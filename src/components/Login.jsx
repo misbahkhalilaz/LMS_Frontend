@@ -9,6 +9,7 @@ export default function Login({ setLogin }) {
 	return (
 		<button
 			onClick={() => {
+				//use this onclick logic on login button
 				cookie.set("login", true, { path: "/", maxAge: 259200 });
 				setLogin(cookie.get("login"));
 				navigate(-1);
