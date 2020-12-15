@@ -1,5 +1,6 @@
 import React from "react";
+import Router from "./Router/Router";
 
 export default function App(props) {
-	return <h1>hi</h1>;
+	return <Router />;
 }
