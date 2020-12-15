@@ -6,17 +6,23 @@ export default function Login({ setLogin }) {
 	const cookie = new Cookies();
 	const navigate = new useNavigate();
 	
-
-	useEffect(() => { if(cookie.get('login') === 'true') navigate('/home')},[])   //***************Don't Remove***************** 
+//***************Don't Remove*****************
+	useEffect(() => {
+		if (cookie.get("login") === "true") navigate("/home");
+	}, []); 
+	
+	
+	const login = () => {
+		//*****use this onclick logic on login button****
+		cookie.set("login", false, { path: "/", maxAge: 259200 }); //set cookie to true after completing login component
+		console.log('login called');
+		setLogin(cookie.get("login"));
+		navigate(-1);
+	};
 
 		return (
 			<button
-				onClick={() => {
-					//*****use this onclick logic on login button****
-					cookie.set("login", false, { path: "/", maxAge: 259200 });//set cookie to true after completing login component
-					setLogin(cookie.get("login"));
-					navigate(-1);
-				}}
+				onClick={() => login()}
 			>
 				Login
 			</button>
