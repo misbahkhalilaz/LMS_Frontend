@@ -10,7 +10,7 @@ export default function Router(props) {
 
 	return (
 		<Routes>
-			<Route path="/" element={<a href="/home">home</a>} />
+			<Route path="/" element={<Login setLogin={setLogin} />} />
 			<Route path="/login" element={<Login setLogin={setLogin} />} />
 			<PrivateRoute path="home" element={<h1>home page</h1>} login={login} />
 		</Routes>
