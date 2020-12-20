@@ -1,15 +1,17 @@
 @import '~antd/dist/antd.css';
 
-*{
-  padding:0;
-  margin:0;
-  box-sizing: border-box;
+
+.userID, .password {
+  margin-bottom: 0px;
+  font-size: 11px;
 }
 
-.loginbtn{
+.passwordRow {
+  margin-top: 15px;
+}
 
-  border-radius: 15px !important ; 
-  width: 50%;
+.btnRow{
+  margin-top: 25px;
 }
 
 .App {
@@ -20,6 +22,7 @@
 .cardLogin{
   border-radius: 20px !important;
 }
+
 
 .forgot{
   color: red;
