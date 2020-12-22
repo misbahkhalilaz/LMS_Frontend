@@ -1,0 +1,12 @@
+.login-form-button {
+  width: 60%;
+  margin-top: 25px;
+}
+
+.ant-form-item {
+  margin-bottom: 15px !important;
+}
+
+.ant-form-item-label {
+  padding: 0 !important;
+}
