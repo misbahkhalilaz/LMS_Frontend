@@ -1,6 +1,6 @@
 import React from "react";
 import Router from "./Router/Router";
-import 'antd/dist/antd.css';
+import "./styles/App.css";
 
 export default function App(props) {
 	return <Router />;

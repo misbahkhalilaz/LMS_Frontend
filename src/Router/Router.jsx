@@ -1,18 +1,25 @@
 import { Routes, Route } from "react-router-dom";
-import React, { useEffect, useState } from "react";
-import Login from "../components/Login";
-import Cookies from "universal-cookie";
+import React from "react";
+import Login from "../pages/Login";
 import PrivateRoute from "./PrivateRoute";
+import DashboardMain from "../components/student/student-dashboard-main";
+import AttendanceMain from "../components/student/student-attendance-main";
+import ResultMain from "../components/student/student-result-main";
+import ClassMain from "../components/student/student-class-main";
+import StudentLayout from "../pages/Layouts/student";
 
-export default function Router(props) {
-	const cookie = new Cookies();
-	const [login, setLogin] = useState(cookie.get("login"));
-
-	return (
-		<Routes>
-			<Route path="/" element={<Login setLogin={setLogin} />} />
-			<Route path="/login" element={<Login setLogin={setLogin} />} />
-			<PrivateRoute path="home" element={<h1>home page</h1>} login={login} />
-		</Routes>
-	);
+export default function Router() {
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      {/* *****************Students Routes********************* */}
+      <PrivateRoute path="/" element={<StudentLayout />}>
+        <PrivateRoute path="/" element={<DashboardMain />} />
+        <PrivateRoute path="attendance" element={<AttendanceMain />} />
+        <PrivateRoute path="class" element={<ClassMain />} />
+        <PrivateRoute path="results" element={<ResultMain />} />
+      </PrivateRoute>
+      {/* *****************Students Routes********************* */}
+    </Routes>
+  );
 }
