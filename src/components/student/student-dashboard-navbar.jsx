@@ -8,12 +8,15 @@ import {
   Popconfirm,
   Typography,
 } from "antd";
-
+import {useNavigate} from 'react-router'
 import { BellFilled, PoweroffOutlined } from "@ant-design/icons";
+import Cookies from 'universal-cookie'
 
 const { Title } = Typography;
 
 const DashboardNavbar = () => {
+  const navigate = useNavigate();
+  const cookie = new Cookies();
   const [visible, setVisible] = useState(false);
   const showDrawer = () => {
     setVisible(true);
@@ -48,6 +51,9 @@ const DashboardNavbar = () => {
                 title="Are you sure？"
                 okText="Yes"
                 cancelText="No"
+                onConfirm={() => {cookie.set('login', false, {path: '/'})
+                  navigate('/login')
+                }}
               >
                 <Button
                   shape="circle"

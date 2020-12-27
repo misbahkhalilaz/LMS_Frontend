@@ -1,11 +1,9 @@
 import { Row, Col } from "antd";
-import "./student-css.css";
-
 import DashboardNavbar from "../../components/student/student-dashboard-navbar";
-import AttendanceMain from "../../components/student/student-attendance-main";
 import DashboardSidebar from "../../components/student/student-dashboard-sidebar";
+import { Outlet } from "react-router";
 
-const StudentAttendance = () => {
+export default function StudentLayout() {
   return (
     <Row style={{ height: "100%" }}>
       <Row style={{ width: "100%", height: "8%" }}>
@@ -19,7 +17,9 @@ const StudentAttendance = () => {
           lg={{ span: 19 }}
           style={{ backgroundColor: "blue" }}
         >
-          <AttendanceMain />
+          {/* ****************Component will render here************************* */}
+          <Outlet />
+          {/* ****************Component will render here************************* */}
         </Col>
         <Col xs={{ span: 24 }} lg={{ span: 5 }}>
           <DashboardSidebar />
@@ -27,6 +27,4 @@ const StudentAttendance = () => {
       </Row>
     </Row>
   );
-};
-
-export default StudentAttendance;
+}

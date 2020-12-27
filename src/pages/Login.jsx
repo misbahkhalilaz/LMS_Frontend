@@ -1,12 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Row, Col, Input, Button, Form, Typography } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import "./student-css.css";
-import img from "../../loginpage.png";
+import img from "../assets/loginpage.png";
+import { useNavigate } from "react-router-dom";
+import Cookies from "universal-cookie";
 
 const { Title } = Typography;
 
-const StudentLogin = () => {
+const Login = () => {
+
+  const cookie = new Cookies();
+  const navigate = new useNavigate();
+  
+  useEffect(() => {
+		if (cookie.get("login") === "true") navigate("/home"); 
+  }, []);
+  
+  const login = () => {
+		//*****use this onclick logic on login button****
+		cookie.set("login", true, { path: "/", maxAge: 259200 }); //set cookie to true after completing login component
+		console.log("login called");
+		// setLogin(cookie.get("login"));
+		navigate(-1);
+	};
+
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
   };
@@ -15,7 +32,7 @@ const StudentLogin = () => {
     <>
       <Row style={{ height: "100%" }}>
         <Col flex="1 1 900px">
-          <img src={img} width="100%" height="100%"></img>
+          <img src={img} width="100%" height="auto"></img>
         </Col>
         <Col flex="1 1 300px">
           <Row justify="center" align="middle" style={{ height: "100%" }}>
@@ -69,6 +86,7 @@ const StudentLogin = () => {
                     htmlType="submit"
                     shape="round"
                     className="login-form-button"
+                    onClick={login}
                   >
                     Log in
                   </Button>
@@ -81,4 +99,5 @@ const StudentLogin = () => {
     </>
   );
 };
-export default StudentLogin;
+
+export default Login;

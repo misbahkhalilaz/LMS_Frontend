@@ -1,11 +1,9 @@
 import { Row, Col } from "antd";
-import "./student-css.css";
-
-import DashboardNavbar from "../../components/student/student-dashboard-navbar";
-import ClassMain from "../../components/student/student-class-main";
+import DashboardMain from "../../components/student/student-dashboard-main";
 import DashboardSidebar from "../../components/student/student-dashboard-sidebar";
+import DashboardNavbar from "../../components/student/student-dashboard-navbar";
 
-const StudentClass = () => {
+const StudentDashboard = () => {
   return (
     <Row style={{ height: "100%" }}>
       <Row style={{ width: "100%", height: "8%" }}>
@@ -19,9 +17,13 @@ const StudentClass = () => {
           lg={{ span: 19 }}
           style={{ backgroundColor: "blue" }}
         >
-          <ClassMain />
+          <DashboardMain />
         </Col>
-        <Col xs={{ span: 24 }} lg={{ span: 5 }}>
+        <Col
+          xs={{ span: 24 }}
+          lg={{ span: 5 }}
+          style={{ backgroundColor: "yellow" }}
+        >
           <DashboardSidebar />
         </Col>
       </Row>
@@ -29,4 +31,4 @@ const StudentClass = () => {
   );
 };
 
-export default StudentClass;
+export default StudentDashboard;
