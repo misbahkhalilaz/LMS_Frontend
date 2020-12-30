@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Row, Col, Button, Typography, Anchor } from "antd";
 
-import ClassPost from "./student-classpost-card";
+import PostCard from "./student-class-postcard";
 
 const { Title } = Typography;
 const { Link } = Anchor;
 
 const ClassMain = () => {
-  const [classPost] = useState({
+  const [classDetails] = useState({
     week1: {
       posts: [
         {
@@ -23,10 +23,9 @@ const ClassMain = () => {
           dueDate: "25-Dec-20",
         },
         {
-          type: "Assignment",
+          type: "Material",
           assignedDate: "19-Dec-20",
-          title: "FYP proposal",
-          dueDate: "25-Dec-20",
+          title: "Books",
         },
       ],
     },
@@ -45,20 +44,18 @@ const ClassMain = () => {
           dueDate: "25-Dec-20",
         },
         {
-          type: "Assignment",
+          type: "Material",
           assignedDate: "19-Dec-20",
-          title: "FYP proposal",
-          dueDate: "25-Dec-20",
+          title: "Books",
         },
       ],
     },
     week3: {
       posts: [
         {
-          type: "Assignment",
+          type: "Material",
           assignedDate: "19-Dec-20",
-          title: "FYP proposal",
-          dueDate: "25-Dec-20",
+          title: "Books",
         },
         {
           type: "Assignment",
@@ -76,60 +73,76 @@ const ClassMain = () => {
     },
   });
 
+  /*const [selectedPosts, setSelectedPosts] = useState();
+
+  const postFilter = (type) => {
+    {
+      setSelectedPosts();
+
+      const result = Object.keys(classDetails).map((key) => {
+        return (
+          <Col key={key} id={key} span={23}>
+            {classDetails[key].posts.map((post, index) => {
+              //console.log(type, post.type);
+              if (type !== post.type) return null;
+              <PostCard key={index} post={post} />;
+            })}
+          </Col>
+        );
+      });
+      setSelectedPosts(result);
+    }
+  };*/
+
   return (
-    <Row style={{ height: "90vh" }}>
+    <Row>
       <Row
         align="middle"
         justify="center"
-        style={{ height: "8vh", width: "100%" }}
+        style={{ width: "100%", height: "10vh" }}
       >
-        <Col xs={{ span: 8 }} lg={{ span: 4, pull: 1 }}>
-          <Button
-            shape="round"
-            type="dashed"
-            size="large"
-            style={{ width: "100%" }}
-          >
+        <Col xs={{ span: 3 }} lg={{ span: 1, pull: 2 }}>
+          <Title className="no-select" level={5} style={{ margin: 0 }}>
+            WEEK
+          </Title>
+        </Col>
+        <Col xs={{ span: 6 }} lg={{ span: 6, pull: 1 }}>
+          <Button block shape="round" type="dashed" size="large">
             All
           </Button>
         </Col>
-        <Col xs={{ span: 8 }} lg={{ span: 4 }}>
+        <Col xs={{ span: 7 }} lg={{ span: 6 }}>
           <Button
+            block
             shape="round"
             type="dashed"
             size="large"
-            style={{ width: "100%" }}
+            onClick={() => postFilter("Assignment")}
           >
             Assignments
           </Button>
         </Col>
-        <Col xs={{ span: 8 }} lg={{ span: 4, push: 1 }}>
+        <Col xs={{ span: 7 }} lg={{ span: 6, push: 1 }}>
           <Button
+            block
             shape="round"
             type="dashed"
             size="large"
-            style={{ width: "100%" }}
+            onClick={() => postFilter("Material")}
           >
             Materials
           </Button>
         </Col>
       </Row>
-      <Row gutter={[0, 10]} style={{ height: "82vh" }}>
-        <Col
-          xs={{ span: 4 }}
-          lg={{ span: 2 }}
-          style={{ height: "100%", textAlign: "center" }}
-        >
-          <Title className="no-select" level={5}>
-            WEEK
-          </Title>
+      <Row gutter={[0, 10]} style={{ width: "100%" }}>
+        <Col xs={{ span: 4 }} lg={{ span: 2 }} style={{ textAlign: "center" }}>
           <Anchor
             getContainer={() => document.getElementById("class-posts")}
             showInkInFixed={true}
             affix={false}
-            style={{ height: "95%", paddingLeft: 15, margin: "0 5px 0" }}
+            style={{ paddingLeft: 15, margin: "0 5px 0" }}
           >
-            {Object.keys(classPost).map((key, index) => (
+            {Object.keys(classDetails).map((key, index) => (
               <Link key={index} href={"#" + key} title={index + 1} />
             ))}
           </Anchor>
@@ -139,17 +152,17 @@ const ClassMain = () => {
           lg={{ span: 22 }}
           id="class-posts"
           style={{
-            height: "100%",
+            height: "80vh",
             overflowY: "auto",
             backgroundColor: "orange",
           }}
         >
-          <Row>
-            {Object.keys(classPost).map((key) => {
+          <Row justify="center" style={{ marginTop: 20 }}>
+            {Object.keys(classDetails).map((key) => {
               return (
-                <Col key={key} id={key} span={23} push={1}>
-                  {classPost[key].posts.map((post, index) => (
-                    <ClassPost key={index} post={post} />
+                <Col key={key} id={key} span={23}>
+                  {classDetails[key].posts.map((post, index) => (
+                    <PostCard key={index} post={post} />
                   ))}
                 </Col>
               );

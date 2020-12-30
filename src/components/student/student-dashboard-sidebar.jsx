@@ -10,7 +10,7 @@ const styles = {
     alignItems: "center",
   },
   btnSize: {
-    width: "90%",
+    width: "80%",
     height: "80%",
   },
 };
@@ -32,7 +32,7 @@ const DashboardSidebar = () => {
   ]);
 
   return (
-    <Row style={{ height: "100%", overflowY: "auto" }}>
+    <Row style={{ height: "100%" }}>
       <Col span={24} style={styles.colAlign}>
         <Button
           type="primary"

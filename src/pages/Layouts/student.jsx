@@ -5,13 +5,13 @@ import { Outlet } from "react-router";
 
 export default function StudentLayout() {
   return (
-    <Row style={{ height: "100%" }}>
-      <Row style={{ width: "100%", height: "8%" }}>
+    <Row>
+      <Row style={{ width: "100%", height: "60px" /*10vh*/ }}>
         <Col span={24} style={{ backgroundColor: "red" }}>
           <DashboardNavbar />
         </Col>
       </Row>
-      <Row style={{ width: "100%", height: "92%" }}>
+      <Row style={{ height: "598px" /*90vh*/ }}>
         <Col
           xs={{ span: 24 }}
           lg={{ span: 19 }}
@@ -21,7 +21,7 @@ export default function StudentLayout() {
           <Outlet />
           {/* ****************Component will render here************************* */}
         </Col>
-        <Col xs={{ span: 24 }} lg={{ span: 5 }}>
+        <Col xs={{ span: 16, offset: 4 }} lg={{ span: 5, offset: 0 }}>
           <DashboardSidebar />
         </Col>
       </Row>

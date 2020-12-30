@@ -6,6 +6,7 @@ import DashboardMain from "../components/student/student-dashboard-main";
 import AttendanceMain from "../components/student/student-attendance-main";
 import ResultMain from "../components/student/student-result-main";
 import ClassMain from "../components/student/student-class-main";
+import ClassPostMain from "../components/student/student-classpost-main";
 import StudentLayout from "../pages/Layouts/student";
 
 export default function Router() {
@@ -16,8 +17,10 @@ export default function Router() {
       <PrivateRoute path="/" element={<StudentLayout />}>
         <PrivateRoute path="/" element={<DashboardMain />} />
         <PrivateRoute path="attendance" element={<AttendanceMain />} />
-        <PrivateRoute path="class" element={<ClassMain />} />
         <PrivateRoute path="results" element={<ResultMain />} />
+        <PrivateRoute path="class" element={<ClassMain />}>
+          <PrivateRoute path="post" element={<ClassPostMain />} />
+        </PrivateRoute>
       </PrivateRoute>
       {/* *****************Students Routes********************* */}
     </Routes>

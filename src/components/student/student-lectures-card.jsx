@@ -29,7 +29,7 @@ const ClassCard = (props) => {
       bordered={false}
       headStyle={styles.cardHead}
       bodyStyle={styles.cardBody}
-      style={{ width: "90%", paddingBottom: 10 }}
+      style={{ width: "90%" /*paddingBottom: 10*/ }}
     >
       <List
         itemLayout="horizontal"
