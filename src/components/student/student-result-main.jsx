@@ -59,7 +59,7 @@ const ResultMain = () => {
           <Tabs tabPosition="left" style={{ height: "100%" }}>
             <TabPane tab="Semester 1" key="1">
               {results.map((result) => (
-                <ResultCard result={result} />
+                <ResultCard key={result.title} result={result} />
               ))}
             </TabPane>
             <TabPane tab="Semester 2" key="2">

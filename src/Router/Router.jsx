@@ -18,7 +18,8 @@ export default function Router() {
         <PrivateRoute path="/" element={<DashboardMain />} />
         <PrivateRoute path="attendance" element={<AttendanceMain />} />
         <PrivateRoute path="results" element={<ResultMain />} />
-        <PrivateRoute path="class" element={<ClassMain />}>
+        <PrivateRoute path="class">
+          <PrivateRoute path="/" element={<ClassMain />} />
           <PrivateRoute path="post" element={<ClassPostMain />} />
         </PrivateRoute>
       </PrivateRoute>

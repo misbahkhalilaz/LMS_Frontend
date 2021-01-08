@@ -67,6 +67,7 @@ const AttendanceMain = () => {
             xs={{ span: 24 }}
             md={{ span: 12 }}
             lg={{ span: 8 }}
+            key={attendanceDetail.title}
           >
             <AttendanceCard attendance={attendanceDetail} />
           </Col>

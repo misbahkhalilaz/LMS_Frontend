@@ -5,7 +5,9 @@ import {
   ScheduleTwoTone,
 } from "@ant-design/icons";
 
-const ClassCard = (props) => {
+const ClassCard = (prop) => {
+  const { className, upcomingAssignments } = prop.classDetail;
+
   const noAssignments = {
     emptyText: (
       <Empty description="No upcoming assginment" imageStyle={{ height: 60 }} />
@@ -15,7 +17,7 @@ const ClassCard = (props) => {
   return (
     <Card
       className="box-shadow no-select"
-      title={props.classDetail}
+      title={className}
       bordered={false}
       actions={[
         <Badge dot>
@@ -29,7 +31,7 @@ const ClassCard = (props) => {
       <List
         itemLayout="horizontal"
         size="small"
-        dataSource={props.assignmentDetail}
+        dataSource={upcomingAssignments}
         locale={noAssignments}
         renderItem={(assignment) => (
           <List.Item key={assignment.title}>

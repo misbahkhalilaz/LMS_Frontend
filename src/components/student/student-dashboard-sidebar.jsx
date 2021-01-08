@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Row, Col, Button } from "antd";
 
 import LecturesCard from "./student-lectures-card";
@@ -31,6 +32,8 @@ const DashboardSidebar = () => {
     },
   ]);
 
+  const navigate = useNavigate();
+
   return (
     <Row style={{ height: "100%" }}>
       <Col span={24} style={styles.colAlign}>
@@ -39,6 +42,7 @@ const DashboardSidebar = () => {
           size="large"
           shape="round"
           style={styles.btnSize}
+          onClick={() => navigate("/")}
         >
           Dashboard
         </Button>
@@ -49,6 +53,7 @@ const DashboardSidebar = () => {
           size="large"
           shape="round"
           style={styles.btnSize}
+          onClick={() => navigate("/attendance")}
         >
           Attendance
         </Button>
@@ -75,6 +80,7 @@ const DashboardSidebar = () => {
           size="large"
           shape="round"
           style={styles.btnSize}
+          onClick={() => navigate("results")}
         >
           Result
         </Button>
