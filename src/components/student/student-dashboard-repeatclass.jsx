@@ -1,5 +1,15 @@
 import { useState, useEffect } from "react";
-import { Typography, Card, Modal, Steps, Button, Checkbox, Radio } from "antd";
+import {
+  Typography,
+  Card,
+  Modal,
+  Steps,
+  Button,
+  Checkbox,
+  Radio,
+  message,
+} from "antd";
+
 import { PlusCircleFilled } from "@ant-design/icons";
 
 const { Title } = Typography;
@@ -15,52 +25,23 @@ const styles = {
     alignItems: "center",
   },
 };
+
 const RepeatClass = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [nextBtnDisabled, setnextBtnDisabled] = useState(true);
   const [current, setCurrent] = useState(0);
-  const [courses, setCourses] = useState([
-    "Course 1",
-    "Course 2",
-    "Course 3",
-    "Course 4",
-    "Course 5",
-  ]);
+  const [nextBtnDisabled, setnextBtnDisabled] = useState(true);
+  const [courseDetail, setCourseDetail] = useState();
+  const [selectedCourseIds, setSelectedCourseIds] = useState();
 
-  const [courseInstructor, SetCourseInstructor] = useState({
-    "Course 1": {
-      instructors: ["ABC", "DEF", "GHI"],
-    },
-    "Course 2": {
-      instructors: ["ABC", "DEF", "GHI"],
-    },
-    "Course 3": {
-      instructors: ["ABC", "DEF", "GHI"],
-    },
-    "Course 4": {
-      instructors: ["ABC", "DEF", "GHI"],
-    },
-    "Course 5": {
-      instructors: ["ABC", "DEF", "GHI"],
-    },
-  });
+  let availableCourses = [];
+  let selectedInstructorIds = [];
 
-  const [selectedCourses, setSelectedCourses] = useState([]);
-  const [selectedCourseInstructor, setSelectedCourseInstructor] = useState();
+  useEffect(() => console.log(courseDetail), [courseDetail]);
 
-  // useEffect(() => console.log(selectedCourses, selectedCourseInstructor), [
-  //   selectedCourses,
-  //   selectedCourseInstructor,
-  // ]);
-
-  const handleCancel = () => {
+  const handleClose = () => {
     setIsModalVisible(false);
-    setnextBtnDisabled(true);
     setCurrent(0);
-    //setCourses();
-    //SetCourseInstructor();
-    setSelectedCourses([]);
-    setSelectedCourseInstructor();
+    clearData();
   };
 
   const next = () => {
@@ -69,24 +50,103 @@ const RepeatClass = () => {
 
   const prev = () => {
     setCurrent(current - 1);
-    if (current === 2) setSelectedCourseInstructor();
-    else if (current === 1) setSelectedCourses([]);
+    if (current === 1) clearData();
   };
 
-  const getCourses = (e) => {
+  const clearData = () => {
+    setnextBtnDisabled(true);
+    setCourseDetail();
+    setSelectedCourseIds();
+    selectedInstructorIds = [];
+  };
+
+  const getCourseDetails = (e) => {
     //e.target.innerText
-    //AFTER API CALL FOR COURSES
+    //AFTER API CALL SET COURSEDETAILS
+    setCourseDetail([
+      {
+        id: 11,
+        title: "Course 1",
+        instructors: [
+          {
+            label: "A",
+            value: 4,
+          },
+          {
+            label: "B",
+            value: 5,
+          },
+          {
+            label: "C",
+            value: 6,
+          },
+        ],
+      },
+      {
+        id: 32,
+        title: "Course 2",
+        instructors: [
+          {
+            label: "D",
+            value: 7,
+          },
+          {
+            label: "E",
+            value: 8,
+          },
+          {
+            label: "F",
+            value: 9,
+          },
+        ],
+      },
+      {
+        id: 73,
+        title: "Course 3",
+        instructors: [
+          {
+            label: "G",
+            value: 10,
+          },
+          {
+            label: "H",
+            value: 11,
+          },
+          {
+            label: "I",
+            value: 12,
+          },
+        ],
+      },
+    ]);
+
     next();
   };
 
-  const getInstructor = () => {
-    next();
-    //courseInstructor -> API CALL FOR SELECTED COURSES LIST OF INSTRUCTORS
-    let tmp = {};
-    Object.keys(courseInstructor).map(
-      (x) => (tmp[x] = courseInstructor[x].instructors[0])
-    );
-    setSelectedCourseInstructor(tmp);
+  const setInstructors = (course) => {
+    if (current != 2) return;
+
+    const index = selectedCourseIds.indexOf(course.id);
+    const defaultValue = course.instructors[0].value;
+    const condition = index != -1;
+    if (condition) selectedInstructorIds[index] = defaultValue;
+
+    return condition ? (
+      <div key={course.id}>
+        <Title level={5}>{course.title}</Title>
+        <Radio.Group
+          options={course.instructors}
+          defaultValue={defaultValue}
+          onChange={(e) => (selectedInstructorIds[index] = e.target.value)}
+        ></Radio.Group>
+      </div>
+    ) : null;
+  };
+
+  const generateRequest = () => {
+    message.success("Request(s) send");
+    console.log(selectedCourseIds, selectedInstructorIds);
+    handleClose();
   };
 
   const steps = [
@@ -99,7 +159,7 @@ const RepeatClass = () => {
             shape="round"
             size="large"
             style={{ width: "80%", height: "80%" }}
-            onClick={(e) => getCourses(e)}
+            onClick={(e) => getCourseDetails(e)}
           >
             Repeat
           </Button>
@@ -108,7 +168,7 @@ const RepeatClass = () => {
             shape="round"
             size="large"
             style={{ width: "80%", height: "80%" }}
-            onClick={(e) => getCourses(e)}
+            onClick={(e) => getCourseDetails(e)}
           >
             Improvement
           </Button>
@@ -119,12 +179,15 @@ const RepeatClass = () => {
       title: "Course Selection",
       content: (
         <Checkbox.Group
-          options={courses}
+          options={courseDetail?.map(
+            (course, i) =>
+              (availableCourses[i] = { label: course.title, value: course.id })
+          )}
           style={{ display: "contents" }}
-          defaultValue={selectedCourses}
-          onChange={(courses) => {
-            setSelectedCourses(courses);
-            courses.length > 0
+          defaultValue={selectedCourseIds}
+          onChange={(courseIds) => {
+            setSelectedCourseIds(courseIds);
+            courseIds.length > 0
               ? setnextBtnDisabled(false)
               : setnextBtnDisabled(true);
           }}
@@ -133,21 +196,7 @@ const RepeatClass = () => {
     },
     {
       title: "Instructor Selection",
-      content: Object.keys(courseInstructor).map((course) => (
-        <div key={course}>
-          <Title level={5}>{course}</Title>
-          <Radio.Group
-            name={course}
-            options={courseInstructor[course].instructors}
-            defaultValue={courseInstructor[course].instructors[0]}
-            onChange={(e) => {
-              const tmp = JSON.parse(JSON.stringify(selectedCourseInstructor));
-              tmp[course] = e.target.value;
-              setSelectedCourseInstructor(tmp);
-            }}
-          ></Radio.Group>
-        </div>
-      )),
+      content: courseDetail?.map((course) => setInstructors(course)),
     },
   ];
 
@@ -170,9 +219,9 @@ const RepeatClass = () => {
         centered
         footer={null}
         width={620}
-        destroyOnClose={true}
+        destroyOnClose
         visible={isModalVisible}
-        onCancel={handleCancel}
+        onCancel={handleClose}
         bodyStyle={{ padding: "40px 40px 20px" }}
       >
         <Steps size="small" current={current}>
@@ -186,7 +235,7 @@ const RepeatClass = () => {
             <Button
               disabled={nextBtnDisabled}
               style={{ float: "right" }}
-              onClick={getInstructor}
+              onClick={next}
             >
               Next
             </Button>
@@ -195,7 +244,7 @@ const RepeatClass = () => {
             <Button
               type="primary"
               style={{ float: "right" }}
-              onClick={() => message.success("Processing complete!")}
+              onClick={generateRequest}
             >
               Generate request(s)
             </Button>
@@ -229,7 +278,6 @@ data.map((d) => (
         </Checkbox>
       )),
 */
-
 /* 
 selectedCourses.map((course, index) => (
         <div key={course.id}>
@@ -249,35 +297,4 @@ selectedCourses.map((course, index) => (
           </Radio.Group>
         </div>
       )),
-
-*/
-
-/*
-let data = [
-  {
-    id: 0,
-    course: "cs1",
-    teachers: [
-      { id: 1, name: "kj" },
-      { id: 2, name: "bs" },
-    ],
-  },
-  {
-    id: 1,
-    course: "cs1",
-    teachers: [
-      { id: 1, name: "kj" },
-      { id: 2, name: "bs" },
-    ],
-  },
-  {
-    id: 2,
-    course: "cs1",
-    teachers: [
-      { id: 1, name: "kj" },
-      { id: 2, name: "bs" },
-    ],
-  },
-];
-
 */
