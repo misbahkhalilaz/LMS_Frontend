@@ -132,7 +132,7 @@ const RepeatClass = () => {
     if (condition) selectedInstructorIds[index] = defaultValue;
 
     return condition ? (
-      <div key={course.id}>
+      <div className="no-select" key={course.id}>
         <Title level={5}>{course.title}</Title>
         <Radio.Group
           options={course.instructors}
@@ -179,6 +179,7 @@ const RepeatClass = () => {
       title: "Course Selection",
       content: (
         <Checkbox.Group
+          className="no-select"
           options={courseDetail?.map(
             (course, i) =>
               (availableCourses[i] = { label: course.title, value: course.id })
@@ -224,7 +225,7 @@ const RepeatClass = () => {
         onCancel={handleClose}
         bodyStyle={{ padding: "40px 40px 20px" }}
       >
-        <Steps size="small" current={current}>
+        <Steps className="no-select" size="small" current={current}>
           {steps.map((item) => (
             <Step key={item.title} title={item.title} />
           ))}

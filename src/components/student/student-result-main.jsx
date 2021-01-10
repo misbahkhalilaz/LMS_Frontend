@@ -46,15 +46,15 @@ const ResultMain = () => {
   ]);
 
   return (
-    <Row style={{ height: "90vh" }}>
-      <Row justify="center" style={{ height: "10%", width: "100%" }}>
-        <Col xs={{ span: 16, offset: 2 }} lg={{ span: 14, offset: 10 }}>
-          <Title className="no-select" level={2}>
+    <Row>
+      <Row justify="center">
+        <Col>
+          <Title className="no-select" level={2} style={{ marginBottom: 25 }}>
             Semester Results
           </Title>
         </Col>
       </Row>
-      <Row style={{ height: "90%", overflowY: "auto" }}>
+      <Row style={{ height: "80vh", overflowY: "auto" }}>
         <Col span={24}>
           <Tabs tabPosition="left" style={{ height: "100%" }}>
             <TabPane tab="Semester 1" key="1">

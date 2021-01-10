@@ -1,6 +1,14 @@
 @import "./student-css.css";
 @import "~antd/dist/antd.css";
 
+#root {
+  height: 100%;
+}
+
+.ant-row {
+  width: 100%;
+}
+
 .no-select {
   -webkit-touch-callout: none;
   -webkit-user-select: none;

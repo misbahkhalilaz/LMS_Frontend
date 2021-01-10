@@ -8,9 +8,9 @@ import {
   Popconfirm,
   Typography,
 } from "antd";
-import {useNavigate} from 'react-router'
+import { useNavigate } from "react-router";
 import { BellFilled, PoweroffOutlined } from "@ant-design/icons";
-import Cookies from 'universal-cookie'
+import Cookies from "universal-cookie";
 
 const { Title } = Typography;
 
@@ -26,15 +26,15 @@ const DashboardNavbar = () => {
   };
 
   return (
-    <Row align="middle" style={{ width: "100%", height: "100%" }}>
-      <Col span={18} push={1}>
-        <Title level={2} ellipsis className="no-select">
+    <Row align="middle" style={{ height: "100%" }}>
+      <Col span={19} push={1}>
+        <Title level={2} ellipsis className="no-select" style={{ margin: 0 }}>
           Department of Computer Science - UBIT
         </Title>
       </Col>
       <Col span={5}>
         <Row justify="end">
-          <Col span={10} pull={2}>
+          <Col span={4} pull={1}>
             <Tooltip placement="bottom" title="Notifications">
               <Button
                 shape="circle"
@@ -44,15 +44,16 @@ const DashboardNavbar = () => {
               />
             </Tooltip>
           </Col>
-          <Col span={8} push={2}>
+          <Col span={4} pull={1}>
             <Tooltip placement="bottom" title="Logout">
               <Popconfirm
                 placement="bottom"
                 title="Are you sure？"
                 okText="Yes"
                 cancelText="No"
-                onConfirm={() => {cookie.set('login', false, {path: '/'})
-                  navigate('/login')
+                onConfirm={() => {
+                  cookie.set("login", false, { path: "/" });
+                  navigate("/login");
                 }}
               >
                 <Button

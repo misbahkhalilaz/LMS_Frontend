@@ -45,22 +45,15 @@ const AttendanceMain = () => {
   ]);
 
   return (
-    <Row style={{ height: "90vh" }}>
-      <Row justify="center" style={{ height: "10%", width: "100%" }}>
-        <Col xs={{ span: 14, offset: 2 }} lg={{ span: 14, offset: 10 }}>
-          <Title className="no-select" level={2} style={{ margin: 0 }}>
+    <Row>
+      <Row justify="center">
+        <Col>
+          <Title className="no-select" level={2} style={{ marginBottom: 25 }}>
             Attendance
           </Title>
         </Col>
       </Row>
-      <Row
-        gutter={[0, 25]}
-        style={{
-          height: "90%",
-          width: "100%",
-          overflowY: "auto",
-        }}
-      >
+      <Row gutter={[0, 25]} style={{ height: "80vh", overflowY: "auto" }}>
         {attendance.map((attendanceDetail) => (
           <Col
             style={styles.colAlign}
