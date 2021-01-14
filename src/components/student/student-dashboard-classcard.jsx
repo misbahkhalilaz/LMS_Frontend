@@ -19,6 +19,7 @@ const ClassCard = (prop) => {
       className="box-shadow no-select"
       title={className}
       bordered={false}
+      hoverable
       actions={[
         <Badge dot>
           <NotificationOutlined style={{ fontSize: 20 }} />

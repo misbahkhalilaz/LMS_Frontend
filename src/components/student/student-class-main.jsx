@@ -96,11 +96,7 @@ const ClassMain = () => {
 
   return (
     <Row>
-      <Row
-        align="middle"
-        justify="center"
-        style={{ width: "100%", height: "10vh" }}
-      >
+      <Row align="middle" justify="center" style={{ height: "10vh" }}>
         <Col xs={{ span: 3 }} lg={{ span: 1, pull: 2 }}>
           <Title className="no-select" level={5} style={{ margin: 0 }}>
             WEEK
@@ -134,7 +130,7 @@ const ClassMain = () => {
           </Button>
         </Col>
       </Row>
-      <Row gutter={[0, 10]} style={{ width: "100%" }}>
+      <Row gutter={[0, 10]}>
         <Col xs={{ span: 4 }} lg={{ span: 2 }} style={{ textAlign: "center" }}>
           <Anchor
             getContainer={() => document.getElementById("class-posts")}

@@ -32,9 +32,9 @@ const DashboardNavbar = () => {
           Department of Computer Science - UBIT
         </Title>
       </Col>
-      <Col span={5}>
+      <Col span={4}>
         <Row justify="end">
-          <Col span={4} pull={1}>
+          <Col xs={{ span: 4, pull: 4 }} lg={{ span: 4, push: 5 }}>
             <Tooltip placement="bottom" title="Notifications">
               <Button
                 shape="circle"
@@ -44,7 +44,7 @@ const DashboardNavbar = () => {
               />
             </Tooltip>
           </Col>
-          <Col span={4} pull={1}>
+          <Col span={4} push={5}>
             <Tooltip placement="bottom" title="Logout">
               <Popconfirm
                 placement="bottom"

@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { Card, Typography, Button, Avatar, Divider, Space } from "antd";
+import {
+  Row,
+  Col,
+  Card,
+  Typography,
+  Button,
+  Avatar,
+  Divider,
+  Space,
+} from "antd";
 import PostComment from "./student-classpost-comment";
 import {
   BookTwoTone,
@@ -40,8 +49,6 @@ const ClasspostMain = () => {
     }*/
   );
 
-  console.log(postDetails);
-
   const postIcon =
     postDetails.type === "Assignment" ? (
       <FileTextTwoTone style={{ fontSize: 36 }} />
@@ -64,49 +71,66 @@ const ClasspostMain = () => {
       ""
     );
   return (
-    <Space direction="vertical" align="center" style={{ marginTop: 50 }}>
-      <Card
-        className="box-shadow no-select"
-        style={{ width: "95%", height: "auto", margin: "auto" }}
-        bodyStyle={{ padding: 30, height: "100%" }}
-      >
-        <Avatar
-          size={55}
-          icon={postIcon}
-          style={{ float: "left", backgroundColor: "white" }}
-        />
-        <Title level={4} style={{ margin: 0 }}>
-          {postDetails.type}: {" " + postDetails.title}
-          {dueDate}
-        </Title>
-        <Text type="secondary" strong style={{ paddingLeft: 3 }}>
-          {postDetails.assignedDate}
-        </Text>
-        <Space direction="vertical">
-          {marks}
-          <Paragraph style={{ padding: 20 }}>
-            {postDetails.description}
-          </Paragraph>
-        </Space>
-        <Divider
-          style={{ backgroundColor: "blue", margin: 0, marginBottom: 30 }}
-        />
-        <Space>
-          {postDetails.file.map((file) => (
-            <Button
-              key={file.name}
-              type="primary"
-              shape="round"
-              icon={<DownloadOutlined />}
-              size="large"
-            >
-              {file.name}
-            </Button>
-          ))}
-        </Space>
-      </Card>
-      <PostComment />
-    </Space>
+    <Row>
+      <Row justify="center">
+        <Col>
+          <Title
+            className="no-select"
+            level={2}
+            style={{ marginBottom: 25, color: "blue" /*JUST FOR ADJUSTMENT */ }}
+          >
+            '
+          </Title>
+        </Col>
+      </Row>
+      <Row style={{ height: "80vh" }}>
+        <Col>
+          <Card
+            className="box-shadow no-select"
+            style={{ width: "90%", height: "auto", margin: "auto" }}
+            bodyStyle={{ padding: 30, height: "100%" }}
+          >
+            <Avatar
+              size={55}
+              icon={postIcon}
+              style={{ float: "left", backgroundColor: "white" }}
+            />
+            <Title level={4} style={{ margin: 0 }}>
+              {postDetails.type}: {" " + postDetails.title}
+              {dueDate}
+            </Title>
+            <Text type="secondary" strong style={{ paddingLeft: 3 }}>
+              {postDetails.assignedDate}
+            </Text>
+            <Space direction="vertical">
+              {marks}
+              <Paragraph style={{ padding: 20 }}>
+                {postDetails.description}
+              </Paragraph>
+            </Space>
+            <Divider
+              style={{ backgroundColor: "blue", margin: 0, marginBottom: 30 }}
+            />
+            <Space>
+              {postDetails.file.map((file) => (
+                <Button
+                  key={file.name}
+                  type="primary"
+                  shape="round"
+                  icon={<DownloadOutlined />}
+                  size="large"
+                >
+                  {file.name}
+                </Button>
+              ))}
+            </Space>
+          </Card>
+        </Col>
+        <Col>
+          <PostComment />
+        </Col>
+      </Row>
+    </Row>
   );
 };
 

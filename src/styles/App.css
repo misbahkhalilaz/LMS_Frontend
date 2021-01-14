@@ -71,6 +71,18 @@
   margin-bottom: 0px !important;
 }
 
+.chat-widget {
+  position: fixed;
+  right: 10px;
+  bottom: 25px;
+  cursor: pointer;
+}
+
+.ant-badge-dot {
+  width: 8px;
+  height: 8px;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
 }

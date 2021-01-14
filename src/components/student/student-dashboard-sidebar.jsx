@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Row, Col, Button } from "antd";
+import { Row, Col, Button, Badge, Avatar } from "antd";
+import { WechatOutlined } from "@ant-design/icons";
 
 import LecturesCard from "./student-lectures-card";
 
@@ -85,6 +86,14 @@ const DashboardSidebar = () => {
           Result
         </Button>
       </Col>
+      <div className="chat-widget">
+        <Badge dot offset={[-5, 10]}>
+          <Avatar
+            size={50}
+            icon={<WechatOutlined style={{ fontSize: 30 }} />}
+          />
+        </Badge>
+      </div>
     </Row>
   );
 };
