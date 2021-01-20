@@ -1,12 +1,9 @@
 @import "./student-css.css";
 @import "~antd/dist/antd.css";
+@import "react-image-lightbox/style.css";
 
 #root {
   height: 100%;
-}
-
-.ant-row {
-  width: 100%;
 }
 
 .no-select {
@@ -18,9 +15,23 @@
   user-select: none;
 }
 
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .box-shadow {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   border-radius: 25px;
+}
+
+.drop-shadow {
+  filter: drop-shadow(2px 4px 8px #585858);
+}
+
+.ant-row {
+  width: 100%;
 }
 
 .form-input-radius {
@@ -40,7 +51,8 @@
 .ant-card-body {
   padding: 0 10px 0;
   overflow-y: auto;
-  height: 20vh; /*height: 180px;*/
+  /*height: 20vh;*/
+  height: 180px;
   width: 99%;
 }
 

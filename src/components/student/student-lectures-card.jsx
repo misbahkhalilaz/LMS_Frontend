@@ -9,9 +9,8 @@ const styles = {
     backgroundColor: "red",
   },
   cardBody: {
-    overflowY: "auto",
     height: "250px",
-    width: "99%",
+    margin: "10px 0",
   },
 };
 
@@ -24,12 +23,13 @@ const ClassCard = (props) => {
 
   return (
     <Card
-      className="box-shadow no-select"
+      className="drop-shadow no-select"
       title="Today's lectures"
       bordered={false}
+      hoverable
       headStyle={styles.cardHead}
       bodyStyle={styles.cardBody}
-      style={{ width: "90%" /*paddingBottom: 10*/ }}
+      style={{ width: "90%" }}
     >
       <List
         itemLayout="horizontal"

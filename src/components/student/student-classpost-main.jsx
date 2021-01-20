@@ -1,14 +1,5 @@
 import { useState } from "react";
-import {
-  Row,
-  Col,
-  Card,
-  Typography,
-  Button,
-  Avatar,
-  Divider,
-  Space,
-} from "antd";
+import { Row, Col, Card, Typography, Button, Divider, Space } from "antd";
 import PostComment from "./student-classpost-comment";
 import {
   BookTwoTone,
@@ -37,6 +28,10 @@ const ClasspostMain = () => {
           name: "assignment2",
           location: "some-location",
         },
+        {
+          name: "assignment3",
+          location: "some-location",
+        },
       ],
     }
     /*{
@@ -49,27 +44,24 @@ const ClasspostMain = () => {
     }*/
   );
 
-  const postIcon =
-    postDetails.type === "Assignment" ? (
-      <FileTextTwoTone style={{ fontSize: 36 }} />
-    ) : (
-      <BookTwoTone style={{ fontSize: 36 }} />
-    );
-  const dueDate =
-    postDetails.type === "Assignment" ? (
-      <span style={{ float: "right" }}>{postDetails.dueDate}</span>
-    ) : (
-      ""
-    );
+  const postType = postDetails.type === "Assignment";
 
-  const marks =
-    postDetails.type === "Assignment" ? (
-      <Text strong code style={{ paddingLeft: 50 }}>
-        {"Marks: "} {postDetails.marks}
-      </Text>
-    ) : (
-      ""
-    );
+  const postIcon = postType ? (
+    <FileTextTwoTone style={{ fontSize: 40, float: "left", padding: 5 }} />
+  ) : (
+    <BookTwoTone style={{ fontSize: 40, float: "left", padding: 5 }} />
+  );
+
+  const dueDate = postType && (
+    <span style={{ float: "right" }}>{postDetails.dueDate}</span>
+  );
+
+  const marks = postType && (
+    <Text strong code style={{ paddingLeft: 50 }}>
+      {"Marks: "} {postDetails.marks}
+    </Text>
+  );
+
   return (
     <Row>
       <Row justify="center">
@@ -87,31 +79,30 @@ const ClasspostMain = () => {
         <Col>
           <Card
             className="box-shadow no-select"
-            style={{ width: "90%", height: "auto", margin: "auto" }}
-            bodyStyle={{ padding: 30, height: "100%" }}
+            style={{ width: "95%", margin: "auto" }}
+            bodyStyle={{ height: "330px", padding: "20px" }}
+            bordered={false}
           >
-            <Avatar
-              size={55}
-              icon={postIcon}
-              style={{ float: "left", backgroundColor: "white" }}
-            />
+            {postIcon}
             <Title level={4} style={{ margin: 0 }}>
               {postDetails.type}: {" " + postDetails.title}
               {dueDate}
             </Title>
-            <Text type="secondary" strong style={{ paddingLeft: 3 }}>
+            <Text type="secondary" strong>
               {postDetails.assignedDate}
             </Text>
             <Space direction="vertical">
               {marks}
-              <Paragraph style={{ padding: 20 }}>
+              <Paragraph
+                style={{ padding: 10, height: 120, overflowY: "auto" }}
+              >
                 {postDetails.description}
               </Paragraph>
             </Space>
             <Divider
               style={{ backgroundColor: "blue", margin: 0, marginBottom: 30 }}
             />
-            <Space>
+            <Space wrap size="large">
               {postDetails.file.map((file) => (
                 <Button
                   key={file.name}

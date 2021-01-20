@@ -6,14 +6,6 @@ import RepeatClass from "./student-dashboard-repeatclass";
 
 const { Title } = Typography;
 
-const styles = {
-  colAlign: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-};
-
 const DashboardMain = () => {
   const [classCardDetails] = useState([
     {
@@ -105,11 +97,11 @@ const DashboardMain = () => {
           </Title>
         </Col>
       </Row>
-      <Row gutter={[0, 25]} style={{ height: "80vh", overflowY: "auto" }}>
+      <Row gutter={[0, 35]} style={{ height: "80vh", overflowY: "auto" }}>
         {classCardDetails.map((classDetail, index) => (
           <Col
+            className="center"
             key={index}
-            style={styles.colAlign}
             xs={{ span: 24 }}
             md={{ span: 12 }}
             lg={{ span: 8 }}
@@ -118,7 +110,7 @@ const DashboardMain = () => {
           </Col>
         ))}
         <Col
-          style={styles.colAlign}
+          className="center"
           xs={{ span: 24 }}
           md={{ span: 12 }}
           lg={{ span: 8 }}

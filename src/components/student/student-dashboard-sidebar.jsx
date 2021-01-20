@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Row, Col, Button, Badge, Avatar } from "antd";
+import Lightbox from "react-image-lightbox";
+
 import { WechatOutlined } from "@ant-design/icons";
 
 import LecturesCard from "./student-lectures-card";
 
-const styles = {
-  colAlign: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  btnSize: {
-    width: "80%",
-    height: "80%",
-  },
-};
+const styles = { btnSize: { width: "80%", height: "80%" } };
 
 const DashboardSidebar = () => {
+  const [showTimetable, setShowTimetable] = useState(false);
   const [lectureDetail] = useState([
     {
       title: "BSCS 602 - ICS I",
@@ -37,7 +30,7 @@ const DashboardSidebar = () => {
 
   return (
     <Row style={{ height: "100%" }}>
-      <Col span={24} style={styles.colAlign}>
+      <Col className="center" span={24}>
         <Button
           type="primary"
           size="large"
@@ -48,7 +41,7 @@ const DashboardSidebar = () => {
           Dashboard
         </Button>
       </Col>
-      <Col span={24} style={styles.colAlign}>
+      <Col className="center" span={24}>
         <Button
           type="primary"
           size="large"
@@ -60,22 +53,31 @@ const DashboardSidebar = () => {
         </Button>
       </Col>
 
-      <Col span={24} style={styles.colAlign}>
+      <Col className="center" span={24}>
         <LecturesCard lectureDetail={lectureDetail} />
       </Col>
 
-      <Col span={24} style={styles.colAlign}>
+      <Col className="center" span={24}>
         <Button
           type="primary"
           size="large"
           shape="round"
           style={styles.btnSize}
+          onClick={() => setShowTimetable(!showTimetable)}
         >
           Timetable
         </Button>
+        {showTimetable && (
+          <Lightbox
+            mainSrc={
+              "https://i.picsum.photos/id/547/700/700.jpg?hmac=2ThCdDErVtA_wxmjarQyKKjgdX6qmCon6U-YoFFOpbo"
+            }
+            onCloseRequest={() => setShowTimetable(!showTimetable)}
+          />
+        )}
       </Col>
 
-      <Col span={24} style={styles.colAlign}>
+      <Col className="center" span={24}>
         <Button
           type="primary"
           size="large"

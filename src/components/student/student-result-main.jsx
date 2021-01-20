@@ -1,17 +1,9 @@
 import { useState } from "react";
-import { Row, Col, Tabs, Avatar, Typography, Space } from "antd";
+import { Row, Col, Tabs, Typography } from "antd";
 import ResultCard from "./student-result-card";
 
 const { TabPane } = Tabs;
 const { Title } = Typography;
-
-const styles = {
-  colAlign: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-};
 
 const ResultMain = () => {
   const [results] = useState([
@@ -56,7 +48,7 @@ const ResultMain = () => {
       </Row>
       <Row style={{ height: "80vh", overflowY: "auto" }}>
         <Col span={24}>
-          <Tabs tabPosition="left" style={{ height: "100%" }}>
+          <Tabs tabPosition="left" style={{ width: "98%" }}>
             <TabPane tab="Semester 1" key="1">
               {results.map((result) => (
                 <ResultCard key={result.title} result={result} />

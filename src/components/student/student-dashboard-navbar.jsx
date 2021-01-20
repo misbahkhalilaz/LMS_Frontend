@@ -8,6 +8,7 @@ import {
   Popconfirm,
   Typography,
 } from "antd";
+
 import { useNavigate } from "react-router";
 import { BellFilled, PoweroffOutlined } from "@ant-design/icons";
 import Cookies from "universal-cookie";
@@ -18,9 +19,11 @@ const DashboardNavbar = () => {
   const navigate = useNavigate();
   const cookie = new Cookies();
   const [visible, setVisible] = useState(false);
+
   const showDrawer = () => {
     setVisible(true);
   };
+
   const onClose = () => {
     setVisible(false);
   };

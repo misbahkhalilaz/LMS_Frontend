@@ -9,10 +9,11 @@ const AttendanceCard = (props) => {
 
   return (
     <Card
-      className="box-shadow no-select"
+      className="drop-shadow no-select"
       title={props.attendance.title}
       bordered={false}
-      bodyStyle={{ height: "180px", paddingTop: 20 }}
+      hoverable
+      bodyStyle={{ padding: 10 }}
     >
       <Title level={5}>
         Attendance percentage: {props.attendance.percentage}%

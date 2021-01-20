@@ -4,14 +4,6 @@ import AttendanceCard from "./student-attendance-card";
 
 const { Title } = Typography;
 
-const styles = {
-  colAlign: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-};
-
 const AttendanceMain = () => {
   const [attendance] = useState([
     {
@@ -56,7 +48,7 @@ const AttendanceMain = () => {
       <Row gutter={[0, 25]} style={{ height: "80vh", overflowY: "auto" }}>
         {attendance.map((attendanceDetail) => (
           <Col
-            style={styles.colAlign}
+            className="center"
             xs={{ span: 24 }}
             md={{ span: 12 }}
             lg={{ span: 8 }}

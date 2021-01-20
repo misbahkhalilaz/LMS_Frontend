@@ -1,44 +1,34 @@
-import { Card, Typography, Avatar } from "antd";
+import { Card, Typography } from "antd";
 
 import { BookTwoTone, FileTextTwoTone } from "@ant-design/icons";
 const { Title, Text } = Typography;
-<BookTwoTone />;
-<FileTextTwoTone />;
+
 const PostCard = (props) => {
-  const postIcon =
-    props.post.type === "Assignment" ? (
-      <FileTextTwoTone style={{ fontSize: 36 }} />
-    ) : (
-      <BookTwoTone style={{ fontSize: 36 }} />
-    );
-  const dueDate =
-    props.post.type === "Assignment" ? (
-      <span style={{ float: "right" }}>{props.post.dueDate}</span>
-    ) : (
-      ""
-    );
+  const postTypeAssignment = props.post.type === "Assignment";
+
+  const postIcon = postTypeAssignment ? (
+    <FileTextTwoTone style={{ fontSize: 40, float: "left", padding: 5 }} />
+  ) : (
+    <BookTwoTone style={{ fontSize: 40, float: "left", padding: 5 }} />
+  );
+
+  const dueDate = postTypeAssignment && (
+    <span style={{ float: "right" }}>{props.post.dueDate}</span>
+  );
+
   return (
     <Card
-      hoverable
       className="box-shadow no-select"
+      hoverable
       bodyStyle={{ paddingTop: 20 }}
-      style={{
-        width: "100%",
-        height: "100px",
-
-        marginBottom: 30,
-      }}
+      style={{ width: "100%", height: "100px", marginBottom: 30 }}
     >
-      <Avatar
-        size={55}
-        icon={postIcon}
-        style={{ float: "left", backgroundColor: "white" }}
-      />
+      {postIcon}
       <Title level={4} style={{ margin: 0 }}>
         {props.post.type}: {" " + props.post.title}
         {dueDate}
       </Title>
-      <Text type="secondary" strong style={{ paddingLeft: 3 }}>
+      <Text type="secondary" strong>
         {props.post.assignedDate}
       </Text>
     </Card>

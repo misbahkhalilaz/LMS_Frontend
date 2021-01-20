@@ -17,8 +17,7 @@ const { Step } = Steps;
 
 const styles = {
   classRepeatImprove: {
-    minHeight: 100,
-    margin: "30px 0 30px",
+    height: 220,
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -131,16 +130,18 @@ const RepeatClass = () => {
     const condition = index != -1;
     if (condition) selectedInstructorIds[index] = defaultValue;
 
-    return condition ? (
-      <div className="no-select" key={course.id}>
-        <Title level={5}>{course.title}</Title>
-        <Radio.Group
-          options={course.instructors}
-          defaultValue={defaultValue}
-          onChange={(e) => (selectedInstructorIds[index] = e.target.value)}
-        ></Radio.Group>
-      </div>
-    ) : null;
+    return (
+      condition && (
+        <div className="no-select" key={course.id}>
+          <Title level={5}>{course.title}</Title>
+          <Radio.Group
+            options={course.instructors}
+            defaultValue={defaultValue}
+            onChange={(e) => (selectedInstructorIds[index] = e.target.value)}
+          ></Radio.Group>
+        </div>
+      )
+    );
   };
 
   const generateRequest = () => {
@@ -204,9 +205,11 @@ const RepeatClass = () => {
   return (
     <>
       <Card
+        className="drop-shadow"
         hoverable
-        onClick={() => setIsModalVisible(true)}
+        bordered={false}
         bodyStyle={styles.classRepeatImprove}
+        onClick={() => setIsModalVisible(true)}
       >
         <PlusCircleFilled
           style={{ fontSize: 64, color: "rgba(0, 0, 0, 0.45)" }}
@@ -250,11 +253,7 @@ const RepeatClass = () => {
               Generate request(s)
             </Button>
           )}
-          {current > 0 && (
-            <Button style={{ margin: "0 8px" }} onClick={prev}>
-              Previous
-            </Button>
-          )}
+          {current > 0 && <Button onClick={prev}>Previous</Button>}
         </div>
       </Modal>
     </>

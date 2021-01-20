@@ -130,7 +130,7 @@ const ClassMain = () => {
           </Button>
         </Col>
       </Row>
-      <Row gutter={[0, 10]}>
+      <Row>
         <Col xs={{ span: 4 }} lg={{ span: 2 }} style={{ textAlign: "center" }}>
           <Anchor
             getContainer={() => document.getElementById("class-posts")}
