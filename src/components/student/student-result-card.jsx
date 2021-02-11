@@ -10,7 +10,7 @@ const ResultCard = (props) => {
       className="drop-shadow no-select"
       title={props.result.title}
       bordered={false}
-      hoverable
+      //hoverable
       style={{ marginBottom: 25 }}
       bodyStyle={{ padding: 10, textAlign: "center" }}
     >

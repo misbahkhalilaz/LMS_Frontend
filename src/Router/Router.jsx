@@ -12,7 +12,7 @@ import StudentLayout from "../pages/Layouts/student";
 export default function Router() {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+      <Route path="login" element={<Login />} />
       {/* *****************Students Routes********************* */}
       <PrivateRoute path="/" element={<StudentLayout />}>
         <PrivateRoute path="/" element={<DashboardMain />} />

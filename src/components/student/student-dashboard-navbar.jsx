@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useState, useLayoutEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { createBrowserHistory } from "history";
+import Cookies from "universal-cookie";
 import {
   Row,
   Col,
@@ -7,18 +10,26 @@ import {
   Drawer,
   Popconfirm,
   Typography,
+  PageHeader,
 } from "antd";
 
-import { useNavigate } from "react-router";
-import { BellFilled, PoweroffOutlined } from "@ant-design/icons";
-import Cookies from "universal-cookie";
+import { LeftOutlined, BellFilled, PoweroffOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 
 const DashboardNavbar = () => {
   const navigate = useNavigate();
+  const history = createBrowserHistory();
+
   const cookie = new Cookies();
   const [visible, setVisible] = useState(false);
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useLayoutEffect(() => {
+    const handleWindowResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleWindowResize);
+    return () => window.removeEventListener("resize", handleWindowResize);
+  }, []);
 
   const showDrawer = () => {
     setVisible(true);
@@ -29,26 +40,27 @@ const DashboardNavbar = () => {
   };
 
   return (
-    <Row align="middle" style={{ height: "100%" }}>
-      <Col span={19} push={1}>
-        <Title level={2} ellipsis className="no-select" style={{ margin: 0 }}>
-          Department of Computer Science - UBIT
-        </Title>
-      </Col>
-      <Col span={4}>
-        <Row justify="end">
-          <Col xs={{ span: 4, pull: 4 }} lg={{ span: 4, push: 5 }}>
-            <Tooltip placement="bottom" title="Notifications">
+    <Row>
+      <Col span={24}>
+        <PageHeader
+          backIcon={history.location.pathname != "/" && <LeftOutlined />}
+          title={
+            <Title level={2} className="no-select" style={{ margin: 0 }}>
+              {width < 700
+                ? "DCS - UBIT"
+                : "Department of Computer Science - UBIT"}
+            </Title>
+          }
+          extra={[
+            <Tooltip key={1} placement="bottom" title="Notifications">
               <Button
                 shape="circle"
                 icon={<BellFilled />}
-                style={{ float: "right", color: "rgba(0, 0, 0, 0.65)" }}
+                style={{ color: "rgba(0, 0, 0, 0.65)" }}
                 onClick={showDrawer}
               />
-            </Tooltip>
-          </Col>
-          <Col span={4} push={5}>
-            <Tooltip placement="bottom" title="Logout">
+            </Tooltip>,
+            <Tooltip key={2} placement="bottom" title="Logout">
               <Popconfirm
                 placement="bottom"
                 title="Are you sure？"
@@ -62,12 +74,13 @@ const DashboardNavbar = () => {
                 <Button
                   shape="circle"
                   icon={<PoweroffOutlined />}
-                  style={{ float: "right", color: "rgba(0, 0, 0, 0.65)" }}
+                  style={{ color: "rgba(0, 0, 0, 0.65)" }}
                 />
               </Popconfirm>
-            </Tooltip>
-          </Col>
-        </Row>
+            </Tooltip>,
+          ]}
+          onBack={() => navigate(-1, { replace: true })}
+        />
       </Col>
       <Drawer
         title="General notifications"

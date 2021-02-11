@@ -23,10 +23,10 @@ const ClassCard = (prop) => {
       hoverable
       actions={[
         <Badge dot>
-          <NotificationOutlined style={{ fontSize: 20 }} />
+          <NotificationOutlined className="classcard-icon" />
         </Badge>,
         <Badge dot>
-          <MessageOutlined style={{ fontSize: 20 }} />
+          <MessageOutlined className="classcard-icon" />
         </Badge>,
       ]}
     >

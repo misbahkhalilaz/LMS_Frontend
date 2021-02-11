@@ -1,6 +1,5 @@
 @import "./student-css.css";
 @import "~antd/dist/antd.css";
-@import "react-image-lightbox/style.css";
 
 #root {
   height: 100%;
@@ -30,6 +29,10 @@
   filter: drop-shadow(2px 4px 8px #585858);
 }
 
+.ant-page-header {
+  padding: 8px 10px;
+}
+
 .ant-row {
   width: 100%;
 }
@@ -40,7 +43,7 @@
 
 .ant-card {
   border-radius: 25px;
-  width: 280px;
+  width: 300px;
 }
 
 .ant-card-head {

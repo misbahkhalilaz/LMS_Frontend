@@ -16,7 +16,7 @@ const { Title } = Typography;
 const { Step } = Steps;
 
 const styles = {
-  classRepeatImprove: {
+  bodystyle: {
     height: 220,
     display: "flex",
     flexDirection: "column",
@@ -208,7 +208,7 @@ const RepeatClass = () => {
         className="drop-shadow"
         hoverable
         bordered={false}
-        bodyStyle={styles.classRepeatImprove}
+        bodyStyle={styles.bodystyle}
         onClick={() => setIsModalVisible(true)}
       >
         <PlusCircleFilled

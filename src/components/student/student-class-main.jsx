@@ -12,19 +12,19 @@ const ClassMain = () => {
       posts: [
         {
           type: "Assignment",
-          assignedDate: "19-Dec-20",
+          assignedDate: "19 Dec",
           title: "FYP proposal",
-          dueDate: "25-Dec-20",
+          dueDate: "25 Dec",
         },
         {
           type: "Assignment",
-          assignedDate: "19-Dec-20",
+          assignedDate: "19 Dec",
           title: "FYP proposal",
-          dueDate: "25-Dec-20",
+          dueDate: "25 Dec",
         },
         {
           type: "Material",
-          assignedDate: "19-Dec-20",
+          assignedDate: "19 Dec",
           title: "Books",
         },
       ],
@@ -33,19 +33,19 @@ const ClassMain = () => {
       posts: [
         {
           type: "Assignment",
-          assignedDate: "19-Dec-20",
+          assignedDate: "19 Dec",
           title: "FYP proposal",
-          dueDate: "25-Dec-20",
+          dueDate: "25 Dec",
         },
         {
           type: "Assignment",
-          assignedDate: "19-Dec-20",
+          assignedDate: "19 Dec",
           title: "FYP proposal",
-          dueDate: "25-Dec-20",
+          dueDate: "25 Dec",
         },
         {
           type: "Material",
-          assignedDate: "19-Dec-20",
+          assignedDate: "19 Dec",
           title: "Books",
         },
       ],
@@ -54,45 +54,26 @@ const ClassMain = () => {
       posts: [
         {
           type: "Material",
-          assignedDate: "19-Dec-20",
+          assignedDate: "19 Dec",
           title: "Books",
         },
         {
           type: "Assignment",
-          assignedDate: "19-Dec-20",
+          assignedDate: "19 Dec",
           title: "FYP proposal",
-          dueDate: "25-Dec-20",
+          dueDate: "25 Dec",
         },
         {
           type: "Assignment",
-          assignedDate: "19-Dec-20",
+          assignedDate: "19 Dec",
           title: "FYP proposal",
-          dueDate: "25-Dec-20",
+          dueDate: "25 Dec",
         },
       ],
     },
   });
 
-  /*const [selectedPosts, setSelectedPosts] = useState();
-
-  const postFilter = (type) => {
-    {
-      setSelectedPosts();
-
-      const result = Object.keys(classDetails).map((key) => {
-        return (
-          <Col key={key} id={key} span={23}>
-            {classDetails[key].posts.map((post, index) => {
-              //console.log(type, post.type);
-              if (type !== post.type) return null;
-              <PostCard key={index} post={post} />;
-            })}
-          </Col>
-        );
-      });
-      setSelectedPosts(result);
-    }
-  };*/
+  const [selectedPosts, setSelectedPosts] = useState("All");
 
   return (
     <Row>
@@ -103,7 +84,13 @@ const ClassMain = () => {
           </Title>
         </Col>
         <Col xs={{ span: 6 }} lg={{ span: 6, pull: 1 }}>
-          <Button block shape="round" type="dashed" size="large">
+          <Button
+            block
+            shape="round"
+            type="dashed"
+            size="large"
+            onClick={() => setSelectedPosts("All")}
+          >
             All
           </Button>
         </Col>
@@ -113,7 +100,7 @@ const ClassMain = () => {
             shape="round"
             type="dashed"
             size="large"
-            onClick={() => postFilter("Assignment")}
+            onClick={() => setSelectedPosts("Assignment")}
           >
             Assignments
           </Button>
@@ -124,7 +111,7 @@ const ClassMain = () => {
             shape="round"
             type="dashed"
             size="large"
-            onClick={() => postFilter("Material")}
+            onClick={() => setSelectedPosts("Material")}
           >
             Materials
           </Button>
@@ -134,8 +121,8 @@ const ClassMain = () => {
         <Col xs={{ span: 4 }} lg={{ span: 2 }} style={{ textAlign: "center" }}>
           <Anchor
             getContainer={() => document.getElementById("class-posts")}
+            onClick={(e) => e.preventDefault()}
             showInkInFixed={true}
-            affix={false}
             style={{ paddingLeft: 15, margin: "0 5px 0" }}
           >
             {Object.keys(classDetails).map((key, index) => (
@@ -157,9 +144,15 @@ const ClassMain = () => {
             {Object.keys(classDetails).map((key) => {
               return (
                 <Col key={key} id={key} span={23}>
-                  {classDetails[key].posts.map((post, index) => (
-                    <PostCard key={index} post={post} />
-                  ))}
+                  {classDetails[key].posts.map((post, index) =>
+                    selectedPosts === post.type ? (
+                      <PostCard key={index} post={post} />
+                    ) : (
+                      selectedPosts === "All" && (
+                        <PostCard key={index} post={post} />
+                      )
+                    )
+                  )}
                 </Col>
               );
             })}

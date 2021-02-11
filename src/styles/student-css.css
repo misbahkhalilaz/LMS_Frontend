@@ -11,6 +11,15 @@
   padding: 0 !important;
 }
 
+.classcard-icon {
+  color: #00000073;
+  font-size: 20px;
+}
+
+.classcard-icon:hover {
+  color: #1890ff;
+}
+
 .repeat-content {
   margin-top: 10px;
   border: 1px dashed #e9e9e9;

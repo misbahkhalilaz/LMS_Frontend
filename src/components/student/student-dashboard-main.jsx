@@ -97,7 +97,7 @@ const DashboardMain = () => {
           </Title>
         </Col>
       </Row>
-      <Row gutter={[0, 35]} style={{ height: "80vh", overflowY: "auto" }}>
+      <Row gutter={[0, 42]} style={{ height: "80vh", overflowY: "auto" }}>
         {classCardDetails.map((classDetail, index) => (
           <Col
             className="center"

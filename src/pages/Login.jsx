@@ -8,21 +8,19 @@ import Cookies from "universal-cookie";
 const { Title } = Typography;
 
 const Login = () => {
-
   const cookie = new Cookies();
   const navigate = new useNavigate();
-  
+
   useEffect(() => {
-		if (cookie.get("login") === "true") navigate("/home"); 
+    if (cookie.get("login") === "true") navigate("/");
   }, []);
-  
+
   const login = () => {
-		//*****use this onclick logic on login button****
-		cookie.set("login", true, { path: "/", maxAge: 259200 }); //set cookie to true after completing login component
-		console.log("login called");
-		// setLogin(cookie.get("login"));
-		navigate(-1);
-	};
+    //*****use this onclick logic on login button****
+    cookie.set("login", true, { path: "/", maxAge: 259200 }); //set cookie to true after completing login component
+    // setLogin(cookie.get("login"));
+    navigate(-1);
+  };
 
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
@@ -32,7 +30,7 @@ const Login = () => {
     <>
       <Row style={{ height: "100%" }}>
         <Col flex="1 1 900px">
-          <img src={img} width="100%" height="auto"></img>
+          <img src={img} width="100%" height="auto" />
         </Col>
         <Col flex="1 1 300px">
           <Row justify="center" align="middle" style={{ height: "100%" }}>

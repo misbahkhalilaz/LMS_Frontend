@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Row, Col, Button, Badge, Avatar } from "antd";
-import Lightbox from "react-image-lightbox";
+import { Row, Col, Button, Badge, Avatar, Image } from "antd";
 
 import { WechatOutlined } from "@ant-design/icons";
 
@@ -11,6 +10,7 @@ const styles = { btnSize: { width: "80%", height: "80%" } };
 
 const DashboardSidebar = () => {
   const [showTimetable, setShowTimetable] = useState(false);
+
   const [lectureDetail] = useState([
     {
       title: "BSCS 602 - ICS I",
@@ -36,7 +36,7 @@ const DashboardSidebar = () => {
           size="large"
           shape="round"
           style={styles.btnSize}
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/", { replace: true })}
         >
           Dashboard
         </Button>
@@ -47,7 +47,7 @@ const DashboardSidebar = () => {
           size="large"
           shape="round"
           style={styles.btnSize}
-          onClick={() => navigate("/attendance")}
+          onClick={() => navigate("attendance")}
         >
           Attendance
         </Button>
@@ -63,18 +63,20 @@ const DashboardSidebar = () => {
           size="large"
           shape="round"
           style={styles.btnSize}
-          onClick={() => setShowTimetable(!showTimetable)}
+          onClick={() => setShowTimetable(true)}
         >
           Timetable
-        </Button>
-        {showTimetable && (
-          <Lightbox
-            mainSrc={
-              "https://i.picsum.photos/id/547/700/700.jpg?hmac=2ThCdDErVtA_wxmjarQyKKjgdX6qmCon6U-YoFFOpbo"
-            }
-            onCloseRequest={() => setShowTimetable(!showTimetable)}
+          <Image
+            alt="Timetable"
+            width={0}
+            preview={{
+              visible: showTimetable,
+              onVisibleChange: () => setShowTimetable(!showTimetable),
+              mask: null,
+            }}
+            src="https://i.picsum.photos/id/547/700/700.jpg?hmac=2ThCdDErVtA_wxmjarQyKKjgdX6qmCon6U-YoFFOpbo"
           />
-        )}
+        </Button>
       </Col>
 
       <Col className="center" span={24}>

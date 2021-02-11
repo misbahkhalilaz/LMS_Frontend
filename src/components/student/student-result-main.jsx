@@ -48,7 +48,7 @@ const ResultMain = () => {
       </Row>
       <Row style={{ height: "80vh", overflowY: "auto" }}>
         <Col span={24}>
-          <Tabs tabPosition="left" style={{ width: "98%" }}>
+          <Tabs tabPosition="left" style={{ width: "99%" }}>
             <TabPane tab="Semester 1" key="1">
               {results.map((result) => (
                 <ResultCard key={result.title} result={result} />

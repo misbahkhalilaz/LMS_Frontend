@@ -13,15 +13,15 @@ const PostCard = (props) => {
   );
 
   const dueDate = postTypeAssignment && (
-    <span style={{ float: "right" }}>{props.post.dueDate}</span>
+    <span style={{ float: "right" }}>Due {props.post.dueDate}</span>
   );
 
   return (
     <Card
       className="box-shadow no-select"
       hoverable
-      bodyStyle={{ paddingTop: 20 }}
-      style={{ width: "100%", height: "100px", marginBottom: 30 }}
+      bodyStyle={{ paddingTop: 20, height: 100 }}
+      style={{ width: "100%", marginBottom: 25 }}
     >
       {postIcon}
       <Title level={4} style={{ margin: 0 }}>
