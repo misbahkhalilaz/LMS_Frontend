@@ -9,7 +9,7 @@ const { Title } = Typography;
 
 const Login = () => {
   const cookie = new Cookies();
-  const navigate = new useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (cookie.get("login") === "true") navigate("/");

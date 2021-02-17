@@ -19,7 +19,7 @@ const ClassCard = (prop) => {
       className="drop-shadow no-select"
       title={className}
       bordered={false}
-      bodyStyle={{ height: "20vh" }} //130px
+      bodyStyle={{ height: "130px" }}
       hoverable
       actions={[
         <Badge dot>

@@ -11,7 +11,7 @@ const ResultCard = (props) => {
       title={props.result.title}
       bordered={false}
       //hoverable
-      style={{ marginBottom: 25 }}
+      style={{ marginBottom: 20 }}
       bodyStyle={{ padding: 10, textAlign: "center" }}
     >
       <Title level={5}>Theory: {props.result.theory}</Title>

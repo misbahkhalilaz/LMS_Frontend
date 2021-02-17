@@ -36,7 +36,7 @@ const DashboardSidebar = () => {
           size="large"
           shape="round"
           style={styles.btnSize}
-          onClick={() => navigate("/", { replace: true })}
+          onClick={() => navigate("/")}
         >
           Dashboard
         </Button>

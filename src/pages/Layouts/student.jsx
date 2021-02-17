@@ -1,6 +1,7 @@
 import { Row, Col } from "antd";
 import DashboardNavbar from "../../components/student/student-dashboard-navbar";
 import DashboardSidebar from "../../components/student/student-dashboard-sidebar";
+import ClasspostSidebar from "../../components/student/student-classpost-sidebar";
 import { Outlet } from "react-router";
 
 export default function StudentLayout() {
@@ -22,7 +23,7 @@ export default function StudentLayout() {
           {/* ****************Component will render here************************* */}
         </Col>
         <Col xs={{ span: 16, offset: 4 }} lg={{ span: 5, offset: 0 }}>
-          <DashboardSidebar />
+          <ClasspostSidebar />
         </Col>
       </Row>
     </Row>

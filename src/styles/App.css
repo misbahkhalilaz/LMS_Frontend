@@ -54,7 +54,6 @@
 .ant-card-body {
   padding: 0 10px 0;
   overflow-y: auto;
-  /*height: 20vh;*/
   height: 180px;
   width: 99%;
 }
@@ -86,16 +85,20 @@
   margin-bottom: 0px !important;
 }
 
+.ant-badge-dot {
+  width: 8px;
+  height: 8px;
+}
+
+.ant-upload.ant-upload-select {
+  display: block;
+}
+
 .chat-widget {
   position: fixed;
   right: 10px;
   bottom: 25px;
   cursor: pointer;
-}
-
-.ant-badge-dot {
-  width: 8px;
-  height: 8px;
 }
 
 ::-webkit-scrollbar {

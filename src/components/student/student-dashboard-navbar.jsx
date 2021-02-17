@@ -79,7 +79,7 @@ const DashboardNavbar = () => {
               </Popconfirm>
             </Tooltip>,
           ]}
-          onBack={() => navigate(-1, { replace: true })}
+          onBack={() => navigate(-1)}
         />
       </Col>
       <Drawer

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Row, Col, Card, Typography, Button, Divider, Space } from "antd";
-import PostComment from "./student-classpost-comment";
+import Comment from "./student-classpost-comment";
 import {
   BookTwoTone,
   FileTextTwoTone,
@@ -64,7 +64,7 @@ const ClasspostMain = () => {
 
   return (
     <Row>
-      <Row justify="center">
+      <Row>
         <Col>
           <Title
             className="no-select"
@@ -75,12 +75,12 @@ const ClasspostMain = () => {
           </Title>
         </Col>
       </Row>
-      <Row style={{ height: "80vh" }}>
-        <Col>
+      <Row justify="center" style={{ height: "80vh", overflowY: "auto" }}>
+        <Col style={{ width: "95%" }}>
           <Card
             className="box-shadow no-select"
-            style={{ width: "95%", margin: "auto" }}
-            bodyStyle={{ height: "330px", padding: "20px" }}
+            style={{ width: "100%", padding: 10 }}
+            bodyStyle={{ height: 299 }}
             bordered={false}
           >
             {postIcon}
@@ -99,9 +99,7 @@ const ClasspostMain = () => {
                 {postDetails.description}
               </Paragraph>
             </Space>
-            <Divider
-              style={{ backgroundColor: "blue", margin: 0, marginBottom: 30 }}
-            />
+            <Divider style={{ backgroundColor: "blue", margin: "10px 0px" }} />
             <Space wrap size="large">
               {postDetails.file.map((file) => (
                 <Button
@@ -117,8 +115,8 @@ const ClasspostMain = () => {
             </Space>
           </Card>
         </Col>
-        <Col>
-          <PostComment />
+        <Col style={{ width: "95%" }}>
+          <Comment type=" class " />
         </Col>
       </Row>
     </Row>
