@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Row, Col, Card, Typography, Button, Divider, Space } from "antd";
 import Comment from "./student-classpost-comment";
 import {
-  BookTwoTone,
-  FileTextTwoTone,
+  BookOutlined,
+  FileTextOutlined,
   DownloadOutlined,
 } from "@ant-design/icons";
 
@@ -47,13 +47,13 @@ const ClasspostMain = () => {
   const postType = postDetails.type === "Assignment";
 
   const postIcon = postType ? (
-    <FileTextTwoTone style={{ fontSize: 40, float: "left", padding: 5 }} />
+    <FileTextOutlined className="postcard-icon" />
   ) : (
-    <BookTwoTone style={{ fontSize: 40, float: "left", padding: 5 }} />
+    <BookOutlined className="postcard-icon" />
   );
 
   const dueDate = postType && (
-    <span style={{ float: "right" }}>{postDetails.dueDate}</span>
+    <span className="postcard-duedate">{postDetails.dueDate}</span>
   );
 
   const marks = postType && (
@@ -67,9 +67,12 @@ const ClasspostMain = () => {
       <Row>
         <Col>
           <Title
-            className="no-select"
+            className="no-select "
             level={2}
-            style={{ marginBottom: 25, color: "blue" /*JUST FOR ADJUSTMENT */ }}
+            style={{
+              marginBottom: 25,
+              color: "#FFFFFF" /*JUST FOR ADJUSTMENT */,
+            }}
           >
             '
           </Title>
@@ -78,13 +81,13 @@ const ClasspostMain = () => {
       <Row justify="center" style={{ height: "80vh", overflowY: "auto" }}>
         <Col style={{ width: "95%" }}>
           <Card
-            className="box-shadow no-select"
-            style={{ width: "100%", padding: 10 }}
-            bodyStyle={{ height: 299 }}
+            className="box-shadow no-select post-bg"
             bordered={false}
+            bodyStyle={{ height: 299 }}
+            style={{ width: "100%", padding: 10 }}
           >
             {postIcon}
-            <Title level={4} style={{ margin: 0 }}>
+            <Title className="postcard-title" level={4}>
               {postDetails.type}: {" " + postDetails.title}
               {dueDate}
             </Title>
@@ -99,7 +102,9 @@ const ClasspostMain = () => {
                 {postDetails.description}
               </Paragraph>
             </Space>
-            <Divider style={{ backgroundColor: "blue", margin: "10px 0px" }} />
+            <Divider
+              style={{ backgroundColor: "#594f8b", margin: "10px 0px" }}
+            />
             <Space wrap size="large">
               {postDetails.file.map((file) => (
                 <Button

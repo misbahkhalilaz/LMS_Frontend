@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Row, Col, Button, Badge, Avatar, Image } from "antd";
+import { Row, Col, Button, Image } from "antd";
 
-import { WechatOutlined } from "@ant-design/icons";
+import LecturesCard from "../../common/sidebar-card";
 
-import LecturesCard from "./student-lectures-card";
-
-const styles = { btnSize: { width: "80%", height: "80%" } };
+const btnSize = { height: "80%" };
 
 const DashboardSidebar = () => {
   const [showTimetable, setShowTimetable] = useState(false);
@@ -14,56 +12,61 @@ const DashboardSidebar = () => {
   const [lectureDetail] = useState([
     {
       title: "BSCS 602 - ICS I",
-      time: "2:15 PM",
+      description: "Time: 2:15 PM",
     },
     {
       title: "BSCS 604 - PHY I",
-      time: "2:15 PM",
+      description: "Time: 2:15 PM",
     },
     {
       title: "BSCS 606 - STATS I",
-      time: "2:15 PM",
+      description: "Time: 2:15 PM",
     },
   ]);
 
   const navigate = useNavigate();
 
   return (
-    <Row style={{ height: "100%" }}>
-      <Col className="center" span={24}>
+    <Row style={{ height: "100%", paddingTop: 10 }}>
+      <Col span={22} push={1}>
         <Button
+          block
           type="primary"
           size="large"
           shape="round"
-          style={styles.btnSize}
+          style={btnSize}
           onClick={() => navigate("/")}
         >
           Dashboard
         </Button>
       </Col>
-      <Col className="center" span={24}>
+      <Col span={22} push={1}>
         <Button
+          block
           type="primary"
           size="large"
           shape="round"
-          style={styles.btnSize}
+          style={btnSize}
           onClick={() => navigate("attendance")}
         >
           Attendance
         </Button>
       </Col>
 
-      <Col className="center" span={24}>
-        <LecturesCard lectureDetail={lectureDetail} />
+      <Col span={22} push={1}>
+        <LecturesCard type="lectures" list={lectureDetail} height={250} />
       </Col>
 
-      <Col className="center" span={24}>
+      <Col span={22} push={1}>
         <Button
+          block
           type="primary"
           size="large"
           shape="round"
-          style={styles.btnSize}
-          onClick={() => setShowTimetable(true)}
+          style={btnSize}
+          onClick={() => {
+            setShowTimetable(true);
+          }}
         >
           Timetable
           <Image
@@ -79,25 +82,18 @@ const DashboardSidebar = () => {
         </Button>
       </Col>
 
-      <Col className="center" span={24}>
+      <Col span={22} push={1}>
         <Button
+          block
           type="primary"
           size="large"
           shape="round"
-          style={styles.btnSize}
+          style={btnSize}
           onClick={() => navigate("results")}
         >
           Result
         </Button>
       </Col>
-      <div className="chat-widget">
-        <Badge dot offset={[-5, 10]}>
-          <Avatar
-            size={50}
-            icon={<WechatOutlined style={{ fontSize: 30 }} />}
-          />
-        </Badge>
-      </div>
     </Row>
   );
 };

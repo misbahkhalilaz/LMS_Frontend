@@ -79,15 +79,19 @@ const ClassMain = () => {
     <Row>
       <Row align="middle" justify="center" style={{ height: "10vh" }}>
         <Col xs={{ span: 3 }} lg={{ span: 1, pull: 2 }}>
-          <Title className="no-select" level={5} style={{ margin: 0 }}>
+          <Title
+            className="no-select subtitle-text"
+            level={5}
+            style={{ margin: 0 }}
+          >
             WEEK
           </Title>
         </Col>
         <Col xs={{ span: 6 }} lg={{ span: 6, pull: 1 }}>
           <Button
+            className="postfilter-btn"
             block
             shape="round"
-            type="dashed"
             size="large"
             onClick={() => setSelectedPosts("All")}
           >
@@ -96,9 +100,9 @@ const ClassMain = () => {
         </Col>
         <Col xs={{ span: 7 }} lg={{ span: 6 }}>
           <Button
+            className="postfilter-btn"
             block
             shape="round"
-            type="dashed"
             size="large"
             onClick={() => setSelectedPosts("Assignment")}
           >
@@ -107,9 +111,9 @@ const ClassMain = () => {
         </Col>
         <Col xs={{ span: 7 }} lg={{ span: 6, push: 1 }}>
           <Button
+            className="postfilter-btn"
             block
             shape="round"
-            type="dashed"
             size="large"
             onClick={() => setSelectedPosts("Material")}
           >
@@ -134,11 +138,7 @@ const ClassMain = () => {
           xs={{ span: 20 }}
           lg={{ span: 22 }}
           id="class-posts"
-          style={{
-            height: "80vh",
-            overflowY: "auto",
-            backgroundColor: "orange",
-          }}
+          style={{ height: "80vh", overflowY: "auto" }}
         >
           <Row justify="center" style={{ marginTop: 20 }}>
             {Object.keys(classDetails).map((key) => {

@@ -15,7 +15,7 @@ const CommentList = ({ comments }) => (
 );
 
 const Editor = ({ onChange, onSubmit, value, type }) => (
-  <div style={{ border: "2px solid", borderRadius: 15, position: "relative" }}>
+  <div className="comment">
     <TextArea
       autoSize={true}
       bordered={false}
@@ -25,11 +25,16 @@ const Editor = ({ onChange, onSubmit, value, type }) => (
       style={{ width: "calc(100% - 18px)" }}
     />
     <Button
+      className="comment-btn"
       size="small"
       disabled={value.length === 0 && true}
       shape="circle"
       onClick={onSubmit}
-      style={{ position: "absolute", bottom: "4px", right: "2px" }}
+      style={{
+        position: "absolute",
+        bottom: "4px",
+        right: "2px",
+      }}
     >
       <RightCircleFilled style={{ fontSize: 24 }} />
     </Button>
@@ -60,7 +65,7 @@ const ClasspostComment = ({ type }) => {
 
   return (
     <>
-      <Title className="no-select" level={5}>{`${
+      <Title className="no-select " level={5}>{`${
         comments.length === 0
           ? type + "comments"
           : comments.length + type.toLowerCase() + "comment"

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Row, Col, Typography } from "antd";
+
 import AttendanceCard from "./student-attendance-card";
 
 const { Title } = Typography;
@@ -40,7 +41,11 @@ const AttendanceMain = () => {
     <Row>
       <Row justify="center">
         <Col>
-          <Title className="no-select" level={2} style={{ marginBottom: 25 }}>
+          <Title
+            className="no-select subtitle-text"
+            level={2}
+            style={{ marginBottom: 25 }}
+          >
             Attendance
           </Title>
         </Col>

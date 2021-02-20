@@ -90,9 +90,13 @@ const DashboardMain = () => {
 
   return (
     <Row>
-      <Row justify="center">
+      <Row justify="center" className="subtitle-bg">
         <Col>
-          <Title className="no-select" level={2} style={{ marginBottom: 25 }}>
+          <Title
+            className="no-select subtitle-text"
+            level={2}
+            style={{ marginBottom: 25 }}
+          >
             2nd semester
           </Title>
         </Col>

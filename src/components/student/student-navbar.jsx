@@ -45,7 +45,11 @@ const DashboardNavbar = () => {
         <PageHeader
           backIcon={history.location.pathname != "/" && <LeftOutlined />}
           title={
-            <Title level={2} className="no-select" style={{ margin: 0 }}>
+            <Title
+              level={2}
+              className="no-select"
+              style={{ margin: 0, color: "#FFFFFF" }}
+            >
               {width < 700
                 ? "DCS - UBIT"
                 : "Department of Computer Science - UBIT"}

@@ -16,13 +16,11 @@ const { Title } = Typography;
 const { Step } = Steps;
 
 const styles = {
-  bodystyle: {
-    height: 220,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-  },
+  height: 220,
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
 };
 
 const RepeatClass = () => {
@@ -208,12 +206,10 @@ const RepeatClass = () => {
         className="drop-shadow"
         hoverable
         bordered={false}
-        bodyStyle={styles.bodystyle}
+        bodyStyle={styles}
         onClick={() => setIsModalVisible(true)}
       >
-        <PlusCircleFilled
-          style={{ fontSize: 64, color: "rgba(0, 0, 0, 0.45)" }}
-        />
+        <PlusCircleFilled style={{ fontSize: 64, color: "#9A9A9A" }} />
         <Title level={5} type="secondary" className="no-select">
           Repeat/Improvement
         </Title>

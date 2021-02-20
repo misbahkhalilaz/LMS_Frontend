@@ -13,12 +13,12 @@ const ClassPostSidebar = () => {
     <Row style={{ height: "100%" }}>
       <Col className="center" span={24}>
         <Card
+          className="box-shadow no-select post-bg"
           title="Work Submission"
           extra={<Text type="success">Assigned</Text>}
           bordered={false}
-          hoverable
           bodyStyle={{ height: 120, margin: "20px 0" }}
-          style={{ width: "90%", backgroundColor: "red" }}
+          style={{ width: "90%" }}
         >
           <Upload>
             <Button block icon={<UploadOutlined />}>
@@ -40,10 +40,10 @@ const ClassPostSidebar = () => {
       </Col>
       <Col className="center" span={24}>
         <Card
+          className="box-shadow no-select post-bg"
           bordered={false}
-          hoverable
           bodyStyle={{ height: 300, margin: "20px 0" }}
-          style={{ width: "90%", backgroundColor: "red" }}
+          style={{ width: "90%" }}
         >
           <Comment type=" Private " />
         </Card>

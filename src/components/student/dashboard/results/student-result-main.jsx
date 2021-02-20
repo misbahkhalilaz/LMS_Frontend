@@ -41,7 +41,11 @@ const ResultMain = () => {
     <Row>
       <Row justify="center">
         <Col>
-          <Title className="no-select" level={2} style={{ marginBottom: 25 }}>
+          <Title
+            className="no-select subtitle-text"
+            level={2}
+            style={{ marginBottom: 25 }}
+          >
             Semester Results
           </Title>
         </Col>

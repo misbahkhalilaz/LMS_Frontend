@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Row, Col, Input, Button, Form, Typography } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import img from "../assets/loginpage.png";
+import img from "../../assets/loginpage.png";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 

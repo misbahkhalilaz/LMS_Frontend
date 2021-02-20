@@ -47,8 +47,9 @@
 }
 
 .ant-card-head {
-  background-color: purple;
   border-radius: 25px 25px 0 0;
+  background-color: #b1acc9 !important;
+  color: #ffffff !important;
 }
 
 .ant-card-body {
@@ -60,6 +61,10 @@
 
 .ant-card-actions {
   border-radius: 25px;
+}
+
+.ant-tabs {
+  color: #c4c4c4;
 }
 
 .ant-tabs-content {
@@ -105,9 +110,13 @@
   width: 10px;
 }
 
+::-webkit-scrollbar-track {
+  background-color: #d2d2d2;
+}
+
 ::-webkit-scrollbar-thumb {
   border-radius: 13px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-  background-color: #a8a8a8;
+  background-color: #999999;
 }
