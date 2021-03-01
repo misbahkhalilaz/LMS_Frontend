@@ -20,7 +20,8 @@ const PostCard = ({ post }) => {
     <Card
       className="box-shadow no-select postcard-bg"
       hoverable
-      bodyStyle={{ paddingTop: 20, height: 100 }}
+      bodyStyle={{ paddingTop: 10, height: 70 }}
+      style={{ padding: "15px 0" }}
     >
       {postIcon}
       <Title className="postcard-title" level={4}>

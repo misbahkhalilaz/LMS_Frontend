@@ -11,10 +11,9 @@ const AttendanceCard = ({ attendance }) => {
 
   return (
     <Card
-      className="drop-shadow no-select"
+      className="box-shadow no-select"
       title={title}
       bordered={false}
-      //hoverable
       bodyStyle={{ padding: 10 }}
     >
       <Title level={5}>

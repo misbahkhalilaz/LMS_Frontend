@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Row, Col, Button, Image } from "antd";
 
-import LecturesCard from "../../common/sidebar-card";
-
-const btnSize = { height: "80%" };
+import LecturesCard from "../sidebar-card";
 
 const DashboardSidebar = () => {
   const [showTimetable, setShowTimetable] = useState(false);
@@ -27,43 +25,31 @@ const DashboardSidebar = () => {
   const navigate = useNavigate();
 
   return (
-    <Row style={{ height: "100%", paddingTop: 10 }}>
-      <Col span={22} push={1}>
+    <Row align="top" style={{ height: "100%", paddingTop: 10 }}>
+      <Col span={22} push={1} style={{ marginBottom: 15 }}>
         <Button
+          className="btn"
           block
           type="primary"
           size="large"
           shape="round"
-          style={btnSize}
-          onClick={() => navigate("/")}
-        >
-          Dashboard
-        </Button>
-      </Col>
-      <Col span={22} push={1}>
-        <Button
-          block
-          type="primary"
-          size="large"
-          shape="round"
-          style={btnSize}
           onClick={() => navigate("attendance")}
         >
           Attendance
         </Button>
       </Col>
 
-      <Col span={22} push={1}>
+      <Col span={22} push={1} style={{ marginBottom: 15 }}>
         <LecturesCard type="lectures" list={lectureDetail} height={250} />
       </Col>
 
-      <Col span={22} push={1}>
+      <Col span={22} push={1} style={{ marginBottom: 15 }}>
         <Button
+          className="btn"
           block
           type="primary"
           size="large"
           shape="round"
-          style={btnSize}
           onClick={() => {
             setShowTimetable(true);
           }}
@@ -82,13 +68,13 @@ const DashboardSidebar = () => {
         </Button>
       </Col>
 
-      <Col span={22} push={1}>
+      <Col span={22} push={1} style={{ marginBottom: 15 }}>
         <Button
+          className="btn"
           block
           type="primary"
           size="large"
           shape="round"
-          style={btnSize}
           onClick={() => navigate("results")}
         >
           Result

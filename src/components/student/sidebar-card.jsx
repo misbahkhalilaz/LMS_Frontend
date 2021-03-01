@@ -11,12 +11,12 @@ const SidebarCard = ({ type, list, height }) => {
 
   return (
     <Card
-      className="drop-shadow no-select"
+      className="box-shadow no-select"
       title={"Today's " + type}
       bordered={false}
       hoverable
       bodyStyle={{ height: height }}
-      style={{ width: "100%", textAlign: "center" }}
+      style={{ width: "100%", textAlign: "center", paddingBottom: 20 }}
     >
       <List
         itemLayout="horizontal"

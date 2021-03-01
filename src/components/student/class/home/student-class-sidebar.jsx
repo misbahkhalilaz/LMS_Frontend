@@ -3,7 +3,7 @@ import { Row, Col, Badge, Avatar } from "antd";
 
 import { WechatOutlined } from "@ant-design/icons";
 
-import UpcomingAssignsCard from "../../../common/sidebar-card";
+import UpcomingAssignsCard from "../../sidebar-card";
 
 const ClassSidebar = () => {
   const [upcomingAssignment] = useState([
@@ -22,8 +22,8 @@ const ClassSidebar = () => {
   ]);
 
   return (
-    <Row style={{ height: "100%", paddingTop: 10 }}>
-      <Col span={22} push={1}>
+    <Row align="middle" style={{ height: "100%", paddingTop: 20 }}>
+      <Col span={22} push={1} style={{ marginBottom: "20px" }}>
         <UpcomingAssignsCard
           type="assignments"
           list={upcomingAssignment}
@@ -35,6 +35,7 @@ const ClassSidebar = () => {
           <Avatar
             size={50}
             icon={<WechatOutlined style={{ fontSize: 30 }} />}
+            style={{ backgroundColor: "#8F86BD" }}
           />
         </Badge>
       </div>

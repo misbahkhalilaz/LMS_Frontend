@@ -39,7 +39,7 @@ const AttendanceMain = () => {
 
   return (
     <Row>
-      <Row justify="center">
+      <Row justify="center" className="subtitle-bg">
         <Col>
           <Title
             className="no-select subtitle-text"
@@ -50,14 +50,15 @@ const AttendanceMain = () => {
           </Title>
         </Col>
       </Row>
-      <Row gutter={[0, 25]} style={{ height: "80vh", overflowY: "auto" }}>
-        {attendance.map((attendanceDetail) => (
+      <Row style={{ height: "80vh", overflowY: "auto", paddingTop: 10 }}>
+        {attendance.map((attendanceDetail, index) => (
           <Col
             className="center"
+            key={index}
             xs={{ span: 24 }}
             md={{ span: 12 }}
             lg={{ span: 8 }}
-            key={attendanceDetail.title}
+            style={{ marginBottom: 20 }}
           >
             <AttendanceCard attendance={attendanceDetail} />
           </Col>

@@ -16,7 +16,7 @@ const ClassCard = (prop) => {
 
   return (
     <Card
-      className="drop-shadow no-select"
+      className="box-shadow no-select"
       title={className}
       bordered={false}
       bodyStyle={{ height: "130px" }}

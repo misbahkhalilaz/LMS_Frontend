@@ -6,7 +6,7 @@ import Sidebar from "../../components/student/class/post/student-classpost-sideb
 const ClassPost = () => {
   return (
     <Row>
-      <Col xs={{ span: 24 }} lg={{ span: 19 }}>
+      <Col className="mainarea-bg" xs={{ span: 24 }} lg={{ span: 19 }}>
         <Main />
       </Col>
       <Col xs={{ span: 16, offset: 4 }} lg={{ span: 5, offset: 0 }}>

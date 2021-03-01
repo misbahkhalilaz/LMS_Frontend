@@ -3,22 +3,20 @@ import { Row, Col, Upload, Button, Card, Typography } from "antd";
 
 import { UploadOutlined } from "@ant-design/icons";
 
-import Comment from "./student-classpost-comment";
-
 const { Text } = Typography;
 const ClassPostSidebar = () => {
   const [bottom, setBottom] = useState(10);
 
   return (
-    <Row style={{ height: "100%" }}>
-      <Col className="center" span={24}>
+    <Row align="top" style={{ paddingTop: 10 }}>
+      <Col span={22} push={1}>
         <Card
           className="box-shadow no-select post-bg"
           title="Work Submission"
           extra={<Text type="success">Assigned</Text>}
           bordered={false}
-          bodyStyle={{ height: 120, margin: "20px 0" }}
-          style={{ width: "90%" }}
+          bodyStyle={{ height: 140, padding: "20px 20px 0px" }}
+          style={{ width: "100%", paddingBottom: 20 }}
         >
           <Upload>
             <Button block icon={<UploadOutlined />}>
@@ -36,16 +34,6 @@ const ClassPostSidebar = () => {
           >
             Submit
           </Button>
-        </Card>
-      </Col>
-      <Col className="center" span={24}>
-        <Card
-          className="box-shadow no-select post-bg"
-          bordered={false}
-          bodyStyle={{ height: 300, margin: "20px 0" }}
-          style={{ width: "90%" }}
-        >
-          <Comment type=" Private " />
         </Card>
       </Col>
     </Row>

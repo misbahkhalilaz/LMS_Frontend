@@ -39,7 +39,7 @@ const ResultMain = () => {
 
   return (
     <Row>
-      <Row justify="center">
+      <Row justify="center" className="subtitle-bg">
         <Col>
           <Title
             className="no-select subtitle-text"
@@ -50,9 +50,9 @@ const ResultMain = () => {
           </Title>
         </Col>
       </Row>
-      <Row style={{ height: "80vh", overflowY: "auto" }}>
+      <Row style={{ height: "80vh", overflowY: "auto", paddingTop: 10 }}>
         <Col span={24}>
-          <Tabs tabPosition="left" style={{ width: "99%" }}>
+          <Tabs tabPosition="left">
             <TabPane tab="Semester 1" key="1">
               {results.map((result) => (
                 <ResultCard key={result.title} result={result} />

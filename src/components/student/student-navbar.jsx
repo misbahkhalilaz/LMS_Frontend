@@ -13,7 +13,12 @@ import {
   PageHeader,
 } from "antd";
 
-import { LeftOutlined, BellFilled, PoweroffOutlined } from "@ant-design/icons";
+import {
+  LeftOutlined,
+  HomeFilled,
+  BellFilled,
+  PoweroffOutlined,
+} from "@ant-design/icons";
 
 const { Title } = Typography;
 
@@ -56,6 +61,14 @@ const DashboardNavbar = () => {
             </Title>
           }
           extra={[
+            <Tooltip key={0} placement="bottom" title="Homepage">
+              <Button
+                shape="circle"
+                icon={<HomeFilled />}
+                style={{ color: "rgba(0, 0, 0, 0.65)" }}
+                onClick={() => navigate("/")}
+              />
+            </Tooltip>,
             <Tooltip key={1} placement="bottom" title="Notifications">
               <Button
                 shape="circle"

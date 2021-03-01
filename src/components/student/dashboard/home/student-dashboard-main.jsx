@@ -101,7 +101,7 @@ const DashboardMain = () => {
           </Title>
         </Col>
       </Row>
-      <Row gutter={[0, 42]} style={{ height: "80vh", overflowY: "auto" }}>
+      <Row style={{ height: "80vh", overflowY: "auto", paddingTop: 15 }}>
         {classCardDetails.map((classDetail, index) => (
           <Col
             className="center"
@@ -109,6 +109,7 @@ const DashboardMain = () => {
             xs={{ span: 24 }}
             md={{ span: 12 }}
             lg={{ span: 8 }}
+            style={{ marginBottom: 20 }}
           >
             <ClassCard classDetail={classDetail} />
           </Col>
@@ -118,6 +119,7 @@ const DashboardMain = () => {
           xs={{ span: 24 }}
           md={{ span: 12 }}
           lg={{ span: 8 }}
+          style={{ marginBottom: 20 }}
         >
           <RepeatClass />
         </Col>

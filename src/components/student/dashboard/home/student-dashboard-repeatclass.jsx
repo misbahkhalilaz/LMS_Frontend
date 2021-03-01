@@ -203,7 +203,7 @@ const RepeatClass = () => {
   return (
     <>
       <Card
-        className="drop-shadow"
+        className="box-shadow"
         hoverable
         bordered={false}
         bodyStyle={styles}
