@@ -11,14 +11,6 @@ const MarkAttendanceMain = () => {
 
   const { width } = useViewport();
 
-  useEffect(
-    () =>
-      SetData(
-        attendanceData.map((obj, key) => ({ ...obj, isPresent: null, key }))
-      ),
-    []
-  );
-
   const [attendanceData] = useState([
     {
       stdID: 1,
@@ -66,6 +58,14 @@ const MarkAttendanceMain = () => {
       stdName: "FFEE",
     },
   ]);
+
+  useEffect(
+    () =>
+      SetData(
+        attendanceData.map((obj, key) => ({ ...obj, isPresent: null, key }))
+      ),
+    []
+  );
 
   const columns = [
     {

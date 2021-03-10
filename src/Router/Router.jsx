@@ -25,6 +25,11 @@ import TeacherClass from "../pages/teacher/class";
 import TeacherClassPost from "../pages/teacher/class-post";
 import TeacherClassAssignGrade from "../pages/teacher/class-post-assigngrade";
 
+import AdminDashboard from "../pages/admin/dashboard";
+import AdminCourseList from "../pages/admin/courses";
+import AdminTeacherList from "../pages/admin/teachers";
+import AdminStudentList from "../pages/admin/students";
+
 const Router = () => {
   return (
     <Row style={{ height: "100%" }}>
@@ -36,14 +41,16 @@ const Router = () => {
       <Routes>
         <Route path="login" element={<Login />} />
         {/* *****************Student Routes********************* */}
-        <PrivateRoute path="student" element={<StudentDashboard />}>
-          <PrivateRoute path="/" element={<StudentHome />} />
-          <PrivateRoute path="attendance" element={<StudentAttendance />} />
-          <PrivateRoute path="results" element={<StudentResult />} />
-        </PrivateRoute>
-        <PrivateRoute path="student/class">
-          <PrivateRoute path="/" element={<StudentClass />} />
-          <PrivateRoute path="post" element={<StudentClassPost />} />
+        <PrivateRoute path="student">
+          <PrivateRoute path="dashboard" element={<StudentDashboard />}>
+            <PrivateRoute path="/" element={<StudentHome />} />
+            <PrivateRoute path="attendance" element={<StudentAttendance />} />
+            <PrivateRoute path="results" element={<StudentResult />} />
+          </PrivateRoute>
+          <PrivateRoute path="class">
+            <PrivateRoute path="/" element={<StudentClass />} />
+            <PrivateRoute path="post" element={<StudentClassPost />} />
+          </PrivateRoute>
         </PrivateRoute>
         {/* *****************Student Routes********************* */}
         {/* *****************Teacher Routes********************* */}
@@ -72,6 +79,16 @@ const Router = () => {
           </PrivateRoute>
         </PrivateRoute>
         {/* *****************Teacher Routes********************* */}
+
+        {/* *****************Admin Routes********************* */}
+        <PrivateRoute path="admin">
+          <PrivateRoute path="/" element={<AdminDashboard />} />
+          <PrivateRoute path="course-list" element={<AdminCourseList />} />
+          <PrivateRoute path="teacher-list" element={<AdminTeacherList />} />
+          <PrivateRoute path="student-list" element={<AdminStudentList />} />
+        </PrivateRoute>
+
+        {/* *****************Admin Routes*********************  */}
       </Routes>
     </Row>
   );

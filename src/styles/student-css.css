@@ -24,6 +24,14 @@
   border-color: #645d84 !important;
 }
 
+.ant-table {
+  background: #f2f2f2 !important;
+}
+
+.ant-modal-content {
+  background-color: #f2f2f2 !important;
+}
+
 .classcard-icon {
   color: #7a7a7a !important;
   font-size: 20px;
