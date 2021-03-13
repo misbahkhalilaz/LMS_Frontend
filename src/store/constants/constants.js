@@ -1,1 +1,2 @@
-//action constants here
+export const CHANGE_LOADING = "changeISLoading";
+export const NAME = "nameReceived";

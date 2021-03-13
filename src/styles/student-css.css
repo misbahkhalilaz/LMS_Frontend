@@ -10,3 +10,110 @@
 .ant-form-item-label {
   padding: 0 !important;
 }
+
+.ant-btn-primary {
+  background: #8f86bd !important;
+  border-color: #8f86bd !important;
+}
+.ant-btn-primary:hover {
+  background-color: #645d84 !important;
+  border-color: #645d84 !important;
+}
+.ant-btn-primary:focus {
+  background-color: #645d84 !important;
+  border-color: #645d84 !important;
+}
+
+.ant-table {
+  background: #f2f2f2 !important;
+}
+
+.ant-modal-content {
+  background-color: #f2f2f2 !important;
+}
+
+.classcard-icon {
+  color: #7a7a7a !important;
+  font-size: 20px;
+}
+
+.classcard-icon:hover {
+  color: #1890ff !important;
+}
+
+.repeat-content {
+  margin-top: 10px;
+  border: 1px dashed #e9e9e9;
+  border-radius: 2px;
+  background-color: #fafafa;
+  height: 200px;
+  text-align: center;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  overflow-y: auto;
+}
+
+.ant-checkbox-group-item {
+  margin: 0 !important;
+}
+
+.subtitle-bg {
+  background-color: #f2f2f2;
+}
+.subtitle-text {
+  color: #8b8b8b !important;
+}
+
+.mainarea-bg {
+  background-color: #ffffff;
+}
+
+.postfilter-btn {
+  background-color: #e0e0e0 !important;
+  color: #9f9f9f !important;
+}
+.postfilter-btn:hover {
+  border-color: #000000 !important;
+}
+.postfilter-btn:focus {
+  color: #000000 !important;
+  border-color: #000000 !important;
+}
+
+.postcard-bg {
+  background-color: #f2f2f2 !important;
+  width: 100% !important;
+  margin-bottom: 25px !important;
+}
+
+.postcard-icon {
+  font-size: 40px;
+  float: left;
+  padding: 5px;
+}
+
+.postcard-title,
+.postcard-icon {
+  color: #594f8b !important;
+  margin: 0 !important;
+}
+
+.postcard-duedate {
+  float: right !important;
+  color: #000000;
+}
+
+.post-bg {
+  background-color: #f2f2f2 !important;
+}
+
+.comment {
+  border: 2px solid #8f86bd;
+  border-radius: 15px;
+  position: relative;
+}
+
+.comment-btn:enabled {
+  color: #0091ff;
+}

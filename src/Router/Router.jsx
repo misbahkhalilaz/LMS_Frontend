@@ -1,25 +1,96 @@
 import { Routes, Route } from "react-router-dom";
+import { Row, Col } from "antd";
 import React from "react";
+
 import Login from "../pages/Login";
 import PrivateRoute from "./PrivateRoute";
-import DashboardMain from "../components/student/student-dashboard-main";
-import AttendanceMain from "../components/student/student-attendance-main";
-import ResultMain from "../components/student/student-result-main";
-import ClassMain from "../components/student/student-class-main";
-import StudentLayout from "../pages/Layouts/student";
 
-export default function Router() {
+import StudentNavbar from "../components/student/student-navbar";
+
+import StudentDashboard from "../pages/student/dashboard";
+import StudentHome from "../components/student/dashboard/home/student-dashboard-main";
+import StudentAttendance from "../components/student/dashboard/attendance/student-attendance-main";
+import StudentResult from "../components/student/dashboard/results/student-result-main";
+
+import StudentClass from "../pages/student/class";
+import StudentClassPost from "../pages/student/class-post";
+
+import TeacherDashboard from "../pages/teacher/dashboard";
+import TeacherRepeatReq from "../pages/teacher/repeat-request";
+import TeacherMarkAttend from "../pages/teacher/mark-attendance";
+import TeacherShowAttend from "../pages/teacher/show-attendance";
+import TeacherShowMember from "../pages/teacher/member";
+import TeacherCourseResult from "../pages/teacher/course-result";
+import TeacherClass from "../pages/teacher/class";
+import TeacherClassPost from "../pages/teacher/class-post";
+import TeacherClassAssignGrade from "../pages/teacher/class-post-assigngrade";
+
+import AdminDashboard from "../pages/admin/dashboard";
+import AdminCourseList from "../pages/admin/courses";
+import AdminTeacherList from "../pages/admin/teachers";
+import AdminStudentList from "../pages/admin/students";
+
+const Router = () => {
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      {/* *****************Students Routes********************* */}
-      <PrivateRoute path="/" element={<StudentLayout />}>
-        <PrivateRoute path="/" element={<DashboardMain />} />
-        <PrivateRoute path="attendance" element={<AttendanceMain />} />
-        <PrivateRoute path="class" element={<ClassMain />} />
-        <PrivateRoute path="results" element={<ResultMain />} />
-      </PrivateRoute>
-      {/* *****************Students Routes********************* */}
-    </Routes>
+    <Row style={{ height: "100%" }}>
+      <Row>
+        <Col span={24} style={{ backgroundColor: "#83000A" }}>
+          <StudentNavbar />
+        </Col>
+      </Row>
+      <Routes>
+        <Route path="login" element={<Login />} />
+        {/* *****************Student Routes********************* */}
+        <PrivateRoute path="student">
+          <PrivateRoute path="dashboard" element={<StudentDashboard />}>
+            <PrivateRoute path="/" element={<StudentHome />} />
+            <PrivateRoute path="attendance" element={<StudentAttendance />} />
+            <PrivateRoute path="results" element={<StudentResult />} />
+          </PrivateRoute>
+          <PrivateRoute path="class">
+            <PrivateRoute path="/" element={<StudentClass />} />
+            <PrivateRoute path="post" element={<StudentClassPost />} />
+          </PrivateRoute>
+        </PrivateRoute>
+        {/* *****************Student Routes********************* */}
+        {/* *****************Teacher Routes********************* */}
+        <PrivateRoute path="teacher">
+          <PrivateRoute path="/" element={<TeacherDashboard />} />
+          <PrivateRoute path="repeat-request" element={<TeacherRepeatReq />} />
+          <PrivateRoute path="class">
+            <PrivateRoute path="/" element={<TeacherClass />} />
+            <PrivateRoute
+              path="mark-attendance"
+              element={<TeacherMarkAttend />}
+            />
+            <PrivateRoute
+              path="show-attendance"
+              element={<TeacherShowAttend />}
+            />
+            <PrivateRoute path="members" element={<TeacherShowMember />} />
+            <PrivateRoute path="result" element={<TeacherCourseResult />} />
+            <PrivateRoute path="post">
+              <PrivateRoute path="/" element={<TeacherClassPost />} />
+              <PrivateRoute
+                path="assign-grade"
+                element={<TeacherClassAssignGrade />}
+              />
+            </PrivateRoute>
+          </PrivateRoute>
+        </PrivateRoute>
+        {/* *****************Teacher Routes********************* */}
+
+        {/* *****************Admin Routes********************* */}
+        <PrivateRoute path="admin">
+          <PrivateRoute path="/" element={<AdminDashboard />} />
+          <PrivateRoute path="course-list" element={<AdminCourseList />} />
+          <PrivateRoute path="teacher-list" element={<AdminTeacherList />} />
+          <PrivateRoute path="student-list" element={<AdminStudentList />} />
+        </PrivateRoute>
+
+        {/* *****************Admin Routes*********************  */}
+      </Routes>
+    </Row>
   );
-}
+};
+export default Router;
