@@ -21,12 +21,13 @@ const App = () => {
       .catch((err) => console.log(err));
     nameAction("Bilal");
   }, []);
-  return (
-    <h1>
-      {isLoading ? "...." : "*"}
-      {name}
-    </h1>
-  );
+  return <Router />;
 };
 
 export default App;
+
+/*    <h1>
+      {isLoading ? "...." : "*"}
+      {name}
+    </h1>
+ */

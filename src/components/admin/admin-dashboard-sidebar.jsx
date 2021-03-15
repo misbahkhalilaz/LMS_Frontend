@@ -33,6 +33,7 @@ const DashboardSidebar = () => {
           icon={<PlusCircleFilled />}
           size="large"
           shape="round"
+          onClick={() => navigate("timetable")}
           style={{ fontSize: 24 }}
         >
           Timetable

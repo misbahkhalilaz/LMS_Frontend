@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-
+import useViewport from "../useViewport";
 import {
   Row,
   Col,
   Typography,
   Button,
-  Radio,
+  Select,
   Input,
   Table,
   Switch,
@@ -25,6 +25,7 @@ const CourseListMain = () => {
   const [data, SetData] = useState([]);
   const [filteredData, SetFilteredData] = useState([]);
   const [prevTxt, SetPrevTxt] = useState("");
+  const { width } = useViewport();
   const [courseData] = useState([
     //FETCH FROM DB
     [
@@ -234,10 +235,22 @@ const CourseListMain = () => {
     <Row>
       <Row align="middle" justify="center" style={{ height: "10vh" }}>
         <Col lg={4}>
-          <Radio.Group
-            options={["BSCS", "BSSE", "MCS"]}
+          <Title
+            className="no-select"
+            level={width < 700 ? 5 : 4}
+            style={{ display: "inline" }}
+          >
+            Program{" "}
+          </Title>
+          <Select
+            showSearch
+            options={[{ value: "BSCS" }, { value: "BSSE" }, { value: "MCS" }]}
+            onChange={(value) => setSelectedProgram(value)}
             value={selectedProgram}
-            onChange={(e) => setSelectedProgram(e.target.value)}
+            filterOption={(input, option) =>
+              option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+            style={{ width: 90 }}
           />
         </Col>
         <Col lg={19}>

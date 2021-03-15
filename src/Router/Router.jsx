@@ -1,17 +1,15 @@
 import { Routes, Route } from "react-router-dom";
 import { Row, Col } from "antd";
-import React from "react";
 
-import Login from "../pages/Login";
+import Navbar from "../components/navbar";
 import PrivateRoute from "./PrivateRoute";
 
-import StudentNavbar from "../components/student/student-navbar";
+import Login from "../pages/Login";
 
 import StudentDashboard from "../pages/student/dashboard";
 import StudentHome from "../components/student/dashboard/home/student-dashboard-main";
 import StudentAttendance from "../components/student/dashboard/attendance/student-attendance-main";
 import StudentResult from "../components/student/dashboard/results/student-result-main";
-
 import StudentClass from "../pages/student/class";
 import StudentClassPost from "../pages/student/class-post";
 
@@ -29,31 +27,33 @@ import AdminDashboard from "../pages/admin/dashboard";
 import AdminCourseList from "../pages/admin/courses";
 import AdminTeacherList from "../pages/admin/teachers";
 import AdminStudentList from "../pages/admin/students";
+import AdminTimetable from "../pages/admin/timetable";
 
 const Router = () => {
   return (
     <Row style={{ height: "100%" }}>
       <Row>
         <Col span={24} style={{ backgroundColor: "#83000A" }}>
-          <StudentNavbar />
+          <Navbar />
         </Col>
       </Row>
       <Routes>
-        <Route path="login" element={<Login />} />
+        <Route path="/" element={<Login />} />
         {/* *****************Student Routes********************* */}
-        <PrivateRoute path="student">
-          <PrivateRoute path="dashboard" element={<StudentDashboard />}>
+        <PrivateRoute path="/">
+          <PrivateRoute path="student" element={<StudentDashboard />}>
             <PrivateRoute path="/" element={<StudentHome />} />
             <PrivateRoute path="attendance" element={<StudentAttendance />} />
             <PrivateRoute path="results" element={<StudentResult />} />
           </PrivateRoute>
-          <PrivateRoute path="class">
+          <PrivateRoute path="student/class">
             <PrivateRoute path="/" element={<StudentClass />} />
             <PrivateRoute path="post" element={<StudentClassPost />} />
           </PrivateRoute>
         </PrivateRoute>
         {/* *****************Student Routes********************* */}
         {/* *****************Teacher Routes********************* */}
+
         <PrivateRoute path="teacher">
           <PrivateRoute path="/" element={<TeacherDashboard />} />
           <PrivateRoute path="repeat-request" element={<TeacherRepeatReq />} />
@@ -79,10 +79,10 @@ const Router = () => {
           </PrivateRoute>
         </PrivateRoute>
         {/* *****************Teacher Routes********************* */}
-
         {/* *****************Admin Routes********************* */}
         <PrivateRoute path="admin">
           <PrivateRoute path="/" element={<AdminDashboard />} />
+          <PrivateRoute path="timetable" element={<AdminTimetable />} />
           <PrivateRoute path="course-list" element={<AdminCourseList />} />
           <PrivateRoute path="teacher-list" element={<AdminTeacherList />} />
           <PrivateRoute path="student-list" element={<AdminStudentList />} />
@@ -93,4 +93,5 @@ const Router = () => {
     </Row>
   );
 };
+
 export default Router;
