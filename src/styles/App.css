@@ -121,6 +121,17 @@
   right: 10px;
   bottom: 25px;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.chat-widget:hover {
+  transform: scale(1.1);
+}
+
+.chat-item {
+  max-width: 564px;
+  border-radius: 15px;
+  padding: 15px;
+  color: #ffffff;
 }
 
 ::-webkit-scrollbar {

@@ -1,14 +1,16 @@
-import { useState, useLayoutEffect } from "react";
-import useViewport from "./useViewport";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import Cookies from "universal-cookie";
+import useViewport from "./useViewport";
 import {
   Row,
   Col,
   Tooltip,
   Button,
   Drawer,
+  List,
+  Modal,
   Popconfirm,
   Typography,
   PageHeader,
@@ -21,25 +23,43 @@ import {
   PoweroffOutlined,
 } from "@ant-design/icons";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const Navbar = () => {
   const navigate = useNavigate();
   const history = createBrowserHistory();
-  const notValidPaths = ["/", "/student", "/teacher", "/admin"];
-
-  const [visible, setVisible] = useState(false);
+  const cookie = new Cookies();
   const { width } = useViewport();
 
-  const cookie = new Cookies();
-
-  const showDrawer = () => {
-    setVisible(true);
-  };
-
-  const onClose = () => {
-    setVisible(false);
-  };
+  const notValidPaths = ["/", "/student", "/teacher", "/admin"];
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [notificationData, setNotificationData] = useState([
+    {
+      title: "Notice",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum, impedit sequi laudantium vel eius sunt, maxime suscipit, aliquid minus aperiam quo doloremque magnam consectetur? Explicabo nostrum reiciendis similique minima quas?",
+    },
+    {
+      title: "Circular",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum, impedit sequi laudantium vel eius sunt, maxime suscipit, aliquid minus aperiam quo doloremque magnam consectetur? Explicabo nostrum reiciendis similique minima quas?",
+    },
+    {
+      title: "Circular",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum, impedit sequi laudantium vel eius sunt, maxime suscipit, aliquid minus aperiam quo doloremque magnam consectetur? Explicabo nostrum reiciendis similique minima quas?",
+    },
+    {
+      title: "Timetable",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum, impedit sequi laudantium vel eius sunt, maxime suscipit, aliquid minus aperiam quo doloremque magnam consectetur? Explicabo nostrum reiciendis similique minima quas?",
+    },
+    {
+      title: "Notice",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum, impedit sequi laudantium vel eius sunt, maxime suscipit, aliquid minus aperiam quo doloremque magnam consectetur? Explicabo nostrum reiciendis similique minima quas?",
+    },
+  ]);
 
   return (
     <Row>
@@ -76,7 +96,7 @@ const Navbar = () => {
                   shape="circle"
                   icon={<BellFilled />}
                   style={{ color: "rgba(0, 0, 0, 0.65)" }}
-                  onClick={showDrawer}
+                  onClick={() => setDrawerVisible(true)}
                 />
               </Tooltip>,
               <Tooltip key={2} placement="bottom" title="Logout">
@@ -103,12 +123,47 @@ const Navbar = () => {
         />
       </Col>
       <Drawer
-        title="General notifications"
+        className="no-select"
+        title="Notifications"
         placement="right"
-        closable={false}
-        onClose={onClose}
-        visible={visible}
-      />
+        width={330}
+        destroyOnClose={true}
+        visible={drawerVisible}
+        onClose={() => setDrawerVisible(false)}
+      >
+        <List
+          dataSource={notificationData}
+          itemLayout="vertical"
+          size="small"
+          renderItem={(news) => (
+            <List.Item
+              actions={[
+                <Button
+                  type="primary"
+                  size="small"
+                  onClick={() => {
+                    Modal.info({
+                      title: news.title,
+                      content: <Text>{news.description}</Text>,
+                      onOk() {},
+                    });
+                  }}
+                >
+                  View
+                </Button>,
+              ]}
+              style={{
+                backgroundColor: "#f2f2f2",
+                marginBottom: 10,
+                borderRadius: 15,
+              }}
+            >
+              <Text strong>{`Admin has posted an annoucnement:
+              ${news.title}`}</Text>
+            </List.Item>
+          )}
+        />
+      </Drawer>
     </Row>
   );
 };

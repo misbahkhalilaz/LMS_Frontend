@@ -11,6 +11,7 @@ import StudentHome from "../components/student/dashboard/home/student-dashboard-
 import StudentAttendance from "../components/student/dashboard/attendance/student-attendance-main";
 import StudentResult from "../components/student/dashboard/results/student-result-main";
 import StudentClass from "../pages/student/class";
+import StudentChat from "../pages/student/chat";
 import StudentClassPost from "../pages/student/class-post";
 
 import TeacherDashboard from "../pages/teacher/dashboard";
@@ -20,6 +21,7 @@ import TeacherShowAttend from "../pages/teacher/show-attendance";
 import TeacherShowMember from "../pages/teacher/member";
 import TeacherCourseResult from "../pages/teacher/course-result";
 import TeacherClass from "../pages/teacher/class";
+import TeacherChat from "../pages/teacher/chat";
 import TeacherClassPost from "../pages/teacher/class-post";
 import TeacherClassAssignGrade from "../pages/teacher/class-post-assigngrade";
 
@@ -48,6 +50,7 @@ const Router = () => {
           </PrivateRoute>
           <PrivateRoute path="student/class">
             <PrivateRoute path="/" element={<StudentClass />} />
+            <PrivateRoute path="chat" element={<StudentChat />} />
             <PrivateRoute path="post" element={<StudentClassPost />} />
           </PrivateRoute>
         </PrivateRoute>
@@ -69,6 +72,7 @@ const Router = () => {
             />
             <PrivateRoute path="members" element={<TeacherShowMember />} />
             <PrivateRoute path="result" element={<TeacherCourseResult />} />
+            <PrivateRoute path="chat" element={<TeacherChat />} />
             <PrivateRoute path="post">
               <PrivateRoute path="/" element={<TeacherClassPost />} />
               <PrivateRoute

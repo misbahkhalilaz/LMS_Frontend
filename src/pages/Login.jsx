@@ -4,6 +4,7 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import img from "../assets/loginpage.png";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
+import { loginAction } from "../store/actions/action";
 
 const { Title } = Typography;
 
@@ -15,11 +16,8 @@ const Login = () => {
     if (cookie.get("login") === "true") navigate("/");
   }, []);
 
-  const login = () => {
-    //*****use this onclick logic on login button****
-    cookie.set("login", true, { path: "/", maxAge: 259200 }); //set cookie to true after completing login component
-    // setLogin(cookie.get("login"));
-    navigate(-1);
+  const login = ({ userId, password }) => {
+    loginAction({ userId, password }, navigate);
   };
 
   const onFinish = (values) => {
@@ -29,7 +27,7 @@ const Login = () => {
   return (
     <Row align="middle" style={{ height: "90vh" }}>
       <Col xs={{ span: 24 }} lg={{ span: 18 }}>
-        <img src={img} width="100%" />
+        <img src={img} width="100%" height="100%" />
       </Col>
       <Col xs={{ span: 20, push: 2 }} lg={{ span: 6, push: 0 }}>
         <Row>
@@ -43,7 +41,7 @@ const Login = () => {
               layout="vertical"
               size="large"
               hideRequiredMark="true"
-              onFinish={onFinish}
+              onFinish={login}
             >
               <Form.Item>
                 <Title level={3} className="no-select">
@@ -51,7 +49,7 @@ const Login = () => {
                 </Title>
               </Form.Item>
               <Form.Item
-                name="userid"
+                name="userId"
                 label="UserID"
                 rules={[
                   { required: true, message: "Please enter your UserID !" },
@@ -83,7 +81,6 @@ const Login = () => {
                   htmlType="submit"
                   shape="round"
                   className="login-form-button"
-                  onClick={login}
                 >
                   Log in
                 </Button>

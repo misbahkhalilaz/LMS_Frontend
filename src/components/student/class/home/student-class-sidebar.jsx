@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Row, Col, Badge, Avatar } from "antd";
 
 import { WechatOutlined } from "@ant-design/icons";
@@ -21,6 +22,8 @@ const ClassSidebar = () => {
     },
   ]);
 
+  const navigate = useNavigate();
+
   return (
     <Row align="middle" style={{ height: "100%", paddingTop: 20 }}>
       <Col span={22} push={1} style={{ marginBottom: "20px" }}>
@@ -30,7 +33,7 @@ const ClassSidebar = () => {
           height={250}
         />
       </Col>
-      <div className="chat-widget">
+      <div className="chat-widget" onClick={() => navigate("chat")}>
         <Badge dot offset={[-5, 10]}>
           <Avatar
             size={50}
