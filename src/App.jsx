@@ -1,15 +1,11 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
 import Router from "./Router/Router";
 import "./styles/App.css";
 import { nameAction, clearStoreAction } from "./store/actions/action";
-import API from "./utils/fetch";
-import Cookies from "universal-cookie";
 
 const App = () => {
-  const cookie = new Cookies();
-  const { name, isLoading } = useSelector((state) => state); //----------
   useEffect(() => () => clearStoreAction(), []);
+
   return <Router />;
 };
 

@@ -29,7 +29,7 @@ export const loginAction = (payload, nav) => {
       // setIsloading false
       // logInStatus {msg: 'success', status: true}
       cookie.set("token", res.token, { path: "/", maxAge: 2000 });
-      nav(res.role);
+      nav("/" + res.role);
     })
     .catch((err) => {
       // isLoading false

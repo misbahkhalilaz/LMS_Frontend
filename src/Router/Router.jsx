@@ -40,56 +40,50 @@ const Router = () => {
         </Col>
       </Row>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         {/* *****************Student Routes********************* */}
         <PrivateRoute path="/">
           <PrivateRoute path="student" element={<StudentDashboard />}>
-            <PrivateRoute path="/" element={<StudentHome />} />
-            <PrivateRoute path="attendance" element={<StudentAttendance />} />
-            <PrivateRoute path="results" element={<StudentResult />} />
+            <Route path="/" element={<StudentHome />} />
+            <Route path="attendance" element={<StudentAttendance />} />
+            <Route path="results" element={<StudentResult />} />
           </PrivateRoute>
           <PrivateRoute path="student/class">
-            <PrivateRoute path="/" element={<StudentClass />} />
-            <PrivateRoute path="chat" element={<StudentChat />} />
-            <PrivateRoute path="post" element={<StudentClassPost />} />
+            <Route path="/" element={<StudentClass />} />
+            <Route path="chat" element={<StudentChat />} />
+            <Route path="post" element={<StudentClassPost />} />
           </PrivateRoute>
         </PrivateRoute>
         {/* *****************Student Routes********************* */}
         {/* *****************Teacher Routes********************* */}
 
         <PrivateRoute path="teacher">
-          <PrivateRoute path="/" element={<TeacherDashboard />} />
-          <PrivateRoute path="repeat-request" element={<TeacherRepeatReq />} />
-          <PrivateRoute path="class">
-            <PrivateRoute path="/" element={<TeacherClass />} />
-            <PrivateRoute
-              path="mark-attendance"
-              element={<TeacherMarkAttend />}
-            />
-            <PrivateRoute
-              path="show-attendance"
-              element={<TeacherShowAttend />}
-            />
-            <PrivateRoute path="members" element={<TeacherShowMember />} />
-            <PrivateRoute path="result" element={<TeacherCourseResult />} />
-            <PrivateRoute path="chat" element={<TeacherChat />} />
-            <PrivateRoute path="post">
-              <PrivateRoute path="/" element={<TeacherClassPost />} />
-              <PrivateRoute
+          <Route path="/" element={<TeacherDashboard />} />
+          <Route path="repeat-request" element={<TeacherRepeatReq />} />
+          <Route path="class">
+            <Route path="/" element={<TeacherClass />} />
+            <Route path="mark-attendance" element={<TeacherMarkAttend />} />
+            <Route path="show-attendance" element={<TeacherShowAttend />} />
+            <Route path="members" element={<TeacherShowMember />} />
+            <Route path="result" element={<TeacherCourseResult />} />
+            <Route path="chat" element={<TeacherChat />} />
+            <Route path="post">
+              <Route path="/" element={<TeacherClassPost />} />
+              <Route
                 path="assign-grade"
                 element={<TeacherClassAssignGrade />}
               />
-            </PrivateRoute>
-          </PrivateRoute>
+            </Route>
+          </Route>
         </PrivateRoute>
         {/* *****************Teacher Routes********************* */}
         {/* *****************Admin Routes********************* */}
         <PrivateRoute path="admin">
-          <PrivateRoute path="/" element={<AdminDashboard />} />
-          <PrivateRoute path="timetable" element={<AdminTimetable />} />
-          <PrivateRoute path="course-list" element={<AdminCourseList />} />
-          <PrivateRoute path="teacher-list" element={<AdminTeacherList />} />
-          <PrivateRoute path="student-list" element={<AdminStudentList />} />
+          <Route path="/" element={<AdminDashboard />} />
+          <Route path="timetable" element={<AdminTimetable />} />
+          <Route path="course-list" element={<AdminCourseList />} />
+          <Route path="teacher-list" element={<AdminTeacherList />} />
+          <Route path="student-list" element={<AdminStudentList />} />
         </PrivateRoute>
 
         {/* *****************Admin Routes*********************  */}
