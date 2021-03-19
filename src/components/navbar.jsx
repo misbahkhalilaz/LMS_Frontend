@@ -31,7 +31,8 @@ const Navbar = () => {
   const cookie = new Cookies();
   const { width } = useViewport();
 
-  const notValidPaths = ["/", "/student", "/teacher", "/admin"];
+  const notValidPaths = ["/login", "/student", "/teacher", "/admin"];
+
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [notificationData, setNotificationData] = useState([
     {
@@ -82,13 +83,13 @@ const Navbar = () => {
             </Title>
           }
           extra={
-            history.location.pathname != "/" && [
+            history.location.pathname != "/login" && [
               <Tooltip key={0} placement="bottom" title="Homepage">
                 <Button
                   shape="circle"
                   icon={<HomeFilled />}
                   style={{ color: "rgba(0, 0, 0, 0.65)" }}
-                  onClick={() => navigate("student")}
+                  onClick={() => navigate("/")}
                 />
               </Tooltip>,
               <Tooltip key={1} placement="bottom" title="Notifications">
@@ -107,7 +108,7 @@ const Navbar = () => {
                   cancelText="No"
                   onConfirm={() => {
                     cookie.set("login", false, { path: "/" });
-                    navigate("/");
+                    navigate("/login");
                   }}
                 >
                   <Button

@@ -1,8 +1,11 @@
+import { useEffect, useMemo, useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import { Row, Col } from "antd";
+import { useNavigate } from "react-router";
+import Cookies from "universal-cookie";
+import API from "../utils/fetch";
 
+import { Row, Col } from "antd";
 import Navbar from "../components/navbar";
-import PrivateRoute from "./PrivateRoute";
 
 import Login from "../pages/Login";
 
@@ -32,63 +35,84 @@ import AdminStudentList from "../pages/admin/students";
 import AdminTimetable from "../pages/admin/timetable";
 
 const Router = () => {
-  return (
-    <Row style={{ height: "100%" }}>
-      <Row>
-        <Col span={24} style={{ backgroundColor: "#83000A" }}>
-          <Navbar />
-        </Col>
-      </Row>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        {/* *****************Student Routes********************* */}
-        <PrivateRoute path="/">
-          <PrivateRoute path="student" element={<StudentDashboard />}>
-            <Route path="/" element={<StudentHome />} />
-            <Route path="attendance" element={<StudentAttendance />} />
-            <Route path="results" element={<StudentResult />} />
-          </PrivateRoute>
-          <PrivateRoute path="student/class">
-            <Route path="/" element={<StudentClass />} />
-            <Route path="chat" element={<StudentChat />} />
-            <Route path="post" element={<StudentClassPost />} />
-          </PrivateRoute>
-        </PrivateRoute>
-        {/* *****************Student Routes********************* */}
-        {/* *****************Teacher Routes********************* */}
+  const navigate = useNavigate();
+  const cookie = new Cookies();
+  const [render, setRender] = useState(false);
 
-        <PrivateRoute path="teacher">
-          <Route path="/" element={<TeacherDashboard />} />
-          <Route path="repeat-request" element={<TeacherRepeatReq />} />
-          <Route path="class">
-            <Route path="/" element={<TeacherClass />} />
-            <Route path="mark-attendance" element={<TeacherMarkAttend />} />
-            <Route path="show-attendance" element={<TeacherShowAttend />} />
-            <Route path="members" element={<TeacherShowMember />} />
-            <Route path="result" element={<TeacherCourseResult />} />
-            <Route path="chat" element={<TeacherChat />} />
-            <Route path="post">
-              <Route path="/" element={<TeacherClassPost />} />
-              <Route
-                path="assign-grade"
-                element={<TeacherClassAssignGrade />}
-              />
+  useEffect(async () => {
+    const token = cookie.get("token");
+    if (!token || token.length < 1) {
+      setRender(true);
+      navigate("/login");
+    } else
+      await API("POST", "/auth", {}, token ? token : "")
+        .then((res) => {
+          setRender(true);
+          res.role ? navigate("/" + res.role) : navigate("/login");
+        })
+        .catch(() => {
+          setRender(true);
+          navigate("/login");
+        });
+  }, []);
+
+  return (
+    render && (
+      <Row style={{ height: "100%" }}>
+        <Row>
+          <Col span={24} style={{ backgroundColor: "#83000A" }}>
+            <Navbar />
+          </Col>
+        </Row>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          {/* *****************Student Routes********************* */}
+          <Route path="/">
+            <Route path="student" element={<StudentDashboard />}>
+              <Route path="/" element={<StudentHome />} />
+              <Route path="attendance" element={<StudentAttendance />} />
+              <Route path="results" element={<StudentResult />} />
+            </Route>
+            <Route path="student/class">
+              <Route path="/" element={<StudentClass />} />
+              <Route path="chat" element={<StudentChat />} />
+              <Route path="post" element={<StudentClassPost />} />
+            </Route>
+            {/* *****************Student Routes********************* */}
+            {/* *****************Teacher Routes********************* */}
+            <Route path="teacher">
+              <Route path="/" element={<TeacherDashboard />} />
+              <Route path="repeat-request" element={<TeacherRepeatReq />} />
+              <Route path="class">
+                <Route path="/" element={<TeacherClass />} />
+                <Route path="mark-attendance" element={<TeacherMarkAttend />} />
+                <Route path="show-attendance" element={<TeacherShowAttend />} />
+                <Route path="members" element={<TeacherShowMember />} />
+                <Route path="result" element={<TeacherCourseResult />} />
+                <Route path="chat" element={<TeacherChat />} />
+                <Route path="post">
+                  <Route path="/" element={<TeacherClassPost />} />
+                  <Route
+                    path="assign-grade"
+                    element={<TeacherClassAssignGrade />}
+                  />
+                </Route>
+              </Route>
+            </Route>
+            {/* *****************Teacher Routes********************* */}
+            {/* *****************Admin Routes********************* */}
+            <Route path="admin" element={<AdminDashboard />}>
+              <Route path="/" />
+              <Route path="timetable" element={<AdminTimetable />} />
+              <Route path="admin/course-list" element={<AdminCourseList />} />
+              <Route path="teacher-list" element={<AdminTeacherList />} />
+              <Route path="student-list" element={<AdminStudentList />} />
             </Route>
           </Route>
-        </PrivateRoute>
-        {/* *****************Teacher Routes********************* */}
-        {/* *****************Admin Routes********************* */}
-        <PrivateRoute path="admin">
-          <Route path="/" element={<AdminDashboard />} />
-          <Route path="timetable" element={<AdminTimetable />} />
-          <Route path="course-list" element={<AdminCourseList />} />
-          <Route path="teacher-list" element={<AdminTeacherList />} />
-          <Route path="student-list" element={<AdminStudentList />} />
-        </PrivateRoute>
-
-        {/* *****************Admin Routes*********************  */}
-      </Routes>
-    </Row>
+          {/* *****************Admin Routes*********************  */}
+        </Routes>
+      </Row>
+    )
   );
 };
 

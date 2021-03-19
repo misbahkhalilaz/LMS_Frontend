@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import { Card, Badge, Avatar, List, Empty } from "antd";
 import {
   NotificationOutlined,
@@ -6,6 +7,7 @@ import {
 } from "@ant-design/icons";
 
 const ClassCard = (prop) => {
+  const navigate = useNavigate();
   const { className, upcomingAssignments } = prop.classDetail;
 
   const noAssignments = {
@@ -21,6 +23,7 @@ const ClassCard = (prop) => {
       bordered={false}
       bodyStyle={{ height: "130px" }}
       hoverable
+      onClick={() => navigate("/student/class")}
       actions={[
         <Badge dot>
           <NotificationOutlined className="classcard-icon" />

@@ -1,27 +1,23 @@
 import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loginAction } from "../redux/actions/generalAction";
+import Cookies from "universal-cookie";
+
 import { Row, Col, Input, Button, Form, Typography } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+
 import img from "../assets/loginpage.png";
-import { useNavigate } from "react-router-dom";
-import Cookies from "universal-cookie";
-import { loginAction } from "../store/actions/action";
 
 const { Title } = Typography;
 
 const Login = () => {
-  const cookie = new Cookies();
+  const isLogging = useSelector((state) => state.isLogging);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (cookie.get("login") === "true") navigate("/");
-  }, []);
+  const cookie = new Cookies();
 
   const login = ({ userId, password }) => {
     loginAction({ userId, password }, navigate);
-  };
-
-  const onFinish = (values) => {
-    console.log("Received values of form: ", values);
   };
 
   return (
@@ -35,52 +31,50 @@ const Login = () => {
             className="box-shadow"
             style={{ textAlign: "center", padding: "40px" }}
           >
+            <Title level={3} className="no-select">
+              Welcome
+            </Title>
             <Form
-              name="login_form"
               className="login-form"
               layout="vertical"
               size="large"
               hideRequiredMark="true"
               onFinish={login}
             >
-              <Form.Item>
-                <Title level={3} className="no-select">
-                  Welcome
-                </Title>
-              </Form.Item>
               <Form.Item
                 name="userId"
                 label="UserID"
                 rules={[
-                  { required: true, message: "Please enter your UserID !" },
+                  { required: true, message: "Please enter your userID!" },
                 ]}
               >
                 <Input
-                  prefix={<UserOutlined className="site-form-item-icon" />}
-                  placeholder="UserID"
                   className="form-input-radius"
+                  placeholder="UserID"
+                  prefix={<UserOutlined />}
                 />
               </Form.Item>
               <Form.Item
                 name="password"
                 label="Password"
                 rules={[
-                  { required: true, message: "Please enter your Password !" },
+                  { required: true, message: "Please enter your password!" },
                 ]}
               >
                 <Input.Password
-                  prefix={<LockOutlined className="site-form-item-icon" />}
-                  placeholder="Password"
                   className="form-input-radius"
+                  placeholder="Password"
+                  prefix={<LockOutlined />}
                 />
               </Form.Item>
 
               <Form.Item>
                 <Button
+                  className="login-form-button"
                   type="primary"
                   htmlType="submit"
                   shape="round"
-                  className="login-form-button"
+                  loading={isLogging}
                 >
                   Log in
                 </Button>
