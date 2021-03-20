@@ -4,7 +4,7 @@ import loggedReducer from "./isLogged";
 import adminReducer from "./admin";
 
 const allReducers = combineReducers({
-  isLogging: loggedReducer,
+  loggedReducer,
   adminReducer,
 });
 

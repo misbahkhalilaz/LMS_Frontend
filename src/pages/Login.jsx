@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { loginAction } from "../redux/actions/generalAction";
-import Cookies from "universal-cookie";
+import { loginAction } from "../redux/actions/LoggingActions";
 
-import { Row, Col, Input, Button, Form, Typography } from "antd";
+import { Row, Col, Input, Button, Form, Typography, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 import img from "../assets/loginpage.png";
@@ -12,9 +11,9 @@ import img from "../assets/loginpage.png";
 const { Title } = Typography;
 
 const Login = () => {
-  const isLogging = useSelector((state) => state.isLogging);
+  const isLogging = useSelector((state) => state.loggedReducer.isLogging);
+  const failedLogin = useSelector((state) => state.loggedReducer.failedLogin);
   const navigate = useNavigate();
-  const cookie = new Cookies();
 
   const login = ({ userId, password }) => {
     loginAction({ userId, password }, navigate);
@@ -67,7 +66,6 @@ const Login = () => {
                   prefix={<LockOutlined />}
                 />
               </Form.Item>
-
               <Form.Item>
                 <Button
                   className="login-form-button"
@@ -83,6 +81,7 @@ const Login = () => {
           </Col>
         </Row>
       </Col>
+      {failedLogin && message.error(failedLogin)}
     </Row>
   );
 };

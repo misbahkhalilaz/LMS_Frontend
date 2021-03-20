@@ -89,7 +89,11 @@ const Navbar = () => {
                   shape="circle"
                   icon={<HomeFilled />}
                   style={{ color: "rgba(0, 0, 0, 0.65)" }}
-                  onClick={() => navigate("/")}
+                  onClick={() => {
+                    const homePath = history.location.pathname.split("/")[1];
+                    if (homePath != history.location.pathname)
+                      navigate(homePath, { replace: true });
+                  }}
                 />
               </Tooltip>,
               <Tooltip key={1} placement="bottom" title="Notifications">
@@ -107,7 +111,7 @@ const Navbar = () => {
                   okText="Yes"
                   cancelText="No"
                   onConfirm={() => {
-                    cookie.set("login", false, { path: "/" });
+                    cookie.remove("token");
                     navigate("/login");
                   }}
                 >

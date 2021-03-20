@@ -1,7 +1,6 @@
 const API = (method, end_point, body, token = "") => {
   const requestOptions = {
     method,
-    mode: "no-cors",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token ? token : ""}`,
