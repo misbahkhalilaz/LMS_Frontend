@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import useViewport from "../useViewport";
 import {
   Row,
@@ -15,17 +16,23 @@ import {
   message,
 } from "antd";
 
+import { addCourseAction } from "../../redux/actions/AdminActions";
+
 const { Title } = Typography;
 const { Search } = Input;
 
 const CourseListMain = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedProgram, setSelectedProgram] = useState("BSCS");
+  const [selectedProgramId, setSelectedProgramId] = useState(1);
   const [selectedSemester, setSelectedSemester] = useState();
   const [data, SetData] = useState([]);
   const [filteredData, SetFilteredData] = useState([]);
   const [prevTxt, SetPrevTxt] = useState("");
   const { width } = useViewport();
+
+  const isLoading = useSelector((state) => state.generalReducer.isLoading);
+  const dispatch = useDispatch();
+
   const [courseData] = useState([
     //FETCH FROM DB
     [
@@ -192,25 +199,10 @@ const CourseListMain = () => {
   };
 
   const addCourse = (values) => {
-    setIsModalVisible(false);
-    const { code, title, creditHrsTh, creditHrsLab } = values;
+    values.semester = selectedSemester;
+    values.programId = selectedProgramId;
 
-    const temp = JSON.parse(JSON.stringify(data));
-    const index = temp[selectedSemester - 1].length;
-
-    temp[selectedSemester - 1][index] = {
-      key: temp[selectedSemester - 1][index - 1].key + 1, //UPDATE DB AND GET COURSE ID
-      semester: selectedSemester,
-      code,
-      title,
-      hours: `${creditHrsTh} + ${creditHrsLab}`,
-      isActive: false,
-    };
-
-    SetData(temp);
-    SetFilteredData(temp);
-
-    message.success(`Semester ${selectedSemester} course "${title}" Added!`);
+    dispatch(addCourseAction(values, message, setIsModalVisible));
   };
 
   const filter = (value) => {
@@ -244,9 +236,13 @@ const CourseListMain = () => {
           </Title>
           <Select
             showSearch
-            options={[{ value: "BSCS" }, { value: "BSSE" }, { value: "MCS" }]}
-            onChange={(value) => setSelectedProgram(value)}
-            value={selectedProgram}
+            options={[
+              { label: "BSCS", value: 1 },
+              { label: "BSSE", value: 2 },
+              { label: "MCS", value: 3 },
+            ]}
+            //defaultValue={1}
+            onSelect={(value) => setSelectedProgramId(value)}
             filterOption={(input, option) =>
               option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
@@ -285,7 +281,7 @@ const CourseListMain = () => {
                       style={{ float: "right" }}
                       onClick={() => {
                         setSelectedSemester(index + 1);
-                        setIsModalVisible(!isModalVisible);
+                        setIsModalVisible(true);
                       }}
                     >
                       Add Course
@@ -335,7 +331,7 @@ const CourseListMain = () => {
             <Input placeholder="Enter course code with program id, eg:BSCS-101" />
           </Form.Item>
           <Form.Item
-            name="title"
+            name="name"
             label="Course Name"
             hasFeedback
             rules={[
@@ -348,7 +344,7 @@ const CourseListMain = () => {
             <Input placeholder="Enter course name" />
           </Form.Item>
           <Form.Item
-            name="creditHrsTh"
+            name="creditHr"
             label="Credit Hours(Theory)"
             rules={[
               {
@@ -365,24 +361,24 @@ const CourseListMain = () => {
             />
           </Form.Item>
           <Form.Item
-            name="creditHrsLab"
-            label="Credit Hours(Lab)"
+            name="totalMarks"
+            label="Theory Marks"
             rules={[
               {
                 required: true,
-                message: "Please enter lab credit hours!",
+                message: "Please enter total theory marks!",
               },
             ]}
           >
             <InputNumber
-              placeholder="Hrs(if any)"
+              placeholder="Th marks"
               type="number"
-              min={0}
-              max={1}
+              min={1}
+              max={100}
             />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 20 }}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={isLoading}>
               Add
             </Button>
           </Form.Item>

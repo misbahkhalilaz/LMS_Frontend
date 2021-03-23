@@ -26,7 +26,6 @@ const CreateBatch = ({ setDestroy }) => {
   const [isModalVisible, setIsModalVisible] = useState(true);
 
   const [initSubmitInfo, setInitSubmitInfo] = useState([]);
-  const [fileList, setFileList] = useState([]);
   const [current, setCurrent] = useState(0);
 
   const isLoading = useSelector((state) => state.generalReducer.isLoading);
@@ -41,23 +40,21 @@ const CreateBatch = ({ setDestroy }) => {
     setCurrent(current + 1);
   };
 
+  const formData = new FormData();
+
   const batchCreateSubmit = (values) => {
     //const formData = new FormData();
-
-    // Object.entries(initSubmitInfo).forEach(([key, value]) => {
+    // Object.entries(initSubmitInfo).forEach( ([key, value]) => {
     //   if (key != "noSection") formData.append(key, value);
-    // });
-
+    // })
     // Object.entries(values).forEach(([key, value]) =>
     //   formData.append(key, value.file, value.file.name)
     // );
-
     // console.log(...formData);
-    //console.log(values);
-
-    dispatch(
-      addBatchAction(initSubmitInfo, values, message, setIsModalVisible)
-    );
+    console.log(values);
+    // dispatch(
+    //   addBatchAction(initInfoSubmit, values, message, setIsModalVisible)
+    // );
   };
 
   const inputFileRef = useRef(null);
@@ -99,9 +96,9 @@ const CreateBatch = ({ setDestroy }) => {
             <Select
               showSearch
               options={[
-                { label: "BSCS", value: 0 },
-                { label: "BSSE", value: 1 },
-                { label: "MCS", value: 2 },
+                { label: "BSCS", value: 1 },
+                { label: "BSSE", value: 2 },
+                { label: "MCS", value: 3 },
               ]}
               filterOption={(input, option) =>
                 option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -179,16 +176,15 @@ const CreateBatch = ({ setDestroy }) => {
               </Typography.Title>
               <Form.Item
                 name={String.fromCharCode(65 + index)}
-                valuePropName="name"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please upload students list!",
-                  },
-                ]}
+                // rules={[
+                //   {
+                //     required: true,
+                //     message: "Please upload students list!",
+                //   },
+                // ]}
                 style={{ position: "absolute", bottom: 0, textAlign: "center" }}
               >
-                <Upload
+                {/* <Upload
                   maxCount={1}
                   accept=".xlsx, .xls"
                   //action="/upload.do"
@@ -198,20 +194,26 @@ const CreateBatch = ({ setDestroy }) => {
                   // fileList
                 >
                   <Button type="primary">Click to upload</Button>
-                </Upload>
+                </Upload> */}
 
+                <input
+                  type="file"
+                  accept=".xlsx, .xls"
+                  // ref={inputFileRef}
+                  onChange={(e) => {
+                    // console.log(e.target.files[0]);
+                    formData.append(
+                      "A",
+                      e.target.files[0],
+                      e.target.files[0].name
+                    );
+                  }}
+                  // style={{ display: "none" }}
+                />
                 {/* <Button
                   type="primary"
                   onClick={() => inputFileRef.current.click()}
-                > */}
-                {/* <input
-                  type="file"
-                  accept=".xlsx, .xls"
-                  //ref={inputFileRef}
-                  //onChange={(e) => console.log(e)}
-                  //style={{ display: "none" }}
-                /> */}
-                {/* </Button> */}
+                ></Button> */}
               </Form.Item>
             </div>
           ))}

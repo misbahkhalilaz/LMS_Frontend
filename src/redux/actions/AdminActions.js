@@ -1,3 +1,4 @@
+import { message } from "antd";
 import API from "../../utils/fetch";
 import Cookies from "universal-cookie";
 import { LOADING } from "../constants";
@@ -24,66 +25,84 @@ export const addTeacherAction = (payload, message, setIsModalVisible) => {
 };
 
 export const addBatchAction = (
-  initSubmitInfo,
+  initInfoSubmit,
   values,
   message,
   setIsModalVisible
-) => {
-  return async (dispatch) => {
+) => (dispatch) => {
+  const cookie = new Cookies();
+  const token = cookie.get("token");
+  dispatch(loadingAction(true));
+
+  const formData = new FormData();
+
+  Object.entries(initSubmitInfo).forEach(([key, value]) => {
+    if (key != "noSection") formData.append(key, value);
+  });
+  Object.entries(values).forEach(([key, value]) =>
+    formData.append(key, value.file, value.file.name)
+  );
+
+  API("POST", "/admin/createBatch", null, formData, token).then((res) => {
+    if (res.status >= 200 && res.status < 300) {
+      setIsModalVisible(false);
+      message.success(res.data.message);
+    } else message.error(res.data.message, 1);
+
+    dispatch(loadingAction(false));
+  });
+};
+
+export const addCourseAction = (courseInfo, message, setIsModalVisible) => {
+  return (dispatch) => {
     const cookie = new Cookies();
     const token = cookie.get("token");
     dispatch(loadingAction(true));
 
-    const formdata = new FormData();
-    formdata.append("programId", "1");
-    formdata.append("name", "hhkhkh3k456");
-    formdata.append("shift", "Morning");
-    formdata.append("startingYr", "jan-2017");
-    formdata.append("endingYr", "jan-2021");
-    formdata.append(
-      "A",
-      values["A"].file,
-      "/C:/Users/Bilal/Desktop/createStudents.xlsx"
-    );
+    API("POST", "/admin/createCourse", courseInfo, null, token).then((res) => {
+      if (res.status >= 200 && res.status < 300) {
+        setIsModalVisible(false);
+        message.success(res.data.message);
+        //res.data.data send back to update UI
+        /*"data": {
+        "id": 4,
+        "program_id": 1,
+        "semester": "1",
+        "name": "ICS3",
+        "code": "BCS-508",
+        "credit_hr": "3",
+        "total_marks": "100",
+        "isActive": true}*/
+      } else message.error(`Status ${res.status} failed to add course`, 1);
 
-    // Object.entries(initSubmitInfo).forEach(([key, value]) => {
-    //   if (key != "noSection") formData.append(key, value);
-    // });
+      dispatch(loadingAction(false));
+    });
+  };
+};
 
-    // Object.entries(values).forEach(([key, value]) =>
-    //   formData.append(key, value.file, value.file.name)
-    // );
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token ? token : ""}`);
+export const classCreateInfoAction = (
+  reqInfo,
+  setBatchDetail,
+  setCourseDetail
+) => {
+  return (dispatch) => {
+    const cookie = new Cookies();
+    const token = cookie.get("token");
+    dispatch(loadingAction(true));
 
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: formdata,
-      redirect: "follow",
-    };
+    API("POST", "/admin/getProgramData", reqInfo, null, token).then((res) => {
+      if (res.status >= 200 && res.status < 300) {
+        console.log(res.data.data);
 
-    return fetch(
-      `https://lms-fyp-devs.herokuapp.com/admin/createBatch`,
-      requestOptions
-    )
-      .then((res) => res.json().then((data) => ({ status: res.status, data })))
-      .then((res) => {
-        if (res.status >= 200 && res.status < 300) {
-          setIsModalVisible(false);
-          message.success(res.data.message);
-        } else message.error(res.data.message, 1);
+        // setBatchDetail(
+        //   res.data.data.batch.map((obj = { label: obj.name, value: obj.id }))
+        // );
+        // setCourseDetail(
+        //   res.data.data.courses.map((obj = { label: obj.name, value: obj.id }))
+        // );
+      } else message.error(res.data.message, 1);
 
-        dispatch(loadingAction(false));
-      });
-
-    // API("POST", "/admin/createBatch", formData, token).then((res) => {
-    //   if (res.status >= 200 && res.status < 300) {
-    //     setIsModalVisible(false);
-    //     message.success(res.data.message);
-    //   } else message.error(res.data.message, 1);
-
-    //   dispatch(loadingAction(false));
-    // });
+      dispatch(loadingAction(false));
+    });
   };
 };

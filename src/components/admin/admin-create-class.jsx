@@ -1,18 +1,31 @@
 import { useState } from "react";
-import { Modal, Steps, Button, Radio, Form, Select, Typography } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+import { Modal, Steps, Button, Radio, Form, Select } from "antd";
+
+import { classCreateInfoAction } from "../../redux/actions/AdminActions";
 
 const { Step } = Steps;
 
 const CreateClass = ({ setDestroy }) => {
   const [isModalVisible, setIsModalVisible] = useState(true);
-  const [isComplete, setIsComplete] = useState(false);
+  const [selectedShift, setSelectedShift] = useState();
   const [current, setCurrent] = useState(0);
+
+  const [programDetail, setProgramDetail] = useState([
+    { label: "BSCS", value: 1 },
+    { label: "BSSE", value: 2 },
+    { label: "MCS", value: 3 },
+  ]);
+  const [batchDetail, setBatchDetail] = useState([]);
 
   const [courseDetail, setCourseDetail] = useState([]);
   const [teacherDetail, setTeacherDetail] = useState([]);
 
   const [initSubmitInfo, setInitSubmitInfo] = useState();
   const [courseSubmitInfo, setCourseSubmitInfo] = useState();
+
+  const isLoading = useSelector((state) => state.generalReducer.isLoading);
+  const dispatch = useDispatch();
 
   const initInfoSubmit = (values) => {
     setInitSubmitInfo(values);
@@ -26,15 +39,10 @@ const CreateClass = ({ setDestroy }) => {
     setCurrent(current + 1);
   };
 
-  const getCourseDetail = (values) => {
-    setCourseDetail([
-      { label: "ICS-1 ", value: 1 },
-      { label: "STATS-1", value: 2 },
-      { label: "CAL-1", value: 3 },
-      { label: "PHY-1", value: 4 },
-      { label: "ENG-1", value: 5 },
-      { label: "PST-1", value: 6 },
-    ]);
+  const getBatchDetail = (programId) => {
+    const obj = { programId, shift: selectedShift };
+
+    dispatch(classCreateInfoAction(obj, setBatchDetail, setCourseDetail));
   };
 
   const getTeacherDetail = (values) => {
@@ -79,7 +87,11 @@ const CreateClass = ({ setDestroy }) => {
               },
             ]}
           >
-            <Radio.Group options={["Morning", "Evening"]} />
+            <Radio.Group
+              value={selectedShift}
+              onChange={(e) => setSelectedShift(e.target.value)}
+              options={["Morning", "Evening"]}
+            />
           </Form.Item>
           <Form.Item
             name="program"
@@ -93,7 +105,10 @@ const CreateClass = ({ setDestroy }) => {
           >
             <Select
               showSearch
-              options={[{ value: "BSCS" }, { value: "BSSE" }, { value: "MCS" }]}
+              loading={isLoading && batchDetail.length == 0}
+              options={programDetail}
+              disabled={!selectedShift}
+              onSelect={(value) => getBatchDetail(value)}
               filterOption={(input, option) =>
                 option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
@@ -111,7 +126,8 @@ const CreateClass = ({ setDestroy }) => {
           >
             <Select
               showSearch
-              options={[{ value: "17" }, { value: "18" }, { value: "19" }]}
+              options={batchDetail}
+              disabled={batchDetail.length == 0}
               filterOption={(input, option) =>
                 option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
@@ -130,7 +146,7 @@ const CreateClass = ({ setDestroy }) => {
       content: (
         <Form colon={false} requiredMark={false} onFinish={courseInfoSubmit}>
           <Form.Item
-            name="courseID"
+            name="courseId"
             rules={[
               {
                 required: true,
@@ -212,26 +228,12 @@ const CreateClass = ({ setDestroy }) => {
       afterClose={() => setDestroy()}
       bodyStyle={{ paddingTop: 50 }}
     >
-      {!isComplete ? (
-        <>
-          <Steps className="no-select" size="small" current={current}>
-            {steps.map((item) => (
-              <Step key={item.title} title={item.title} />
-            ))}
-          </Steps>
-          <div style={{ marginTop: 20 }}>{steps[current].content}</div>
-        </>
-      ) : (
-        <div style={{ textAlign: "center" }}>
-          <Typography.Title className="no-select subtitle-text" level={4}>
-            Class Successfully Created
-          </Typography.Title>
-          <br />
-          <Button type="primary" onClick={() => setIsModalVisible(false)}>
-            OK
-          </Button>
-        </div>
-      )}
+      <Steps className="no-select" size="small" current={current}>
+        {steps.map((item) => (
+          <Step key={item.title} title={item.title} />
+        ))}
+      </Steps>
+      <div style={{ marginTop: 20 }}>{steps[current].content}</div>
     </Modal>
   );
 };

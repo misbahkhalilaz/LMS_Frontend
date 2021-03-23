@@ -43,7 +43,7 @@ export const loginTokenAction = (navigate, requestedPath) => {
     const cookie = new Cookies();
     const token = cookie.get("token");
     dispatch(checkTokenAction(false));
-    API("POST", "/auth", {}, token).then((res) => {
+    API("POST", "/auth", {}, null, token).then((res) => {
       if (res.status >= 200 && res.status < 300) {
         res.data.role == requestedPath.split("/")[1]
           ? navigate(requestedPath)
@@ -78,7 +78,7 @@ export const requestOtpAction = (userId, message, setToken, setCurrent) => {
 export const verifyOtpAction = (otp, token, message, setToken, setCurrent) => {
   return (dispatch) => {
     dispatch(loadingAction(true));
-    API("POST", "/auth/verifyOtp", otp, token).then((res) => {
+    API("POST", "/auth/verifyOtp", otp, null, token).then((res) => {
       if (res.status >= 200 && res.status < 300) {
         setToken(res.data.token);
         setCurrent((prev) => prev + 1);
@@ -93,7 +93,7 @@ export const verifyOtpAction = (otp, token, message, setToken, setCurrent) => {
 export const setPassAction = (password, token, message, setShowSetPass) => {
   return (dispatch) => {
     dispatch(loadingAction(true));
-    API("POST", "/auth/resetPassword", password, token).then((res) => {
+    API("POST", "/auth/resetPassword", password, null, token).then((res) => {
       if (res.status >= 200 && res.status < 300) {
         setShowSetPass(false);
         message.success(res.data.message);
