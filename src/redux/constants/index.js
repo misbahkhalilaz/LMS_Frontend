@@ -1,4 +1,7 @@
-export const LOGGING_IN = "LOGGING_IN";
-export const LOGIN_FAILED = "LOGIN_FAILED";
-export const CHECKING_TOKEN = "CHECKING_TOKEN";
+//GENERAL CONSTANTS
 export const CLEAR_STORE = "CLEAR_STORE";
+export const LOADING = "LOADING";
+export const LOGGED_IN = "LOGGED_IN";
+export const CHECKING_TOKEN = "CHECKING_TOKEN";
+
+//ADMIN CONSTANTS

@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
 
-import loggedReducer from "./isLogged";
+import generalReducer from "./general";
 import adminReducer from "./admin";
 
 const allReducers = combineReducers({
-  loggedReducer,
+  generalReducer,
   adminReducer,
 });
 

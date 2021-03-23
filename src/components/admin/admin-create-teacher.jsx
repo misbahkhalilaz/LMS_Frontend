@@ -1,20 +1,17 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Button, Modal, Form, Input, Typography, message } from "antd";
 
-const CreateEditPost = ({ setDestroy }) => {
+import { addTeacherAction } from "../../redux/actions/AdminActions";
+
+const CreateTeacherProfile = ({ setDestroy }) => {
   const [isModalVisible, setIsModalVisible] = useState(true);
-  const [isDisabled, setIsDisabled] = useState(false);
-  const [values, setValues] = useState(null);
 
-  const postSubmit = (values) => {
-    setIsDisabled(true);
-    message.success(`Teacher profile created`, [1.8], () => {
-      setValues(values); //UPDATE DB HERE
+  const isLoading = useSelector((state) => state.generalReducer.isLoading);
+  const dispatch = useDispatch();
 
-      message.destroy();
-      setIsModalVisible(false);
-    });
-  };
+  const postSubmit = (values) =>
+    dispatch(addTeacherAction(values, message, setIsModalVisible));
 
   return (
     <Modal
@@ -24,12 +21,12 @@ const CreateEditPost = ({ setDestroy }) => {
         </Typography.Title>
       }
       centered
-      width={800}
+      width={600}
       destroyOnClose
       footer={null}
       visible={isModalVisible}
       onCancel={() => setIsModalVisible(false)}
-      afterClose={() => setDestroy(values)}
+      afterClose={() => setDestroy(false)}
     >
       <Form
         colon={false}
@@ -38,6 +35,19 @@ const CreateEditPost = ({ setDestroy }) => {
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 12 }}
       >
+        <Form.Item
+          name="userId"
+          label="Login ID"
+          hasFeedback
+          rules={[
+            {
+              required: true,
+              message: "Please enter login id!",
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
         <Form.Item
           name="name"
           label="Teacher Name"
@@ -52,7 +62,7 @@ const CreateEditPost = ({ setDestroy }) => {
           <Input />
         </Form.Item>
         <Form.Item
-          name="phoneNo"
+          name="phone_no"
           label="Phone Number"
           hasFeedback
           rules={[
@@ -88,7 +98,7 @@ const CreateEditPost = ({ setDestroy }) => {
           <Input />
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 20 }}>
-          <Button type="primary" htmlType="submit" disabled={isDisabled}>
+          <Button type="primary" htmlType="submit" loading={isLoading}>
             Create
           </Button>
         </Form.Item>
@@ -97,4 +107,4 @@ const CreateEditPost = ({ setDestroy }) => {
   );
 };
 
-export default CreateEditPost;
+export default CreateTeacherProfile;

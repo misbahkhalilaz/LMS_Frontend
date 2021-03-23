@@ -12,8 +12,7 @@ const API = (method, end_point, body, token = "") => {
   return fetch(
     `https://lms-fyp-devs.herokuapp.com${end_point}`,
     requestOptions
-  ).then((response) => response.json());
-  // .then((result) => console.log(result))
-  //   .catch((error) => console.log("error", error))
+  ).then((res) => res.json().then((data) => ({ status: res.status, data })));
+  // .catch((err) => console.log(err, "CAtCH"));
 };
 export default API;

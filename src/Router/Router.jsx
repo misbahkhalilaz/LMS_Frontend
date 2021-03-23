@@ -1,9 +1,7 @@
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate, useRoutes } from "react-router";
-
-import { tokenAction } from "../redux/actions/LoggingActions";
-import Cookies from "universal-cookie";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, useRoutes, useLocation, Navigate } from "react-router";
+import { loginTokenAction } from "../redux/actions/GeneralActions";
 
 import { Row, Col } from "antd";
 import Skeleton from "./skeleton";
@@ -37,8 +35,7 @@ import AdminStudentList from "../pages/admin/students";
 import AdminTimetable from "../pages/admin/timetable";
 
 const routes = [
-  { path: "/login", element: <Login /> },
-  /* *****************Student Routes********************* */
+  { path: "login", element: <Login /> },
   {
     path: "/",
     children: [
@@ -49,6 +46,7 @@ const routes = [
           { path: "/", element: <StudentHome /> },
           { path: "attendance", element: <StudentAttendance /> },
           { path: "results", element: <StudentResult /> },
+          { path: "/*", element: <Navigate to="/student" /> },
         ],
       },
       {
@@ -57,12 +55,11 @@ const routes = [
           { path: "/", element: <StudentClass /> },
           { path: "chat", element: <StudentChat /> },
           { path: "post", element: <StudentClassPost /> },
+          { path: "/*", element: <Navigate to="/student" /> },
         ],
       },
     ],
   },
-  /* *****************Student Routes********************* */
-  /* *****************Teacher Routes********************* */
   {
     path: "teacher",
     children: [
@@ -86,10 +83,9 @@ const routes = [
           },
         ],
       },
+      { path: "/*", element: <Navigate to="/teacher" /> },
     ],
   },
-  /* *****************Teacher Routes********************* */
-  /* *****************Admin Routes********************* */
   {
     path: "admin",
     children: [
@@ -98,103 +94,34 @@ const routes = [
       { path: "course-list", element: <AdminCourseList /> },
       { path: "teacher-list", element: <AdminTeacherList /> },
       { path: "student-list", element: <AdminStudentList /> },
+      { path: "/*", element: <Navigate to="/admin" /> },
     ],
   },
+  { path: "/*", element: <Navigate to="/login" replace /> }, //maybe?
 ];
 
 const Router = () => {
+  let element = useRoutes(routes);
   const navigate = useNavigate();
-  const cookie = new Cookies();
-  const allowRender = useSelector((state) => state.loggedReducer.allowRender);
+  const location = useLocation();
+  const allowRender = useSelector((state) => state.generalReducer.allowRender);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const token = cookie.get("token");
-    tokenAction(token, navigate);
+    dispatch(loginTokenAction(navigate, location.pathname));
   }, []);
 
-  let element = useRoutes(routes);
   return (
     <Row style={{ height: "100%" }}>
       <Row>
-        <Col span={24} style={{ backgroundColor: "#83000A" }}>
+        <Col span={24}>
           <Navbar />
         </Col>
       </Row>
-      {allowRender == true ? element : <Skeleton />}
+
+      {allowRender ? element : <Skeleton />}
     </Row>
   );
 };
 
 export default Router;
-
-/*
-useEffect(async () => {
-    const token = cookie.get("token");
-    if (!token || token.length < 1) {
-      setRender(true);
-      navigate("/login");
-    } else
-      await API("POST", "/auth", {}, token ? token : "")
-        .then((res) => {
-          setRender(true);
-          res.role ? navigate("/" + res.role) : navigate("/login");
-        })
-        .catch(() => {
-          setRender(true);
-          navigate("/login");
-        });
-  }, []);
-
-
-
-
-
-
-
-{s>
-  :       { path:"/login" element={<Login />} />
-         // {/* *****************Student Routes********************* */
-//   { path:"/">
-//     { path:"student" element={<StudentDashboard />}>
-//       { path:"/" element={<StudentHome />} />
-//       { path:"attendance" element={<StudentAttendance />} />
-//       { path:"results" element={<StudentResult />} />
-//     </Route>
-//     { path:"student/class">
-//       { path:"/" element={<StudentClass />} />
-//       { path:"chat" element={<StudentChat />} />
-//       { path:"post" element={<StudentClassPost />} />
-//     </Route>
-//     {/* *****************Student Routes********************* */}
-//     {/* *****************Teacher Routes********************* */}
-//     { path:"teacher">
-//       { path:"/" element={<TeacherDashboard />} />
-//       { path:"repeat-request" element={<TeacherRepeatReq />} />
-//       { path:"class">
-//         { path:"/" element={<TeacherClass />} />
-//         { path:"mark-attendance" element={<TeacherMarkAttend />} />
-//         { path:"show-attendance" element={<TeacherShowAttend />} />
-//         { path:"members" element={<TeacherShowMember />} />
-//         { path:"result" element={<TeacherCourseResult />} />
-//         { path:"chat" element={<TeacherChat />} />
-//         { path:"post">
-//           { path:"/" element={<TeacherClassPost />} />
-//           {
-//  :          path="assign-grade"
-//             element={<TeacherClassAssignGrade />}
-//           />
-//         </Route>
-//       </Route>
-//     </Route>
-//     {/* *****************Teacher Routes********************* */}
-//     {/* *****************Admin Routes********************* */}
-//     { path:"admin" element={<AdminDashboard />}>
-//       { path:"/" />
-//       { path:"timetable" element={<AdminTimetable />} />
-//       { path:"admin/course-list" element={<AdminCourseList />} />
-//       { path:"teacher-list" element={<AdminTeacherList />} />
-//       { path:"student-list" element={<AdminStudentList />} />
-//     </Route>
-//   </Route>
-//   {/* *****************Admin Routes*********************  */}
-// </Routes>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import CreateTeacherProfile from "./admin-addteacher";
+import CreateTeacherProfile from "./admin-create-teacher";
 import useViewport from "../useViewport";
 import { Row, Col, Button, Input, Table, Switch } from "antd";
 
@@ -202,7 +202,9 @@ const TeacherListMain = () => {
           />
         </Col>
       </Row>
-      {showCreateProfile && <CreateTeacherProfile setDestroy={setDestroy} />}
+      {showCreateProfile && (
+        <CreateTeacherProfile setDestroy={setShowCreateProfile} />
+      )}
     </Row>
   );
 };

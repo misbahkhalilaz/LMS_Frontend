@@ -1,23 +1,105 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { loginAction } from "../redux/actions/LoggingActions";
+import {
+  loginAction,
+  requestOtpAction,
+  verifyOtpAction,
+  setPassAction,
+} from "../redux/actions/GeneralActions";
 
-import { Row, Col, Input, Button, Form, Typography, message } from "antd";
+import {
+  Row,
+  Col,
+  Input,
+  Button,
+  Form,
+  Typography,
+  Modal,
+  Steps,
+  message,
+} from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 import img from "../assets/loginpage.png";
 
 const { Title } = Typography;
+const { Step } = Steps;
+
+const steps = [
+  {
+    content: (
+      <Form.Item
+        name="userId"
+        label="UserID"
+        rules={[{ required: true, message: "Please enter your userID!" }]}
+      >
+        <Input />
+      </Form.Item>
+    ),
+  },
+  {
+    content: (
+      <Form.Item
+        name="otp"
+        label="OTP"
+        rules={[{ required: true, message: "Please enter received Otp!" }]}
+      >
+        <Input />
+      </Form.Item>
+    ),
+  },
+  {
+    content: (
+      <Form.Item
+        name="password"
+        label="Password"
+        rules={[{ required: true, message: "Please enter new password!" }]}
+      >
+        <Input.Password />
+      </Form.Item>
+    ),
+  },
+];
 
 const Login = () => {
-  const isLogging = useSelector((state) => state.loggedReducer.isLogging);
-  const failedLogin = useSelector((state) => state.loggedReducer.failedLogin);
+  const [current, setCurrent] = useState(0);
+  const [showSetPass, setShowSetPass] = useState(false);
+
+  const [OtpTime, setOtpTime] = useState(120);
+  const [token, setToken] = useState();
+  const [timer, setTimer] = useState();
+
   const navigate = useNavigate();
+  const isLoading = useSelector((state) => state.generalReducer.isLoading);
+  const dispatch = useDispatch();
 
   const login = ({ userId, password }) => {
-    loginAction({ userId, password }, navigate);
+    dispatch(loginAction({ userId, password }, navigate, message));
   };
+
+  const setPassValidation = (values) => {
+    if (current == 0)
+      dispatch(requestOtpAction(values, message, setToken, setCurrent));
+    else if (current == 1)
+      dispatch(verifyOtpAction(values, token, message, setToken, setCurrent));
+    else dispatch(setPassAction(values, token, message, setShowSetPass));
+  };
+
+  useEffect(() => {
+    if (OtpTime == 0) {
+      clearInterval(timer);
+      if (current == 1 && showSetPass) {
+        setShowSetPass(false);
+        message.error("OTP Expired!");
+      }
+    }
+  }, [OtpTime]);
+
+  useEffect(() => {
+    if (current == 1)
+      setTimer(setInterval(() => setOtpTime((prev) => prev - 1), 1000));
+  }, [current]);
 
   return (
     <Row align="middle" style={{ height: "90vh" }}>
@@ -34,7 +116,6 @@ const Login = () => {
               Welcome
             </Title>
             <Form
-              className="login-form"
               layout="vertical"
               size="large"
               hideRequiredMark="true"
@@ -72,16 +153,61 @@ const Login = () => {
                   type="primary"
                   htmlType="submit"
                   shape="round"
-                  loading={isLogging}
+                  loading={isLoading}
                 >
                   Log in
+                </Button>
+                <Button type="link" onClick={() => setShowSetPass(true)}>
+                  Set password?
                 </Button>
               </Form.Item>
             </Form>
           </Col>
         </Row>
       </Col>
-      {failedLogin && message.error(failedLogin)}
+      <Modal
+        footer={null}
+        destroyOnClose
+        width={600}
+        visible={showSetPass}
+        onCancel={() => setShowSetPass(false)}
+        afterClose={() => {
+          setToken();
+          setCurrent(0);
+          setOtpTime(120);
+          clearInterval(timer);
+        }}
+        bodyStyle={{ padding: 50 }}
+      >
+        <Steps className="no-select" size="small" current={current}>
+          <Step title="User Validation" />
+          <Step
+            title="Otp Validation"
+            subTitle={!isLoading && "TTL: " + OtpTime}
+          />
+          <Step title="Set Password" />
+        </Steps>
+        <Form
+          colon={false}
+          preserve={false}
+          hideRequiredMark="true"
+          onFinish={setPassValidation}
+        >
+          <div className="center" style={{ height: 120 }}>
+            {steps[current].content}
+          </div>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={isLoading}
+              style={{ float: "right" }}
+            >
+              {current < 2 ? "Next" : "Set Password"}
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
     </Row>
   );
 };

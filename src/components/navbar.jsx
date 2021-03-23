@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { createBrowserHistory } from "history";
-import Cookies from "universal-cookie";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { loginStatAction } from "../redux/actions/GeneralActions";
 import useViewport from "./useViewport";
 import {
   Row,
@@ -26,12 +26,13 @@ import {
 const { Title, Text } = Typography;
 
 const Navbar = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const history = createBrowserHistory();
-  const cookie = new Cookies();
+  const location = useLocation();
   const { width } = useViewport();
+  const isLogged = useSelector((state) => state.generalReducer.isLogged);
 
-  const notValidPaths = ["/login", "/student", "/teacher", "/admin"];
+  const homePaths = ["/", "/login", "/student", "/teacher", "/admin"];
 
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [notificationData, setNotificationData] = useState([
@@ -63,18 +64,14 @@ const Navbar = () => {
   ]);
 
   return (
-    <Row>
+    <Row style={{ backgroundColor: "#83000A" }}>
       <Col span={24}>
         <PageHeader
-          backIcon={
-            !notValidPaths.includes(history.location.pathname) && (
-              <LeftOutlined />
-            )
-          }
+          backIcon={!homePaths.includes(location.pathname) && <LeftOutlined />}
           title={
             <Title
-              level={2}
               className="no-select"
+              level={2}
               style={{ margin: 0, color: "#FFFFFF" }}
             >
               {width < 700
@@ -83,15 +80,15 @@ const Navbar = () => {
             </Title>
           }
           extra={
-            history.location.pathname != "/login" && [
+            isLogged && [
               <Tooltip key={0} placement="bottom" title="Homepage">
                 <Button
                   shape="circle"
                   icon={<HomeFilled />}
                   style={{ color: "rgba(0, 0, 0, 0.65)" }}
                   onClick={() => {
-                    const homePath = history.location.pathname.split("/")[1];
-                    if (homePath != history.location.pathname)
+                    const homePath = location.pathname.split("/")[1];
+                    if (homePath != location.pathname)
                       navigate(homePath, { replace: true });
                   }}
                 />
@@ -111,8 +108,8 @@ const Navbar = () => {
                   okText="Yes"
                   cancelText="No"
                   onConfirm={() => {
-                    cookie.remove("token");
-                    navigate("/login");
+                    dispatch(loginStatAction(false));
+                    navigate("/login", { replace: true });
                   }}
                 >
                   <Button
