@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import useViewport from "../useViewport";
 import { Row, Col, Typography, Select, Input, Table, Switch } from "antd";
+
+import {} from "../../redux/actions/AdminActions";
 
 const { Title } = Typography;
 const { Search } = Input;
@@ -10,6 +13,20 @@ const StudentListMain = () => {
   const [filteredData, SetFilteredData] = useState([]);
   const [prevTxt, SetPrevTxt] = useState("");
   const { width } = useViewport();
+
+  const isLoading = useSelector((state) => state.generalReducer.isLoading);
+  const batchList = useSelector((state) => state.adminReducer.batchList);
+  const dispatch = useDispatch();
+
+  const [selectedProgram, setSelectedProgram] = useState();
+  const [selectedBatch, setSelectedBatch] = useState();
+  const [selectedSect, setSelectedSect] = useState("All");
+
+  const [programDetail] = useState([
+    { label: "BSCS", value: 2 },
+    { label: "BSSE", value: 3 },
+    { label: "MCS", value: 4 },
+  ]);
 
   const [studentData] = useState([
     {
@@ -134,6 +151,8 @@ const StudentListMain = () => {
     SetPrevTxt(value);
   };
 
+  const getStudentList = (value) => {};
+
   const tableProps = {
     scroll: { y: "70vh" },
     loading: false,
@@ -163,10 +182,14 @@ const StudentListMain = () => {
           </Title>
           <Select
             showSearch
-            defaultValue={"BSCS"}
-            options={[{ value: "BSCS" }, { value: "BSSE" }, { value: "MCS" }]}
+            options={programDetail}
+            value={selectedProgram}
+            onSelect={(value) => {
+              setSelectedProgram(value);
+              getStudentList();
+            }}
             filterOption={(input, option) =>
-              option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
             style={{ width: 90 }}
           />
@@ -177,10 +200,13 @@ const StudentListMain = () => {
           </Title>
           <Select
             showSearch
-            defaultValue={17}
-            options={[{ value: 17 }, { value: 18 }, { value: 19 }]}
+            options={batchList}
+            onSelect={(value) => {
+              setSelectedBatch(value);
+              getStudentList();
+            }}
             filterOption={(input, option) =>
-              option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
             style={{ width: 90 }}
           />
@@ -191,13 +217,13 @@ const StudentListMain = () => {
           </Title>
           <Select
             showSearch
-            defaultValue={"All"}
             options={[
               { value: "All" },
               { value: "A" },
               { value: "B" },
               { value: "C" },
             ]}
+            onSelect={(value) => getStudentList(value)}
             filterOption={(input, option) =>
               option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }

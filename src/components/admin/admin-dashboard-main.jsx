@@ -104,11 +104,11 @@ const DashboardMain = () => {
           </Card>
         </Col>
         {showCreateBatch && <CreateBatch setDestroy={setShowCreateBatch} />}
-        {showCreateClass && (
-          <CreateClass setDestroy={() => setShowCreateClass(false)} />
-        )}
+        {showCreateClass && <CreateClass setDestroy={setShowCreateClass} />}
         {showCreateProfile && (
-          <CreateTeacherProfile setDestroy={setShowCreateProfile} />
+          <CreateTeacherProfile
+            setDestroy={() => setShowCreateProfile(false)}
+          />
         )}
       </Row>
     </Row>

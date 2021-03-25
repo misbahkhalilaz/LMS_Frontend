@@ -1,85 +1,28 @@
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import CreateTeacherProfile from "./admin-create-teacher";
 import useViewport from "../useViewport";
 import { Row, Col, Button, Input, Table, Switch } from "antd";
 
+import { getTeacherListAction } from "../../redux/actions/AdminActions";
+
 const { Search } = Input;
 
 const TeacherListMain = () => {
-  const [data, SetData] = useState(null);
   const [filteredData, SetFilteredData] = useState([]);
   const [prevTxt, SetPrevTxt] = useState("");
   const [showCreateProfile, setShowCreateProfile] = useState(false);
   const { width } = useViewport();
 
-  const [teacherData] = useState([
-    {
-      id: 1,
-      name: "AA",
-      email: "xyz@email.com",
-      phoneNo: "+92-300-1234567",
-      isActive: true,
-    },
-    {
-      id: 2,
-      name: "BB",
-      email: "xyz@email.com",
-      phoneNo: "+92-300-1234567",
-      isActive: true,
-    },
-    {
-      id: 3,
-      name: "CC",
-      email: "xyz@email.com",
-      phoneNo: "+92-300-1234567",
-      isActive: true,
-    },
-    {
-      id: 4,
-      name: "DD",
-      email: "xyz@email.com",
-      phoneNo: "+92-300-1234567",
-      isActive: true,
-    },
-    {
-      id: 5,
-      name: "EE",
-      email: "xyz@email.com",
-      phoneNo: "+92-300-1234567",
-      isActive: true,
-    },
-    {
-      id: 6,
-      name: "FF",
-      email: "xyz@email.com",
-      phoneNo: "+92-300-1234567",
-      isActive: true,
-    },
-    {
-      id: 7,
-      name: "GG",
-      email: "xyz@email.com",
-      phoneNo: "+92-300-1234567",
-      isActive: true,
-    },
-    {
-      id: 8,
-      name: "HH",
-      email: "xyz@email.com",
-      phoneNo: "+92-300-1234567",
-      isActive: false,
-    },
-    {
-      id: 9,
-      name: "II",
-      email: "xyz@email.com",
-      phoneNo: "+92-300-1234567",
-      isActive: false,
-    },
-  ]);
+  const isLoading = useSelector((state) => state.generalReducer.isLoading);
+  const teacherList = useSelector((state) => state.adminReducer.teacherList);
+  const dispatch = useDispatch();
 
   useEffect(
-    () => SetData(teacherData.map((obj, key) => ({ ...obj, key }))),
+    () =>
+      teacherList.length == 0
+        ? dispatch(getTeacherListAction({ role: "teacher" }))
+        : null,
     []
   );
 
@@ -91,13 +34,13 @@ const TeacherListMain = () => {
     },
     {
       align: "center",
-      title: "Email",
-      dataIndex: "email",
+      title: "Phone No",
+      dataIndex: "phone_no",
     },
     {
       align: "center",
-      title: "Phone No",
-      dataIndex: "phoneNo",
+      title: "Email",
+      dataIndex: "email",
     },
     {
       align: "center",
@@ -108,45 +51,32 @@ const TeacherListMain = () => {
           unCheckedChildren="Inactive"
           checked={teacher.isActive}
           onChange={(checked) => {
-            let index = data.findIndex((x) => x.key === teacher.key);
+            //let index = teacherList.findIndex((x) => x.key === teacher.key);
+            console.log(teacher.id);
 
-            SetData([
-              ...data.slice(0, index),
-              { ...teacher, isActive: checked },
-              ...data.slice(index + 1),
-            ]);
+            // SetData([
+            //   ...data.slice(0, index),
+            //   { ...teacher, isActive: checked },
+            //   ...data.slice(index + 1),
+            // ]);
 
-            if (filteredData.length > 0) {
-              index = filteredData.findIndex((x) => x.key === teacher.key);
-              SetFilteredData([
-                ...filteredData.slice(0, index),
-                { ...teacher, isActive: checked },
-                ...filteredData.slice(index + 1),
-              ]);
-            }
+            // if (filteredData.length > 0) {
+            //   index = filteredData.findIndex((x) => x.key === teacher.key);
+            //   SetFilteredData([
+            //     ...filteredData.slice(0, index),
+            //     { ...teacher, isActive: checked },
+            //     ...filteredData.slice(index + 1),
+            //   ]);
+            // }
           }}
         />
       ),
     },
   ];
 
-  const setDestroy = (values) => {
+  const setDestroy = () => {
     setShowCreateProfile(false);
-    if (values) {
-      const { name, email, phoneNo } = values;
-      const temp = [
-        ...data,
-        {
-          id: 10111, //GET THIS FROM DB IDK HOW
-          name,
-          email,
-          phoneNo,
-          isActive: false,
-        },
-      ];
-      SetData(temp);
-      SetFilteredData(temp);
-    }
+    SetFilteredData(teacherList);
   };
 
   const filterStudent = (value) => {
@@ -154,7 +84,7 @@ const TeacherListMain = () => {
       SetFilteredData(
         value == ""
           ? []
-          : data.filter((o) =>
+          : teacherList.filter((o) =>
               Object.keys(o).some((k) =>
                 String(o[k]).toLowerCase().includes(value.toLowerCase())
               )
@@ -198,12 +128,13 @@ const TeacherListMain = () => {
           <Table
             {...tableProps}
             columns={columns}
-            dataSource={filteredData.length == 0 ? data : filteredData}
+            dataSource={filteredData.length == 0 ? teacherList : filteredData}
+            loading={isLoading}
           />
         </Col>
       </Row>
       {showCreateProfile && (
-        <CreateTeacherProfile setDestroy={setShowCreateProfile} />
+        <CreateTeacherProfile setDestroy={() => setDestroy()} />
       )}
     </Row>
   );

@@ -26,7 +26,7 @@ const CreateTeacherProfile = ({ setDestroy }) => {
       footer={null}
       visible={isModalVisible}
       onCancel={() => setIsModalVisible(false)}
-      afterClose={() => setDestroy(false)}
+      afterClose={() => setDestroy()}
     >
       <Form
         colon={false}

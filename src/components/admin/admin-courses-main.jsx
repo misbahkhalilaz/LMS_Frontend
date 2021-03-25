@@ -23,7 +23,12 @@ const { Search } = Input;
 
 const CourseListMain = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedProgramId, setSelectedProgramId] = useState(1);
+  const [programDetail] = useState([
+    { label: "BSCS", value: 2 },
+    { label: "BSSE", value: 3 },
+    { label: "MCS", value: 4 },
+  ]);
+  const [selectedProgramId, setSelectedProgramId] = useState(2);
   const [selectedSemester, setSelectedSemester] = useState();
   const [data, SetData] = useState([]);
   const [filteredData, SetFilteredData] = useState([]);
@@ -236,11 +241,7 @@ const CourseListMain = () => {
           </Title>
           <Select
             showSearch
-            options={[
-              { label: "BSCS", value: 1 },
-              { label: "BSSE", value: 2 },
-              { label: "MCS", value: 3 },
-            ]}
+            options={programDetail}
             //defaultValue={1}
             onSelect={(value) => setSelectedProgramId(value)}
             filterOption={(input, option) =>

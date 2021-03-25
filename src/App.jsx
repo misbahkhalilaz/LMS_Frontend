@@ -4,9 +4,7 @@ import "./styles/App.css";
 import { clearStoreAction } from "./redux/actions/GeneralActions";
 
 const App = () => {
-  useEffect(() => {
-    () => clearStoreAction();
-  }, []);
+  useEffect(() => () => clearStoreAction(), []);
 
   return <Router />;
 };

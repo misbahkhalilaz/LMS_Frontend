@@ -1,50 +1,138 @@
 import { message } from "antd";
 import API from "../../utils/fetch";
 import Cookies from "universal-cookie";
-import { LOADING } from "../constants";
+import { LOADING, LOAD_TEACHERLIST, LOAD_BATCHLIST } from "../constants";
 
 export const loadingAction = (payload) => {
   return { type: LOADING, payload };
 };
 
-export const addTeacherAction = (payload, message, setIsModalVisible) => {
-  return (dispatch) => {
-    const cookie = new Cookies();
-    const token = cookie.get("token");
-    dispatch(loadingAction(true));
-
-    API("POST", "/admin/createTeacherAccount", payload, token).then((res) => {
-      if (res.status >= 200 && res.status < 300) {
-        setIsModalVisible(false);
-        message.success(res.data.message);
-      } else message.error(res.data.message, 1);
-
-      dispatch(loadingAction(false));
-    });
-  };
+export const setTeacherList = (payload) => {
+  return { type: LOAD_TEACHERLIST, payload };
 };
 
-export const addBatchAction = (
-  initInfoSubmit,
-  values,
-  message,
-  setIsModalVisible
-) => (dispatch) => {
+export const setBatchList = (payload) => {
+  return { type: LOAD_BATCHLIST, payload };
+};
+
+export const getTeacherListAction = (teacherStatus) => (dispatch) => {
   const cookie = new Cookies();
   const token = cookie.get("token");
   dispatch(loadingAction(true));
 
-  const formData = new FormData();
+  API(
+    "GET",
+    "/admin/getUsers?" + new URLSearchParams(teacherStatus),
+    "",
+    null,
+    token
+  ).then((res) => {
+    if (res.status >= 200 && res.status < 300) {
+      const payload = res.data.data.map(
+        ({ id, name, phone_no, email, isActive }) => {
+          return { key: id, id, name, phone_no, email, isActive };
+        }
+      );
 
-  Object.entries(initSubmitInfo).forEach(([key, value]) => {
-    if (key != "noSection") formData.append(key, value);
+      dispatch(setTeacherList(payload));
+    } else message.error(res.data.message, 1);
+
+    dispatch(loadingAction(false));
   });
-  Object.entries(values).forEach(([key, value]) =>
-    formData.append(key, value.file, value.file.name)
-  );
+};
+
+export const getClassCreateInfoAction = (
+  reqInfo,
+  setCourseDetail,
+  setSectionDetail
+) => (dispatch) => {
+  const cookie = new Cookies();
+  const token = cookie.get("token");
+
+  dispatch(loadingAction(true));
+
+  API(
+    "GET",
+    "/admin/getProgramData?" + new URLSearchParams(reqInfo),
+    "",
+    null,
+    token
+  ).then((res) => {
+    if (res.status >= 200 && res.status < 300) {
+      const batchinfo = [];
+      const sectinfo = {};
+
+      Object.values(res.data.data.batch).forEach((batch) => {
+        batchinfo.push({ label: batch.name, value: batch.id });
+        sectinfo[batch.id] = batch.sections?.map((sect) => ({
+          label: sect.name,
+          value: sect.id,
+        }));
+      });
+
+      dispatch(setBatchList(batchinfo));
+      setSectionDetail(sectinfo);
+      setCourseDetail(
+        res.data.data.courses?.map((course) => ({
+          label: course.name,
+          value: course.id,
+        }))
+      );
+    } else message.error(res.data.message, 1);
+
+    dispatch(loadingAction(false));
+  });
+};
+
+export const addTeacherAction = (payload, message, setIsModalVisible) => {
+  return (dispatch, getState) => {
+    const cookie = new Cookies();
+    const token = cookie.get("token");
+    const adminState = getState().adminReducer;
+    dispatch(loadingAction(true));
+
+    API("POST", "/admin/createTeacherAccount", payload, null, token).then(
+      (res) => {
+        if (res.status >= 200 && res.status < 300) {
+          const { id, name, phone_no, email, isActive } = res.data.data;
+
+          const payload = {
+            key: id,
+            id,
+            name,
+            phone_no,
+            email,
+            isActive,
+          };
+
+          dispatch(setTeacherList([...adminState.teacherList, payload]));
+          setIsModalVisible(false);
+
+          message.success(res.data.message);
+        } else message.error(res.data.message, 1);
+
+        dispatch(loadingAction(false));
+      }
+    );
+  };
+};
+
+export const addBatchAction = (formData, setIsModalVisible) => (
+  dispatch,
+  getState
+) => {
+  const cookie = new Cookies();
+  const token = cookie.get("token");
+  const adminState = getState().adminReducer;
+  dispatch(loadingAction(true));
 
   API("POST", "/admin/createBatch", null, formData, token).then((res) => {
     if (res.status >= 200 && res.status < 300) {
+      const { id, name } = res.data.data;
+
+      const payload = { label: name, value: id };
+      dispatch(setBatchList([...adminState.batchList, payload]));
+
       setIsModalVisible(false);
       message.success(res.data.message);
     } else message.error(res.data.message, 1);
@@ -80,26 +168,47 @@ export const addCourseAction = (courseInfo, message, setIsModalVisible) => {
   };
 };
 
-export const classCreateInfoAction = (
-  reqInfo,
-  setBatchDetail,
-  setCourseDetail
-) => {
+export const addClassAction = (classInfo, setIsModalVisible) => {
   return (dispatch) => {
     const cookie = new Cookies();
     const token = cookie.get("token");
+
     dispatch(loadingAction(true));
 
-    API("POST", "/admin/getProgramData", reqInfo, null, token).then((res) => {
+    API("POST", "/admin/createClass", classInfo, null, token).then((res) => {
       if (res.status >= 200 && res.status < 300) {
-        console.log(res.data.data);
+        setIsModalVisible(false);
+        message.success(res.data.message);
+      } else message.error(res.data.message, 1);
 
-        // setBatchDetail(
-        //   res.data.data.batch.map((obj = { label: obj.name, value: obj.id }))
-        // );
-        // setCourseDetail(
-        //   res.data.data.courses.map((obj = { label: obj.name, value: obj.id }))
-        // );
+      dispatch(loadingAction(false));
+    });
+  };
+};
+
+export const userInfoAction = (userStatus, setUserDetail, setCurrent) => {
+  return (dispatch) => {
+    const cookie = new Cookies();
+    const token = cookie.get("token");
+
+    dispatch(loadingAction(true));
+
+    API(
+      "GET",
+      "/admin/getUsers?" + new URLSearchParams(userStatus),
+      "",
+      null,
+      token
+    ).then((res) => {
+      if (res.status >= 200 && res.status < 300) {
+        setUserDetail(
+          res.data.data.map((user) => ({
+            label: user.name,
+            value: user.id,
+          }))
+        );
+
+        setCurrent((prev) => prev + 1);
       } else message.error(res.data.message, 1);
 
       dispatch(loadingAction(false));

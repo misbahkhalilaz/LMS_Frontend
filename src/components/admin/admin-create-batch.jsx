@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Modal,
@@ -25,7 +25,12 @@ const { RangePicker } = DatePicker;
 const CreateBatch = ({ setDestroy }) => {
   const [isModalVisible, setIsModalVisible] = useState(true);
 
-  const [initSubmitInfo, setInitSubmitInfo] = useState([]);
+  const [programDetail] = useState([
+    { label: "BSCS", value: 2 },
+    { label: "BSSE", value: 3 },
+    { label: "MCS", value: 4 },
+  ]);
+  const [batchinfo, setBatchinfo] = useState([]);
   const [current, setCurrent] = useState(0);
 
   const isLoading = useSelector((state) => state.generalReducer.isLoading);
@@ -36,28 +41,27 @@ const CreateBatch = ({ setDestroy }) => {
     values["endingYr"] = values["term"][1].format("MMM-YYYY");
     delete values["term"];
 
-    setInitSubmitInfo(values);
+    setBatchinfo(values);
     setCurrent(current + 1);
   };
 
-  const formData = new FormData();
-
   const batchCreateSubmit = (values) => {
-    //const formData = new FormData();
-    // Object.entries(initSubmitInfo).forEach( ([key, value]) => {
-    //   if (key != "noSection") formData.append(key, value);
-    // })
-    // Object.entries(values).forEach(([key, value]) =>
-    //   formData.append(key, value.file, value.file.name)
-    // );
-    // console.log(...formData);
-    console.log(values);
-    // dispatch(
-    //   addBatchAction(initInfoSubmit, values, message, setIsModalVisible)
-    // );
-  };
+    const formData = new FormData();
 
-  const inputFileRef = useRef(null);
+    Object.entries(batchinfo).forEach(([key, value]) => {
+      if (key != "noSection") formData.append(key, value);
+    });
+
+    try {
+      Object.entries(values).forEach(([key, value]) =>
+        formData.append(key, value.file, value.file.name)
+      );
+
+      dispatch(addBatchAction(formData, setIsModalVisible));
+    } catch {
+      message.error("Please upload remaining student file(s)!", 1);
+    }
+  };
 
   const steps = [
     {
@@ -95,11 +99,7 @@ const CreateBatch = ({ setDestroy }) => {
           >
             <Select
               showSearch
-              options={[
-                { label: "BSCS", value: 1 },
-                { label: "BSSE", value: 2 },
-                { label: "MCS", value: 3 },
-              ]}
+              options={programDetail}
               filterOption={(input, option) =>
                 option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
@@ -159,7 +159,7 @@ const CreateBatch = ({ setDestroy }) => {
       title: "Upload student file",
       content: (
         <Form layout="inline" requiredMark={false} onFinish={batchCreateSubmit}>
-          {[...Array(initSubmitInfo.noSection)].map((_, index) => (
+          {[...Array(batchinfo.noSection)].map((_, index) => (
             <div
               key={index}
               className="mainarea-bg"
@@ -176,44 +176,22 @@ const CreateBatch = ({ setDestroy }) => {
               </Typography.Title>
               <Form.Item
                 name={String.fromCharCode(65 + index)}
-                // rules={[
-                //   {
-                //     required: true,
-                //     message: "Please upload students list!",
-                //   },
-                // ]}
+                valuePropName="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please upload students list!",
+                  },
+                ]}
                 style={{ position: "absolute", bottom: 0, textAlign: "center" }}
               >
-                {/* <Upload
+                <Upload
                   maxCount={1}
                   accept=".xlsx, .xls"
-                  //action="/upload.do"
-                  beforeUpload={() => {
-                    return false;
-                  }}
-                  // fileList
+                  beforeUpload={() => false}
                 >
                   <Button type="primary">Click to upload</Button>
-                </Upload> */}
-
-                <input
-                  type="file"
-                  accept=".xlsx, .xls"
-                  // ref={inputFileRef}
-                  onChange={(e) => {
-                    // console.log(e.target.files[0]);
-                    formData.append(
-                      "A",
-                      e.target.files[0],
-                      e.target.files[0].name
-                    );
-                  }}
-                  // style={{ display: "none" }}
-                />
-                {/* <Button
-                  type="primary"
-                  onClick={() => inputFileRef.current.click()}
-                ></Button> */}
+                </Upload>
               </Form.Item>
             </div>
           ))}

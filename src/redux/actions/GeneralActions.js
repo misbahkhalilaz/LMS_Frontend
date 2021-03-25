@@ -38,26 +38,24 @@ export const loginAction = (payload, navigate, message) => {
   };
 };
 
-export const loginTokenAction = (navigate, requestedPath) => {
-  return (dispatch) => {
-    const cookie = new Cookies();
-    const token = cookie.get("token");
-    dispatch(checkTokenAction(false));
-    API("POST", "/auth", {}, null, token).then((res) => {
-      if (res.status >= 200 && res.status < 300) {
-        res.data.role == requestedPath.split("/")[1]
-          ? navigate(requestedPath)
-          : navigate("/" + res.data.role, { replace: true });
+export const loginTokenAction = (navigate, requestedPath) => (dispatch) => {
+  const cookie = new Cookies();
+  const token = cookie.get("token");
+  dispatch(checkTokenAction(false));
+  API("POST", "/auth", {}, null, token).then((res) => {
+    if (res.status >= 200 && res.status < 300) {
+      res.data.role == requestedPath.split("/")[1]
+        ? navigate(requestedPath)
+        : navigate("/" + res.data.role, { replace: true });
 
-        dispatch(loginStatAction(true));
-      } else {
-        dispatch(loginStatAction(false));
-        navigate("/login", { replace: true });
-      }
+      dispatch(loginStatAction(true));
+    } else {
+      dispatch(loginStatAction(false));
+      navigate("/login", { replace: true });
+    }
 
-      dispatch(checkTokenAction(true));
-    });
-  };
+    dispatch(checkTokenAction(true));
+  });
 };
 
 export const requestOtpAction = (userId, message, setToken, setCurrent) => {

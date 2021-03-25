@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { loginStatAction } from "../redux/actions/GeneralActions";
+import {
+  loginStatAction,
+  clearStoreAction,
+} from "../redux/actions/GeneralActions";
 import useViewport from "./useViewport";
 import {
   Row,
@@ -109,6 +112,7 @@ const Navbar = () => {
                   cancelText="No"
                   onConfirm={() => {
                     dispatch(loginStatAction(false));
+                    dispatch(clearStoreAction());
                     navigate("/login", { replace: true });
                   }}
                 >

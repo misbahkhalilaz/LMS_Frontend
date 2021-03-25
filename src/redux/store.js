@@ -5,7 +5,10 @@ import { CLEAR_STORE } from "./constants";
 
 const rootReducer = (state, action) => {
   if (action.type === CLEAR_STORE) {
-    return (state = undefined);
+    return (state = {
+      generalReducer: { allowRender: true },
+      adminReducer: { teacherList: [], batchList: [] },
+    });
   }
 
   return allReducers(state, action);
@@ -13,11 +16,6 @@ const rootReducer = (state, action) => {
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const store = createStore(
-  rootReducer,
-  composeEnhancer(
-    applyMiddleware(thunk)
-  )
-);
+const store = createStore(rootReducer, composeEnhancer(applyMiddleware(thunk)));
 
 export default store;
