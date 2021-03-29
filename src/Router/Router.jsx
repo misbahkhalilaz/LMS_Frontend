@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useRoutes, useLocation, Navigate } from "react-router";
-import { loginTokenAction } from "../redux/actions/GeneralActions";
+import { loginTokenAction } from "../redux/actions/LoggerActions";
 
 import { Row, Col } from "antd";
 import Skeleton from "./skeleton";
@@ -104,12 +104,10 @@ const Router = () => {
   let element = useRoutes(routes);
   const navigate = useNavigate();
   const location = useLocation();
-  const allowRender = useSelector((state) => state.generalReducer.allowRender);
+  const allowRender = useSelector((state) => state.loggerReducer.allowRender);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(loginTokenAction(navigate, location.pathname));
-  }, []);
+  useEffect(() => dispatch(loginTokenAction(navigate, location.pathname)), []);
 
   return (
     <Row style={{ height: "100%" }}>

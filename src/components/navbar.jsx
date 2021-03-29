@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   loginStatAction,
   clearStoreAction,
-} from "../redux/actions/GeneralActions";
+} from "../redux/actions/LoggerActions";
 import useViewport from "./useViewport";
 import {
   Row,
@@ -33,7 +33,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { width } = useViewport();
-  const isLogged = useSelector((state) => state.generalReducer.isLogged);
+  const isLogged = useSelector((state) => state.loggerReducer.isLogged);
 
   const homePaths = ["/", "/login", "/student", "/teacher", "/admin"];
 

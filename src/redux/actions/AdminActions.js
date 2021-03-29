@@ -1,7 +1,15 @@
 import { message } from "antd";
 import API from "../../utils/fetch";
 import Cookies from "universal-cookie";
-import { LOADING, LOAD_TEACHERLIST, LOAD_BATCHLIST } from "../constants";
+import {
+  LOADING,
+  LOAD_TEACHERLIST,
+  LOAD_TEACHERLIST_PAGE,
+  LOAD_TEACHERLIST_PAGESIZE,
+  LOAD_TEACHERLIST_TOTAL,
+  LOAD_BATCHLIST,
+  LOAD_COURSELIST,
+} from "../constants";
 
 export const loadingAction = (payload) => {
   return { type: LOADING, payload };
@@ -11,29 +19,45 @@ export const setTeacherList = (payload) => {
   return { type: LOAD_TEACHERLIST, payload };
 };
 
+export const setTeacherPage = (payload) => {
+  return { type: LOAD_TEACHERLIST_PAGE, payload };
+};
+
+export const setTeacherPageSize = (payload) => {
+  return { type: LOAD_TEACHERLIST_PAGESIZE, payload };
+};
+
+export const setTeacherTotal = (payload) => {
+  return { type: LOAD_TEACHERLIST_TOTAL, payload };
+};
+
 export const setBatchList = (payload) => {
   return { type: LOAD_BATCHLIST, payload };
 };
 
-export const getTeacherListAction = (teacherStatus) => (dispatch) => {
+export const setCourseList = (payload) => {
+  return { type: LOAD_COURSELIST, payload };
+};
+
+export const getTeacherListAction = (queryParams) => (dispatch) => {
   const cookie = new Cookies();
   const token = cookie.get("token");
   dispatch(loadingAction(true));
 
-  API(
-    "GET",
-    "/admin/getUsers?" + new URLSearchParams(teacherStatus),
-    "",
-    null,
-    token
-  ).then((res) => {
+  API("GET", "/admin/getUsers?" + new URLSearchParams(queryParams), "", null, token).then((res) => {
     if (res.status >= 200 && res.status < 300) {
-      const payload = res.data.data.map(
-        ({ id, name, phone_no, email, isActive }) => {
-          return { key: id, id, name, phone_no, email, isActive };
-        }
-      );
+      const payload = res.data.data.map(({ id, name, phone_no, email, isActive }) => {
+        return { key: id, id, name, phone_no, email, isActive };
+      });
 
+      dispatch(setTeacherPage(queryParams.page));
+      dispatch(setTeacherPageSize(queryParams.pageSize));
+
+      if (queryParams.page == 1) {
+        const totalPages = res.data.totalPages;
+        const total = totalPages * queryParams.pageSize;
+        dispatch(setTeacherTotal(total));
+      }
       dispatch(setTeacherList(payload));
     } else message.error(res.data.message, 1);
 
@@ -41,47 +65,56 @@ export const getTeacherListAction = (teacherStatus) => (dispatch) => {
   });
 };
 
-export const getClassCreateInfoAction = (
-  reqInfo,
-  setCourseDetail,
-  setSectionDetail
-) => (dispatch) => {
+export const getStudentListAction = (queryParams, functions) => (dispatch) => {
+  const cookie = new Cookies();
+  const token = cookie.get("token");
+  dispatch(loadingAction(true));
+
+  API("GET", "/admin/getStudents?" + new URLSearchParams(queryParams), "", null, token).then(
+    (res) => {
+      if (res.status >= 200 && res.status < 300) {
+        const payload = res.data.data.map(({ id, user_id, name, phone_no, email, isActive }) => {
+          return { key: id, id, seatNo: user_id, name, phone_no, email, isActive };
+        });
+
+        if (queryParams.page == 1) {
+          const totalPages = res.data.totalPages;
+          const total = totalPages * queryParams.pageSize;
+          functions[3](total);
+        }
+
+        functions[0](payload);
+        functions[1](res.data.filters);
+        functions[2](queryParams.page);
+        functions[4](queryParams.pageSize);
+      } else message.error(res.data.message);
+
+      dispatch(loadingAction(false));
+    }
+  );
+};
+
+export const getCourseList = (queryParams, setCourseList, setCurrent) => (dispatch) => {
   const cookie = new Cookies();
   const token = cookie.get("token");
 
   dispatch(loadingAction(true));
 
-  API(
-    "GET",
-    "/admin/getProgramData?" + new URLSearchParams(reqInfo),
-    "",
-    null,
-    token
-  ).then((res) => {
-    if (res.status >= 200 && res.status < 300) {
-      const batchinfo = [];
-      const sectinfo = {};
-
-      Object.values(res.data.data.batch).forEach((batch) => {
-        batchinfo.push({ label: batch.name, value: batch.id });
-        sectinfo[batch.id] = batch.sections?.map((sect) => ({
-          label: sect.name,
-          value: sect.id,
-        }));
-      });
-
-      dispatch(setBatchList(batchinfo));
-      setSectionDetail(sectinfo);
-      setCourseDetail(
-        res.data.data.courses?.map((course) => ({
-          label: course.name,
+  API("GET", "/admin/getCourses?" + new URLSearchParams(queryParams), "", null, token).then(
+    (res) => {
+      if (res.status >= 200 && res.status < 300) {
+        const list = res.data.data.map((course) => ({
+          label: `${course.code} ${course.name}`,
           value: course.id,
-        }))
-      );
-    } else message.error(res.data.message, 1);
+          creditHours: course.credit_hr,
+        }));
+        setCourseList(list);
+        setCurrent((prev) => prev + 1);
+      } else message.error(res.data.message, 1);
 
-    dispatch(loadingAction(false));
-  });
+      dispatch(loadingAction(false));
+    }
+  );
 };
 
 export const addTeacherAction = (payload, message, setIsModalVisible) => {
@@ -91,36 +124,31 @@ export const addTeacherAction = (payload, message, setIsModalVisible) => {
     const adminState = getState().adminReducer;
     dispatch(loadingAction(true));
 
-    API("POST", "/admin/createTeacherAccount", payload, null, token).then(
-      (res) => {
-        if (res.status >= 200 && res.status < 300) {
-          const { id, name, phone_no, email, isActive } = res.data.data;
+    API("POST", "/admin/createTeacherAccount", payload, null, token).then((res) => {
+      if (res.status >= 200 && res.status < 300) {
+        const { id, name, phone_no, email, isActive } = res.data.data;
 
-          const payload = {
-            key: id,
-            id,
-            name,
-            phone_no,
-            email,
-            isActive,
-          };
+        const payload = {
+          key: id,
+          id,
+          name,
+          phone_no,
+          email,
+          isActive,
+        };
 
-          dispatch(setTeacherList([...adminState.teacherList, payload]));
-          setIsModalVisible(false);
+        dispatch(setTeacherList([...adminState.teacherList, payload]));
+        setIsModalVisible(false);
 
-          message.success(res.data.message);
-        } else message.error(res.data.message, 1);
+        message.success(res.data.message);
+      } else message.error(res.data.message, 1);
 
-        dispatch(loadingAction(false));
-      }
-    );
+      dispatch(loadingAction(false));
+    });
   };
 };
 
-export const addBatchAction = (formData, setIsModalVisible) => (
-  dispatch,
-  getState
-) => {
+export const addBatchAction = (formData, setIsModalVisible) => (dispatch, getState) => {
   const cookie = new Cookies();
   const token = cookie.get("token");
   const adminState = getState().adminReducer;
@@ -174,7 +202,7 @@ export const addClassAction = (classInfo, setIsModalVisible) => {
     const token = cookie.get("token");
 
     dispatch(loadingAction(true));
-
+    console.log(classInfo);
     API("POST", "/admin/createClass", classInfo, null, token).then((res) => {
       if (res.status >= 200 && res.status < 300) {
         setIsModalVisible(false);
@@ -193,22 +221,84 @@ export const userInfoAction = (userStatus, setUserDetail, setCurrent) => {
 
     dispatch(loadingAction(true));
 
-    API(
-      "GET",
-      "/admin/getUsers?" + new URLSearchParams(userStatus),
-      "",
-      null,
-      token
-    ).then((res) => {
-      if (res.status >= 200 && res.status < 300) {
-        setUserDetail(
-          res.data.data.map((user) => ({
-            label: user.name,
-            value: user.id,
-          }))
-        );
+    API("GET", "/admin/getUsers?" + new URLSearchParams(userStatus), "", null, token).then(
+      (res) => {
+        if (res.status >= 200 && res.status < 300) {
+          setUserDetail(
+            res.data.data.map((user) => ({
+              label: user.name,
+              value: user.id,
+            }))
+          );
 
-        setCurrent((prev) => prev + 1);
+          setCurrent((prev) => prev + 1);
+        } else message.error(res.data.message, 1);
+
+        dispatch(loadingAction(false));
+      }
+    );
+  };
+};
+
+export const chgTeacherActiveAction = (userInfo) => {
+  return (dispatch, getState) => {
+    const adminState = getState().adminReducer;
+    const cookie = new Cookies();
+    const token = cookie.get("token");
+
+    dispatch(loadingAction(true));
+
+    API("POST", "/admin/changeUserIsactive", userInfo, null, token).then((res) => {
+      if (res.status >= 200 && res.status < 300) {
+        const newArray = [...adminState.teacherList];
+        const index = newArray.findIndex((t) => t.id == userInfo.id);
+
+        newArray[index].isActive = res.data.data.isActive;
+
+        dispatch(setTeacherList(newArray));
+      } else message.error(res.data.message, 1);
+      dispatch(loadingAction(false));
+    });
+  };
+};
+
+export const chgStudentActiveAction = (userInfo, list, setList) => {
+  return (dispatch) => {
+    const cookie = new Cookies();
+    const token = cookie.get("token");
+
+    dispatch(loadingAction(true));
+
+    API("POST", "/admin/changeUserIsactive", userInfo, null, token).then((res) => {
+      if (res.status >= 200 && res.status < 300) {
+        const newArray = [...list];
+        const index = newArray.findIndex((t) => t.id == userInfo.id);
+
+        newArray[index].isActive = res.data.data.isActive;
+
+        setList(newArray);
+      } else message.error(res.data.message, 1);
+
+      dispatch(loadingAction(false));
+    });
+  };
+};
+
+export const studentSearchAction = (studentInfo, functions) => {
+  return (dispatch) => {
+    const cookie = new Cookies();
+    const token = cookie.get("token");
+
+    dispatch(loadingAction(true));
+
+    API("POST", "/admin/searchUsers?page=1&pageSize=1000", studentInfo, null, token).then((res) => {
+      if (res.status >= 200 && res.status < 300) {
+        const payload = res.data.data.map(({ id, user_id, name, phone_no, email, isActive }) => {
+          return { key: id, id, seatNo: user_id, name, phone_no, email, isActive };
+        });
+
+        functions[0](payload);
+        functions[3](1);
       } else message.error(res.data.message, 1);
 
       dispatch(loadingAction(false));

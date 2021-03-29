@@ -6,7 +6,7 @@ import { CLEAR_STORE } from "./constants";
 const rootReducer = (state, action) => {
   if (action.type === CLEAR_STORE) {
     return (state = {
-      generalReducer: { allowRender: true },
+      loggerReducer: { allowRender: true },
       adminReducer: { teacherList: [], batchList: [] },
     });
   }

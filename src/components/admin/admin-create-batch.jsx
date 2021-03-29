@@ -33,7 +33,7 @@ const CreateBatch = ({ setDestroy }) => {
   const [batchinfo, setBatchinfo] = useState([]);
   const [current, setCurrent] = useState(0);
 
-  const isLoading = useSelector((state) => state.generalReducer.isLoading);
+  const isLoading = useSelector((state) => state.loggerReducer.isLoading);
   const dispatch = useDispatch();
 
   const initInfoSubmit = (values) => {

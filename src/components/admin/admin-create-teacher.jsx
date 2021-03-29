@@ -7,7 +7,7 @@ import { addTeacherAction } from "../../redux/actions/AdminActions";
 const CreateTeacherProfile = ({ setDestroy }) => {
   const [isModalVisible, setIsModalVisible] = useState(true);
 
-  const isLoading = useSelector((state) => state.generalReducer.isLoading);
+  const isLoading = useSelector((state) => state.loggerReducer.isLoading);
   const dispatch = useDispatch();
 
   const postSubmit = (values) =>

@@ -6,7 +6,7 @@ import {
   requestOtpAction,
   verifyOtpAction,
   setPassAction,
-} from "../redux/actions/GeneralActions";
+} from "../redux/actions/LoggerActions";
 
 import {
   Row,
@@ -71,7 +71,7 @@ const Login = () => {
   const [timer, setTimer] = useState();
 
   const navigate = useNavigate();
-  const isLoading = useSelector((state) => state.generalReducer.isLoading);
+  const isLoading = useSelector((state) => state.loggerReducer.isLoading);
   const dispatch = useDispatch();
 
   const login = ({ userId, password }) => {

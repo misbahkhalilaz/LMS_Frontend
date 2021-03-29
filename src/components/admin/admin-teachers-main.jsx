@@ -4,7 +4,7 @@ import CreateTeacherProfile from "./admin-create-teacher";
 import useViewport from "../useViewport";
 import { Row, Col, Button, Input, Table, Switch } from "antd";
 
-import { getTeacherListAction } from "../../redux/actions/AdminActions";
+import { getTeacherListAction, chgTeacherActiveAction } from "../../redux/actions/AdminActions";
 
 const { Search } = Input;
 
@@ -14,15 +14,17 @@ const TeacherListMain = () => {
   const [showCreateProfile, setShowCreateProfile] = useState(false);
   const { width } = useViewport();
 
-  const isLoading = useSelector((state) => state.generalReducer.isLoading);
+  const isLoading = useSelector((state) => state.loggerReducer.isLoading);
+
   const teacherList = useSelector((state) => state.adminReducer.teacherList);
+  const current = useSelector((state) => state.adminReducer.teacherPage);
+  const pageSize = useSelector((state) => state.adminReducer.teacherPageSize);
+  const total = useSelector((state) => state.adminReducer.teacherTotal);
+
   const dispatch = useDispatch();
 
   useEffect(
-    () =>
-      teacherList.length == 0
-        ? dispatch(getTeacherListAction({ role: "teacher" }))
-        : null,
+    () => (teacherList.length == 0 ? dispatch(getTeacherListAction({ role: "teacher", page: 1, pageSize: 20 })) : null),
     []
   );
 
@@ -47,27 +49,11 @@ const TeacherListMain = () => {
       title: "Status",
       render: (teacher) => (
         <Switch
-          checkedChildren="Active"
-          unCheckedChildren="Inactive"
+          checkedChildren='Active'
+          unCheckedChildren='Inactive'
           checked={teacher.isActive}
           onChange={(checked) => {
-            //let index = teacherList.findIndex((x) => x.key === teacher.key);
-            console.log(teacher.id);
-
-            // SetData([
-            //   ...data.slice(0, index),
-            //   { ...teacher, isActive: checked },
-            //   ...data.slice(index + 1),
-            // ]);
-
-            // if (filteredData.length > 0) {
-            //   index = filteredData.findIndex((x) => x.key === teacher.key);
-            //   SetFilteredData([
-            //     ...filteredData.slice(0, index),
-            //     { ...teacher, isActive: checked },
-            //     ...filteredData.slice(index + 1),
-            //   ]);
-            // }
+            dispatch(chgTeacherActiveAction({ id: teacher.id, isActive: checked }));
           }}
         />
       ),
@@ -85,9 +71,7 @@ const TeacherListMain = () => {
         value == ""
           ? []
           : teacherList.filter((o) =>
-              Object.keys(o).some((k) =>
-                String(o[k]).toLowerCase().includes(value.toLowerCase())
-              )
+              Object.keys(o).some((k) => String(o[k]).toLowerCase().includes(value.toLowerCase()))
             )
       );
 
@@ -95,17 +79,28 @@ const TeacherListMain = () => {
   };
 
   const tableProps = {
-    scroll: { y: "70vh" },
-    loading: false,
-    pagination: false,
+    scroll: { y: "62vh" },
+    loading: isLoading,
+    pagination: {
+      showSizeChanger: true,
+      current,
+      pageSize,
+      total,
+      onChange: (page, pageSize) => {
+        dispatch(getTeacherListAction({ role: "teacher", page, pageSize }));
+      },
+      onShowSizeChange: (_, pageSize) => {
+        dispatch(getTeacherListAction({ role: "teacher", page: 1, pageSize }));
+      },
+    },
   };
 
   return (
     <Row>
-      <Row align="middle" style={{ height: "10vh" }}>
+      <Row align='middle' style={{ height: "10vh" }}>
         <Col span={16} push={1}>
           <Search
-            placeholder="Search by name/email/phone no (press enter/click search icon). . . ."
+            placeholder='Search by name/email/phone no (press enter/click search icon). . . .'
             allowClear
             enterButton
             onSearch={filterStudent}
@@ -113,10 +108,10 @@ const TeacherListMain = () => {
         </Col>
         <Col span={5} push={2}>
           <Button
-            className="postfilter-btn"
+            className='postfilter-btn'
             block
-            shape="round"
-            size="large"
+            shape='round'
+            size='large'
             onClick={() => setShowCreateProfile(true)}
           >
             {width < 700 ? "Add" : "Add Teacher"}
@@ -125,17 +120,10 @@ const TeacherListMain = () => {
       </Row>
       <Row style={{ height: "80vh" }}>
         <Col>
-          <Table
-            {...tableProps}
-            columns={columns}
-            dataSource={filteredData.length == 0 ? teacherList : filteredData}
-            loading={isLoading}
-          />
+          <Table {...tableProps} columns={columns} dataSource={filteredData.length == 0 ? teacherList : filteredData} />
         </Col>
       </Row>
-      {showCreateProfile && (
-        <CreateTeacherProfile setDestroy={() => setDestroy()} />
-      )}
+      {showCreateProfile && <CreateTeacherProfile setDestroy={() => setDestroy()} />}
     </Row>
   );
 };

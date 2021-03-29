@@ -35,7 +35,7 @@ const CourseListMain = () => {
   const [prevTxt, SetPrevTxt] = useState("");
   const { width } = useViewport();
 
-  const isLoading = useSelector((state) => state.generalReducer.isLoading);
+  const isLoading = useSelector((state) => state.loggerReducer.isLoading);
   const dispatch = useDispatch();
 
   const [courseData] = useState([
