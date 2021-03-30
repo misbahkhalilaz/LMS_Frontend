@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Modal, Steps, Button, Radio, Form, Select } from "antd";
 
@@ -12,6 +12,7 @@ const CreateClass = ({ setDestroy }) => {
 
   const [teacherList, setTeacherList] = useState([]);
   const [courseList, setCourseList] = useState([]);
+  const [courseTemp, setCourseTemp] = useState();
 
   const [selectedShift, setSelectedShift] = useState();
   const [selectedProgId, setSelectedProgId] = useState();
@@ -27,9 +28,11 @@ const CreateClass = ({ setDestroy }) => {
 
   const initInfoSubmit = ({ programId, batchId, sectionId, shift }) => {
     const { semester } = batchList[programId][shift].find((x) => x.value === batchId);
+    const obj = { programId, semester, sectionId, isActive: true };
 
-    dispatch(getCourseList({ programId, semester, isActive: true }, setCourseList, setCurrent));
+    dispatch(getCourseList(obj, setCourseList, setCurrent));
     setClassInfo({ sectionId });
+    setCourseTemp(obj);
   };
 
   const courseInfoSubmit = ({ courseId }) => {
@@ -42,9 +45,11 @@ const CreateClass = ({ setDestroy }) => {
   };
 
   const createClass = ({ teacherId, labTeacherId }) => {
-    const obj = labTeacherId ? { ...classInfo, teacherId, labTeacherId } : { ...classInfo, teacherId };
+    const obj = labTeacherId
+      ? { ...classInfo, teacherId, labTeacherId }
+      : { ...classInfo, teacherId };
 
-    dispatch(addClassAction(obj, setIsModalVisible));
+    dispatch(addClassAction(obj, courseTemp, setCourseList, setCurrent));
   };
 
   const radioStyle = {
@@ -94,7 +99,9 @@ const CreateClass = ({ setDestroy }) => {
               options={programList}
               disabled={!selectedShift}
               onSelect={(value) => setSelectedProgId(value)}
-              filterOption={(input, option) => option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              filterOption={(input, option) =>
+                option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
             />
           </Form.Item>
           <Form.Item
@@ -112,7 +119,9 @@ const CreateClass = ({ setDestroy }) => {
               options={batchList[selectedProgId]?.[selectedShift]}
               disabled={!selectedProgId}
               onSelect={(value) => setAvailableSect(sectionList[value])}
-              filterOption={(input, option) => option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              filterOption={(input, option) =>
+                option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
             />
           </Form.Item>
           <Form.Item
@@ -129,7 +138,9 @@ const CreateClass = ({ setDestroy }) => {
               showSearch
               options={availableSect}
               disabled={availableSect.length == 0}
-              filterOption={(input, option) => option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              filterOption={(input, option) =>
+                option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
             />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 20 }}>
@@ -143,7 +154,7 @@ const CreateClass = ({ setDestroy }) => {
     {
       title: "Course",
       content: (
-        <Form colon={false} requiredMark={false} onFinish={courseInfoSubmit}>
+        <Form colon={false} preserve={false} requiredMark={false} onFinish={courseInfoSubmit}>
           <Form.Item
             name='courseId'
             rules={[
@@ -174,7 +185,7 @@ const CreateClass = ({ setDestroy }) => {
     {
       title: "Teacher",
       content: (
-        <Form colon={false} requiredMark={false} onFinish={createClass} labelCol={{ span: 10 }}>
+        <Form colon={false} requiredMark={false} preserve={false} onFinish={createClass}>
           <Form.Item
             name='teacherId'
             label='Select Teacher'
@@ -184,11 +195,14 @@ const CreateClass = ({ setDestroy }) => {
                 message: "Please select a teacher!",
               },
             ]}
+            labelCol={{ span: 10 }}
           >
             <Select
               showSearch
               options={teacherList}
-              filterOption={(input, option) => option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              filterOption={(input, option) =>
+                option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
               style={{ width: 200 }}
             />
           </Form.Item>
@@ -202,11 +216,14 @@ const CreateClass = ({ setDestroy }) => {
                   message: "Please select a lab teacher!",
                 },
               ]}
+              labelCol={{ span: 10 }}
             >
               <Select
                 showSearch
                 options={teacherList}
-                filterOption={(input, option) => option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                filterOption={(input, option) =>
+                  option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }
                 style={{ width: 200 }}
               />
             </Form.Item>

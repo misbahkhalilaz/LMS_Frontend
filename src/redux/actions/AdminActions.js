@@ -109,12 +109,42 @@ export const getCourseList = (queryParams, setCourseList, setCurrent) => (dispat
           creditHours: course.credit_hr,
         }));
         setCourseList(list);
-        setCurrent((prev) => prev + 1);
+        if (setCurrent) setCurrent((prev) => prev + 1);
       } else message.error(res.data.message, 1);
 
       dispatch(loadingAction(false));
     }
   );
+};
+
+export const getProgramCourseList = (programId, years, setCourseData) => (dispatch) => {
+  const cookie = new Cookies();
+  const token = cookie.get("token");
+
+  dispatch(loadingAction(true));
+  API("GET", `/admin/getCourses?programId=${programId}`, "", null, token).then((res) => {
+    if (res.status >= 200 && res.status < 300) {
+      const programCourses = [];
+      for (let i = 0; i < years * 2; i++) programCourses.push([]);
+
+      res.data.data.map(({ id, semester, name, code, credit_hr, isActive }) => {
+        const hours = credit_hr === "3" ? "3 + 0" : "2 + 1";
+        programCourses[parseInt(semester) - 1].push({
+          key: id,
+          id,
+          semester,
+          code,
+          name,
+          hours,
+          isActive,
+        });
+      });
+
+      setCourseData(programCourses);
+    } else message.error(res.data.message, 1);
+
+    dispatch(loadingAction(false));
+  });
 };
 
 export const addTeacherAction = (payload, message, setIsModalVisible) => {
@@ -169,7 +199,7 @@ export const addBatchAction = (formData, setIsModalVisible) => (dispatch, getSta
   });
 };
 
-export const addCourseAction = (courseInfo, message, setIsModalVisible) => {
+export const addCourseAction = (courseInfo, setIsModalVisible, setCourseData) => {
   return (dispatch) => {
     const cookie = new Cookies();
     const token = cookie.get("token");
@@ -179,16 +209,16 @@ export const addCourseAction = (courseInfo, message, setIsModalVisible) => {
       if (res.status >= 200 && res.status < 300) {
         setIsModalVisible(false);
         message.success(res.data.message);
-        //res.data.data send back to update UI
-        /*"data": {
-        "id": 4,
-        "program_id": 1,
-        "semester": "1",
-        "name": "ICS3",
-        "code": "BCS-508",
-        "credit_hr": "3",
-        "total_marks": "100",
-        "isActive": true}*/
+
+        const { id, code, name, isActive, semester, credit_hr } = res.data.data;
+        const hours = credit_hr === "3" ? "3 + 0" : "2 + 1";
+
+        setCourseData((prev) => {
+          const newArray = JSON.parse(JSON.stringify(prev));
+          newArray[semester - 1].push({ key: id, id, code, name, hours, isActive, semester });
+
+          return newArray;
+        });
       } else message.error(`Status ${res.status} failed to add course`, 1);
 
       dispatch(loadingAction(false));
@@ -196,16 +226,16 @@ export const addCourseAction = (courseInfo, message, setIsModalVisible) => {
   };
 };
 
-export const addClassAction = (classInfo, setIsModalVisible) => {
+export const addClassAction = (classInfo, prevCourses, setCourseList, setCurrent) => {
   return (dispatch) => {
     const cookie = new Cookies();
     const token = cookie.get("token");
 
     dispatch(loadingAction(true));
-    console.log(classInfo);
     API("POST", "/admin/createClass", classInfo, null, token).then((res) => {
       if (res.status >= 200 && res.status < 300) {
-        setIsModalVisible(false);
+        dispatch(getCourseList(prevCourses, setCourseList));
+        setCurrent((prev) => prev - 1);
         message.success(res.data.message);
       } else message.error(res.data.message, 1);
 
@@ -237,6 +267,27 @@ export const userInfoAction = (userStatus, setUserDetail, setCurrent) => {
         dispatch(loadingAction(false));
       }
     );
+  };
+};
+
+export const chgCourseActiveAction = (courseInfo, course, setCourseData) => {
+  return (dispatch) => {
+    const cookie = new Cookies();
+    const token = cookie.get("token");
+
+    dispatch(loadingAction(true));
+
+    API("POST", "/admin/changeCourseIsActive", courseInfo, null, token).then((res) => {
+      if (res.status >= 200 && res.status < 300) {
+        setCourseData((prev) => {
+          const index = prev[course.semester - 1].findIndex((x) => x.id === course.id);
+          prev[course.semester - 1][index].isActive = res.data.data.isActive;
+
+          return prev;
+        });
+      } else message.error(res.data.message, 1);
+      dispatch(loadingAction(false));
+    });
   };
 };
 

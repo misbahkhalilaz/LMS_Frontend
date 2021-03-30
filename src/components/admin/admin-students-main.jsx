@@ -97,6 +97,18 @@ const StudentListMain = () => {
     SetPrevTxt(query);
   };
 
+  const pageOptions = (page, pageSize) => {
+    if (prevTxt != "") return;
+    const obj = {};
+    if (sectionId) obj.sectionId = sectionId;
+    else if (batchId) obj.batchId = batchId;
+    else obj.programId = programId;
+    obj.page = page ? page : 1;
+    obj.pageSize = pageSize;
+    obj.isActive = true;
+    dispatch(getStudentListAction(obj, functions));
+  };
+
   const tableProps = {
     scroll: { y: "62vh" },
     loading: isLoading,
@@ -105,26 +117,8 @@ const StudentListMain = () => {
       current,
       pageSize,
       total,
-      onChange: (page, pageSize) => {
-        const obj = {};
-        if (sectionId) obj.sectionId = sectionId;
-        else if (batchId) obj.batchId = batchId;
-        else if (programId) obj.programId = programId;
-        obj.page = page;
-        obj.pageSize = pageSize;
-        obj.isActive = true;
-        dispatch(getStudentListAction(obj, functions));
-      },
-      onShowSizeChange: (_, pageSize) => {
-        const obj = {};
-        if (sectionId) obj.sectionId = sectionId;
-        else if (batchId) obj.batchId = batchId;
-        else if (programId) obj.programId = programId;
-        obj.page = 1;
-        obj.pageSize = pageSize;
-        obj.isActive = true;
-        dispatch(getStudentListAction(obj, functions));
-      },
+      onChange: (page, pageSize) => pageOptions(page, pageSize),
+      onShowSizeChange: (_, pageSize) => pageOptions(null, pageSize),
     },
   };
 
@@ -168,6 +162,7 @@ const StudentListMain = () => {
               setSectionId();
               setTotal();
               setAvailableSect();
+              setFilter({ role: "student" });
             }}
             filterOption={(input, option) =>
               option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0

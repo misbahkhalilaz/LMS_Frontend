@@ -125,12 +125,20 @@ const setAdminValues = (role, token) => async (dispatch) => {
           }));
 
           batch.shift == "Morning"
-            ? shiftWise.Morning.push({ label: batch.name, value: batch.id, semester: batch.current_semester })
-            : shiftWise.Evening.push({ label: batch.name, value: batch.id, semester: batch.current_semester });
+            ? shiftWise.Morning.push({
+                label: batch.name,
+                value: batch.id,
+                semester: batch.current_semester,
+              })
+            : shiftWise.Evening.push({
+                label: batch.name,
+                value: batch.id,
+                semester: batch.current_semester,
+              });
         });
 
         batchInfo[program.id] = shiftWise;
-        return { label: program.name, value: program.id };
+        return { label: program.name, value: program.id, years: program.no_of_years };
       });
     else message.error(res.data.message + ". Refresh the screen!");
   });
