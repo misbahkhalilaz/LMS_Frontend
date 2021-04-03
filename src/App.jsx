@@ -5,7 +5,6 @@ import { clearStoreAction } from "./redux/actions/LoggerActions";
 import ChatMain from "./components/chat-main"
 
 const App = () => {
-  useEffect(() => () => clearStoreAction(), []);
 
   return <ChatMain />;
 };

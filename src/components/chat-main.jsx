@@ -1,32 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Row, Col, Button, Typography, List, Input } from "antd";
 import { RightCircleFilled } from "@ant-design/icons";
+import {io} from "socket.io-client";
 
 const { TextArea } = Input;
 
-const ChatMain = () => {
+const ChatMain = ({roomId = "mata_ics1"}) => {
   const [value, Setvalue] = useState("");
+  const [data, setData] = useState([]);
+  const [room, setRoom] = useState('');
+  const [socket, setSocket] = useState(io.connect('http://localhost:4000'));
+  useEffect(() => {
+    socket.emit('join', roomId);
+    socket.on("rcv_msg", (msg) => alert(msg?.message))
+    socket.on("rcv_prev_chat", messages => {
+      setData(messages.map(msg => ({type: msg.senderId === "mata"? "send" : "receive", msg: msg.message})));
+    })
+    socket.on("err_msg", err => console.log(err))
+    socket.on("msg_success", () => console.log('success'))
 
-  const data = [
-    { type: "receive", msg: "Japanese princess to wed commoner." },
-    { type: "receive", msg: "Japanese princess to wed commoner." },
-    { type: "receive", msg: "Japanese princess to wed commoner." },
-
-    { type: "receive", msg: "Japanese princess to wed commoner." },
-    { type: "receive", msg: "Japanese princess to wed commoner." },
-    { type: "receive", msg: "Japanese princess to wed commoner." },
-
-    {
-      type: "send",
-      msg:
-        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nostrum sunt, perferendis at maxime odit quibusdam expedita, ullam, vero ipsum asperiores possimus minima? Incidunt illo soluta sed magni libero neque cupiditate?",
-    },
-    { type: "receive", msg: "Australian walks 100km after outback crash." },
-    { type: "send", msg: "Man charged over missing wedding girl." },
-    { type: "receive", msg: "Los Angeles battles huge wildfires." },
-  ];
+  }, []);
 
   const handleSubmit = () => {
+    socket.emit('send_msg', value, 'mata');
     Setvalue("");
   };
 
@@ -66,6 +62,33 @@ const ChatMain = () => {
               )}
             />
           </Row>
+          {/* <Row justify="center"
+            align="middle"
+            style={{ flex: "0 0 40px", margin: "10px 0" }}>
+            <Col span={22}>
+              <div className="comment">
+              <TextArea
+                  autoSize={{ minRows: 1, maxRows: 4 }}
+                  bordered={false}
+                  onChange={(e) => {
+                    setRoom(e.target.value);
+                  }}
+                  value={room}
+                  style={{ width: "calc(100% - 30px)" }}
+                />
+                <Button
+                  className="comment-btn"
+                  size="small"
+                  disabled={room.length === 0 && true}
+                  shape="circle"
+                  onClick={handleJoinRoom}
+                  style={{ position: "absolute", bottom: 4, right: 2 }}
+                >
+                  <RightCircleFilled style={{ fontSize: 24 }} />
+                </Button>
+              </div>
+            </Col>
+          </Row> */}
           <Row
             justify="center"
             align="middle"
