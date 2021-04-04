@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Moment from "react-moment";
+import DayJS from "react-dayjs";
 import { Comment, Input, Typography, Button, List } from "antd";
 import { RightCircleFilled } from "@ant-design/icons";
 
@@ -55,7 +55,7 @@ const ClasspostComment = ({ type }) => {
           content: <p>{value}</p>,
           datetime: (
             <Text>
-              <Moment format="MMM DD" />
+              <DayJS format="MMM DD" />
             </Text>
           ),
         },

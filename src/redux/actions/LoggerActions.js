@@ -138,7 +138,11 @@ const setAdminValues = (role, token) => async (dispatch) => {
         });
 
         batchInfo[program.id] = shiftWise;
-        return { label: program.name, value: program.id, years: program.no_of_years };
+        return {
+          label: program.name,
+          value: program.id,
+          years: program.no_of_years,
+        };
       });
     else message.error(res.data.message + ". Refresh the screen!");
   });

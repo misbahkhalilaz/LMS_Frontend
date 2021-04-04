@@ -1,31 +1,29 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { Row, Col, Typography, Select, Skeleton } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+
+import { getClassBySect } from "../../redux/actions/AdminActions";
 import useViewport from "../useViewport";
 import TimetableStruct from "./timetable-structure";
-import { Row, Col, Typography, Select } from "antd";
 
 const { Title } = Typography;
 
 const CourseListMain = () => {
-  const [selectedShift, setSelectedShift] = useState("Morning");
-  const [selectedProgram, setSelectedProgram] = useState("BSCS");
-  const [selectedBatch, setSelectedBatch] = useState("All");
-  const [batchList, setBatchList] = useState([{ value: "All" }]);
-  const [activeBatch, setActiveBatch] = useState([]);
+  const [selectedShift, setSelectedShift] = useState();
+  const [selectedProgId, setSelectedProgId] = useState();
+  const [selectedBatch, setSelectedBatch] = useState();
+  const [availableSect, setAvailableSect] = useState();
   const { width } = useViewport();
 
-  useEffect(() => {
-    setActiveBatch([17, 18, 19]); //GET FROM API CALL
-    activeBatch.map((yr) => setBatchList([...batchList, { value: yr }]));
-  }, []);
+  const isLoading = useSelector((state) => state.loggerReducer.isLoading);
+  const programList = useSelector((state) => state.adminReducer.programList);
+  const batchList = useSelector((state) => state.adminReducer.batchList);
+  const sectionList = useSelector((state) => state.adminReducer.sectionList);
+  const dispatch = useDispatch();
 
   return (
     <Row>
-      <Row
-        className="no-select"
-        gutter={[20, 10]}
-        align="middle"
-        style={{ height: "10vh" }}
-      >
+      <Row className="no-select" align="middle" justify="space-around" gutter={[20]} style={{ height: "10vh" }}>
         <Col offset={1}>
           <Title level={width < 700 ? 5 : 4} style={{ display: "inline" }}>
             Shift{" "}
@@ -33,12 +31,14 @@ const CourseListMain = () => {
           <Select
             showSearch
             options={[{ value: "Morning" }, { value: "Evening" }]}
-            onChange={(value) => setSelectedShift(value)}
+            onSelect={(value) => {
+              setSelectedShift(value);
+              setSelectedProgId();
+              setSelectedBatch();
+            }}
             value={selectedShift}
-            filterOption={(input, option) =>
-              option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-            style={{ width: 100 }}
+            filterOption={(input, option) => option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            style={{ width: 110 }}
           />
         </Col>
         <Col>
@@ -47,13 +47,16 @@ const CourseListMain = () => {
           </Title>
           <Select
             showSearch
-            options={[{ value: "BSCS" }, { value: "BSSE" }, { value: "MCS" }]}
-            onChange={(value) => setSelectedProgram(value)}
-            value={selectedProgram}
-            filterOption={(input, option) =>
-              option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-            style={{ width: 90 }}
+            options={programList}
+            value={selectedProgId}
+            disabled={!selectedShift}
+            onSelect={(value) => {
+              setSelectedProgId(value);
+              setSelectedBatch();
+              setAvailableSect();
+            }}
+            filterOption={(input, option) => option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            style={{ width: 110 }}
           />
         </Col>
         <Col>
@@ -62,41 +65,28 @@ const CourseListMain = () => {
           </Title>
           <Select
             showSearch
-            options={[
-              { value: "All" },
-              { value: 17 },
-              { value: 18 },
-              { value: 19 },
-            ]}
-            onChange={(value) => setSelectedBatch(value)}
             value={selectedBatch}
-            filterOption={(input, option) =>
-              option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-            style={{ width: 90 }}
+            options={batchList[selectedProgId]?.[selectedShift]}
+            disabled={!selectedProgId}
+            onSelect={(value) => {
+              setSelectedBatch(value);
+              dispatch(getClassBySect({ sectionId: value }));
+              setAvailableSect(sectionList[value]);
+            }}
+            filterOption={(input, option) => option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            style={{ width: 110 }}
           />
         </Col>
       </Row>
-      <Row
-        gutter={[0, 40]}
-        justify="center"
-        style={{ height: "80vh", overflowY: "auto" }}
-      >
-        {selectedBatch != "All" ? (
+      <Row justify="center" style={{ height: "80vh", overflowY: "auto" }}>
+        {isLoading && <Skeleton.Avatar active shape="square" style={{ width: "90vw", height: "78vh" }} />}
+        {!isLoading && selectedBatch && (
           <TimetableStruct
             shift={selectedShift}
-            program={selectedProgram}
-            batch={selectedBatch}
+            program={selectedProgId}
+            batch={batchList[selectedProgId]?.[selectedShift].find((x) => x.value == selectedBatch)}
+            sections={availableSect}
           />
-        ) : (
-          activeBatch.map((yr) => (
-            <TimetableStruct
-              key={yr}
-              shift={selectedShift}
-              program={selectedProgram}
-              batch={yr}
-            />
-          ))
         )}
       </Row>
     </Row>
