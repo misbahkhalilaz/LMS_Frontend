@@ -8,6 +8,7 @@ import {
   LOAD_TEACHERLIST_PAGESIZE,
   LOAD_TEACHERLIST_TOTAL,
   LOAD_BATCHLIST,
+  LOAD_SECTIONLIST,
   LOAD_COURSELIST,
 } from "../constants";
 
@@ -35,21 +36,57 @@ export const setBatchList = (payload) => {
   return { type: LOAD_BATCHLIST, payload };
 };
 
+export const setSectionList = (payload) => {
+  return { type: LOAD_SECTIONLIST, payload };
+};
+
 export const setCourseList = (payload) => {
   return { type: LOAD_COURSELIST, payload };
 };
 
-export const getClassBySect = (queryParams) => (dispatch) => {
+export const getClassBySect = (queryParams, queryParams1, setClassBySect, setRooms) => (
+  dispatch
+) => {
   const cookie = new Cookies();
   const token = cookie.get("token");
   dispatch(loadingAction(true));
 
-  API("GET", "/admin/getClassesBySection?" + new URLSearchParams(queryParams), "", null, token).then((res) => {
-    if (res.status >= 200 && res.status < 300) {
-    } else message.error(res.data.message, 1);
+  Promise.all([
+    API("GET", "/admin/getClassesBySection?" + queryParams, "", null, token).then((res) => {
+      if (res.status < 200 || res.status >= 300) throw new Error(res.data.message);
+      else return res.data.data;
+    }),
+    API("GET", "/admin/getAvailableRooms?" + queryParams1, "", null, token).then((res) => {
+      if (res.status < 200 || res.status >= 300) throw new Error(res.data.message);
+      else return res.data.data;
+    }),
+  ])
+    .then(([Class, room]) => {
+      const classesBySect = {};
+      const rooms = [];
+      Class.map(({ id, section_id, teacher_id, users, courses }) => {
+        const className = `${courses.name} - ${users.name}`;
+        const value = [id, teacher_id]; //, section_id
+        if (!classesBySect[section_id]) classesBySect[section_id] = [];
 
-    dispatch(loadingAction(false));
-  });
+        classesBySect[section_id].push({ label: className, value });
+      });
+
+      room.map((day) =>
+        rooms.push(day.map((slots) => slots.map((slot) => ({ label: slot.name, value: slot.id }))))
+      );
+
+      setClassBySect(classesBySect);
+      setRooms(rooms);
+
+      dispatch(loadingAction(false));
+    })
+    .catch((err) => {
+      console.log(err.name, err.message);
+      message.error(err.name, 1);
+
+      dispatch(loadingAction(false));
+    });
 };
 
 export const getTeacherListAction = (queryParams) => (dispatch) => {
@@ -83,26 +120,28 @@ export const getStudentListAction = (queryParams, functions) => (dispatch) => {
   const token = cookie.get("token");
   dispatch(loadingAction(true));
 
-  API("GET", "/admin/getStudents?" + new URLSearchParams(queryParams), "", null, token).then((res) => {
-    if (res.status >= 200 && res.status < 300) {
-      const payload = res.data.data.map(({ id, user_id, name, phone_no, email, isActive }) => {
-        return { key: id, id, seatNo: user_id, name, phone_no, email, isActive };
-      });
+  API("GET", "/admin/getStudents?" + new URLSearchParams(queryParams), "", null, token).then(
+    (res) => {
+      if (res.status >= 200 && res.status < 300) {
+        const payload = res.data.data.map(({ id, user_id, name, phone_no, email, isActive }) => {
+          return { key: id, id, seatNo: user_id, name, phone_no, email, isActive };
+        });
 
-      if (queryParams.page == 1) {
-        const totalPages = res.data.totalPages;
-        const total = totalPages * queryParams.pageSize;
-        functions[3](total);
-      }
+        if (queryParams.page == 1) {
+          const totalPages = res.data.totalPages;
+          const total = totalPages * queryParams.pageSize;
+          functions[3](total);
+        }
 
-      functions[0](payload);
-      functions[1](res.data.filters);
-      functions[2](queryParams.page);
-      functions[4](queryParams.pageSize);
-    } else message.error(res.data.message);
+        functions[0](payload);
+        functions[1](res.data.filters);
+        functions[2](queryParams.page);
+        functions[4](queryParams.pageSize);
+      } else message.error(res.data.message);
 
-    dispatch(loadingAction(false));
-  });
+      dispatch(loadingAction(false));
+    }
+  );
 };
 
 export const getCourseList = (queryParams, setCourseList, setCurrent) => (dispatch) => {
@@ -111,19 +150,21 @@ export const getCourseList = (queryParams, setCourseList, setCurrent) => (dispat
 
   dispatch(loadingAction(true));
 
-  API("GET", "/admin/getCourses?" + new URLSearchParams(queryParams), "", null, token).then((res) => {
-    if (res.status >= 200 && res.status < 300) {
-      const list = res.data.data.map((course) => ({
-        label: `${course.code} ${course.name}`,
-        value: course.id,
-        creditHours: course.credit_hr,
-      }));
-      setCourseList(list);
-      if (setCurrent) setCurrent((prev) => prev + 1);
-    } else message.error(res.data.message, 1);
+  API("GET", "/admin/getCourses?" + new URLSearchParams(queryParams), "", null, token).then(
+    (res) => {
+      if (res.status >= 200 && res.status < 300) {
+        const list = res.data.data.map((course) => ({
+          label: `${course.code} ${course.name}`,
+          value: course.id,
+          creditHours: course.credit_hr,
+        }));
+        setCourseList(list);
+        if (setCurrent) setCurrent((prev) => prev + 1);
+      } else message.error(res.data.message, 1);
 
-    dispatch(loadingAction(false));
-  });
+      dispatch(loadingAction(false));
+    }
+  );
 };
 
 export const getProgramCourseList = (programId, years, setCourseData) => (dispatch) => {
@@ -154,6 +195,23 @@ export const getProgramCourseList = (programId, years, setCourseData) => (dispat
 
     dispatch(loadingAction(false));
   });
+};
+
+export const addBatchTimetable = (payload) => {
+  return (dispatch) => {
+    const cookie = new Cookies();
+    const token = cookie.get("token");
+    dispatch(loadingAction(true));
+
+    API("POST", "/admin/createTimeTable", payload, null, token).then((res) => {
+      res.status >= 200 && res.status < 300
+        ? message.success(res.data.message)
+        : message.error("Failed due to duplication in timetable(s)!");
+
+      //res.data.error.meta.target
+      dispatch(loadingAction(false));
+    });
+  };
 };
 
 export const addTeacherAction = (payload, message, setIsModalVisible) => {
@@ -195,10 +253,23 @@ export const addBatchAction = (formData, setIsModalVisible) => (dispatch, getSta
 
   API("POST", "/admin/createBatch", null, formData, token).then((res) => {
     if (res.status >= 200 && res.status < 300) {
-      const { id, name } = res.data.data;
+      const { id, name, program_id, shift, sections } = res.data.data;
 
-      const payload = { label: name, value: id };
-      dispatch(setBatchList([...adminState.batchList, payload]));
+      const obj = { ...adminState.batchList };
+
+      obj[program_id][shift].push({ label: name, value: id });
+
+      dispatch(setBatchList(obj));
+
+      dispatch(
+        setSectionList({
+          ...adminState.sectionList,
+          [id]: sections.map((sect) => ({
+            label: sect.name,
+            value: sect.id,
+          })),
+        })
+      );
 
       setIsModalVisible(false);
       message.success(res.data.message);
@@ -243,6 +314,7 @@ export const addClassAction = (classInfo, prevCourses, setCourseList, setCurrent
     dispatch(loadingAction(true));
     API("POST", "/admin/createClass", classInfo, null, token).then((res) => {
       if (res.status >= 200 && res.status < 300) {
+        setCourseList();
         dispatch(getCourseList(prevCourses, setCourseList));
         setCurrent((prev) => prev - 1);
         message.success(res.data.message);
@@ -260,20 +332,22 @@ export const userInfoAction = (userStatus, setUserDetail, setCurrent) => {
 
     dispatch(loadingAction(true));
 
-    API("GET", "/admin/getUsers?" + new URLSearchParams(userStatus), "", null, token).then((res) => {
-      if (res.status >= 200 && res.status < 300) {
-        setUserDetail(
-          res.data.data.map((user) => ({
-            label: user.name,
-            value: user.id,
-          }))
-        );
+    API("GET", "/admin/getUsers?" + new URLSearchParams(userStatus), "", null, token).then(
+      (res) => {
+        if (res.status >= 200 && res.status < 300) {
+          setUserDetail(
+            res.data.data.map((user) => ({
+              label: user.name,
+              value: user.id,
+            }))
+          );
 
-        setCurrent((prev) => prev + 1);
-      } else message.error(res.data.message, 1);
+          setCurrent((prev) => prev + 1);
+        } else message.error(res.data.message, 1);
 
-      dispatch(loadingAction(false));
-    });
+        dispatch(loadingAction(false));
+      }
+    );
   };
 };
 

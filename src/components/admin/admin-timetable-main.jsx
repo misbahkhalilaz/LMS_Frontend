@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Row, Col, Typography, Select, Skeleton } from "antd";
 import { useSelector, useDispatch } from "react-redux";
+import { Row, Col, Typography, Select, Skeleton } from "antd";
 
 import { getClassBySect } from "../../redux/actions/AdminActions";
 import useViewport from "../useViewport";
@@ -11,8 +11,7 @@ const { Title } = Typography;
 const CourseListMain = () => {
   const [selectedShift, setSelectedShift] = useState();
   const [selectedProgId, setSelectedProgId] = useState();
-  const [selectedBatch, setSelectedBatch] = useState();
-  const [availableSect, setAvailableSect] = useState();
+  const [selectedBatchId, setSelectedBatchId] = useState();
   const { width } = useViewport();
 
   const isLoading = useSelector((state) => state.loggerReducer.isLoading);
@@ -21,9 +20,17 @@ const CourseListMain = () => {
   const sectionList = useSelector((state) => state.adminReducer.sectionList);
   const dispatch = useDispatch();
 
+  const [classBySect, setClassBySect] = useState();
+  const [rooms, setRooms] = useState(false);
+
   return (
     <Row>
-      <Row className="no-select" align="middle" justify="space-around" gutter={[20]} style={{ height: "10vh" }}>
+      <Row
+        className="no-select"
+        align="middle"
+        justify="space-around"
+        gutter={[20]}
+        style={{ height: "10vh" }}>
         <Col offset={1}>
           <Title level={width < 700 ? 5 : 4} style={{ display: "inline" }}>
             Shift{" "}
@@ -34,10 +41,12 @@ const CourseListMain = () => {
             onSelect={(value) => {
               setSelectedShift(value);
               setSelectedProgId();
-              setSelectedBatch();
+              setSelectedBatchId();
             }}
             value={selectedShift}
-            filterOption={(input, option) => option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            filterOption={(input, option) =>
+              option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
             style={{ width: 110 }}
           />
         </Col>
@@ -52,10 +61,11 @@ const CourseListMain = () => {
             disabled={!selectedShift}
             onSelect={(value) => {
               setSelectedProgId(value);
-              setSelectedBatch();
-              setAvailableSect();
+              setSelectedBatchId();
             }}
-            filterOption={(input, option) => option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            filterOption={(input, option) =>
+              option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
             style={{ width: 110 }}
           />
         </Col>
@@ -65,27 +75,41 @@ const CourseListMain = () => {
           </Title>
           <Select
             showSearch
-            value={selectedBatch}
+            value={selectedBatchId}
             options={batchList[selectedProgId]?.[selectedShift]}
             disabled={!selectedProgId}
             onSelect={(value) => {
-              setSelectedBatch(value);
-              dispatch(getClassBySect({ sectionId: value }));
-              setAvailableSect(sectionList[value]);
+              setSelectedBatchId(value);
+
+              dispatch(
+                getClassBySect(
+                  `sectionIds= ${sectionList[value].map((sect) => sect.value).join(",")}`,
+                  `shift=${selectedShift}`,
+                  setClassBySect,
+                  setRooms
+                )
+              );
             }}
-            filterOption={(input, option) => option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            filterOption={(input, option) =>
+              option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
             style={{ width: 110 }}
           />
         </Col>
       </Row>
       <Row justify="center" style={{ height: "80vh", overflowY: "auto" }}>
-        {isLoading && <Skeleton.Avatar active shape="square" style={{ width: "90vw", height: "78vh" }} />}
-        {!isLoading && selectedBatch && (
+        {isLoading && selectedBatchId && (
+          <Skeleton.Avatar active shape="square" style={{ width: "90vw", height: "78vh" }} />
+        )}
+        {!isLoading && rooms && selectedBatchId && (
           <TimetableStruct
             shift={selectedShift}
-            program={selectedProgId}
-            batch={batchList[selectedProgId]?.[selectedShift].find((x) => x.value == selectedBatch)}
-            sections={availableSect}
+            batch={batchList[selectedProgId]?.[selectedShift].find(
+              (x) => x.value == selectedBatchId
+            )}
+            sections={sectionList[selectedBatchId]}
+            classBySect={classBySect}
+            rooms={rooms}
           />
         )}
       </Row>

@@ -1,67 +1,74 @@
 import { useState, useEffect } from "react";
-import { Row, Col, Typography, Select, Button, Popconfirm } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+import { Row, Col, Typography, Select, Button, Popconfirm, message } from "antd";
+
+import { addBatchTimetable } from "../../redux/actions/AdminActions";
 
 const { Title } = Typography;
 
-const TimetableStruct = ({ shift, program, batch, sections }) => {
-  const [sectAClass, setSectAClass] = useState([
-    { value: "ICS II - FAS" },
-    { value: "STATS II - HB" },
-    { value: "CAL II - HF" },
-    { value: "PHY II - FA" },
-  ]);
-  const [sectBClass, setSectBClass] = useState([
-    { value: "ICS II - FAS" },
-    { value: "STATS II - HB" },
-    { value: "CAL II - HF" },
-    { value: "PHY II - FA" },
-  ]);
-  const [availableRooms, setAvailableRooms] = useState({
-    Monday: [{ value: "GF-16" }, { value: "FF-16" }, { value: "SF-16" }],
-    Tuesday: [{ value: "GF-16" }, { value: "FF-16" }, { value: "SF-16" }],
-    Wednesday: [{ value: "GF-16" }, { value: "FF-16" }, { value: "SF-16" }],
-    Thursday: [{ value: "GF-16" }, { value: "FF-16" }, { value: "SF-16" }],
-    Friday: [{ value: "GF-16" }, { value: "FF-16" }, { value: "SF-16" }],
-  });
+const TimetableStruct = ({ shift, batch, sections, classBySect, rooms }) => {
+  const [timetable, setTimetable] = useState([]);
+  const [availableRooms, setAvailableRooms] = useState(rooms);
 
-  const [timetable, setTimetable] = useState({
-    A: {
-      Monday: Array(3).fill({ class: "", room: "" }),
-      Tuesday: Array(3).fill({ class: "", room: "" }),
-      Wednesday: Array(3).fill({ class: "", room: "" }),
-      Thursday: Array(3).fill({ class: "", room: "" }),
-      Friday: Array(2).fill({ class: "", room: "" }),
-    },
-    B: {
-      Monday: Array(3).fill({ class: "", room: "" }),
-      Tuesday: Array(3).fill({ class: "", room: "" }),
-      Wednesday: Array(3).fill({ class: "", room: "" }),
-      Thursday: Array(3).fill({ class: "", room: "" }),
-      Friday: Array(2).fill({ class: "", room: "" }),
-    },
-    C: {
-      Monday: Array(3).fill({ class: "", room: "" }),
-      Tuesday: Array(3).fill({ class: "", room: "" }),
-      Wednesday: Array(3).fill({ class: "", room: "" }),
-      Thursday: Array(3).fill({ class: "", room: "" }),
-      Friday: Array(2).fill({ class: "", room: "" }),
-    },
-  });
   const slots = [1, 2, 3];
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
-  const selectProps = {
-    showSearch: true,
-    size: "small",
-    filterOption: (input, option) => option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0,
-    style: { width: 120 },
-  };
+  const isLoading = useSelector((state) => state.loggerReducer.isLoading);
+  const dispatch = useDispatch();
 
   const saveTimetable = () => {
-    console.log(timetable);
+    const temp = [];
+
+    for (const sectionId in timetable) {
+      for (let day = 0; day < timetable[sectionId].length; day++) {
+        for (let period = 0; period < timetable[sectionId][day].length; period++) {
+          const { classId, teacherId, roomId } = timetable[sectionId][day][period];
+
+          if (classId && !roomId) {
+            message.error("One of the Scheduled class have no assigned room!");
+            return;
+          }
+          if (classId && roomId) {
+            const obj = {
+              shift,
+              semester: parseInt(batch.semester),
+              sectionId: parseInt(sectionId),
+              classId,
+              teacherId,
+              day,
+              period,
+              roomId,
+            };
+
+            temp.push(obj);
+          }
+        }
+      }
+    }
+
+    dispatch(addBatchTimetable(temp));
   };
 
-  useEffect(() => console.log(batch, sections), [batch, sections]);
+  useEffect(() => {
+    const temp = {};
+    sections.map(
+      (sect) =>
+        (temp[sect.value] = days.map((_) =>
+          Array(3).fill({ classId: "", teacherId: "", roomId: "" })
+        ))
+    );
+
+    setTimetable(temp);
+  }, []);
+
+  const selectProps = {
+    dropdownMatchSelectWidth: false,
+    allowClear: true,
+    showSearch: true,
+    size: "small",
+    filterOption: (input, option) => option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0,
+    style: { width: 120 },
+  };
 
   return (
     <Row className="no-select" style={{ position: "relative" }}>
@@ -119,18 +126,18 @@ const TimetableStruct = ({ shift, program, batch, sections }) => {
           ))}
         </Row>
         <Row style={{ backgroundColor: "#EFEFEF", borderRadius: 10 }}>
-          {days.map((day, index) => (
-            <Row key={index}>
+          {days.map((dayName, day) => (
+            <Row key={day}>
               <Col span={6}>
                 <Row>
                   <Col span={10} className="center">
-                    <Title level={4}>{day}</Title>
+                    <Title level={4}>{dayName}</Title>
                   </Col>
                   <Col
                     span={12}
                     push={2}
                     style={{
-                      backgroundColor: index % 2 == 0 ? "#C4C4C4" : "#7A7A7A",
+                      backgroundColor: day % 2 == 0 ? "#C4C4C4" : "#7A7A7A",
                     }}>
                     {sections.map((section) => (
                       <Row key={section.value} justify="center" align="middle">
@@ -141,105 +148,95 @@ const TimetableStruct = ({ shift, program, batch, sections }) => {
                 </Row>
               </Col>
               {slots.map((slotNo) => {
-                const [room1, setRoom1] = useState(null);
-                const [room2, setRoom2] = useState(null);
-                if (day != "Friday" || slotNo != 3)
+                if (day != 4 || slotNo != 3)
                   return (
                     <Col
                       key={slotNo}
                       span={6}
                       style={{
                         backgroundColor:
-                          index % 2 == 0
+                          day % 2 == 0
                             ? (slotNo - 1) % 2 == 0
                               ? "#C4C4C4"
                               : "#F2F2F2"
                             : (slotNo - 1) % 2 == 0
                             ? "#F2F2F2"
                             : "#C4C4C4",
-                        borderRadius: index == 0 && slotNo - 1 == 2 ? "0 10px 0 0" : 0,
+                        borderRadius: day == 0 && slotNo - 1 == 2 ? "0 10px 0 0" : 0,
                       }}>
-                      {sections.map((section) => (
-                        <Row key={section.value} justify="space-around" align="middle" style={{ height: "50%" }}>
-                          <Select
-                            allowClear
-                            {...selectProps}
-                            options={sectAClass}
-                            onSelect={(value) => {
-                              const temp = JSON.parse(JSON.stringify(timetable));
-                              temp.A[day][slotNo - 1].class = value;
+                      {sections.map((sect) => {
+                        const [Class, setClass] = useState();
+                        const [room, setRoom] = useState();
+                        return (
+                          <Row
+                            key={sect.value}
+                            justify="space-around"
+                            align="middle"
+                            style={{ height: 100 / sections.length + "%" }}>
+                            <Select
+                              value={Class}
+                              {...selectProps}
+                              options={classBySect[sect.value]}
+                              onSelect={(value, option) => {
+                                const temp = JSON.parse(JSON.stringify(timetable));
+                                temp[sect.value][day][slotNo - 1].classId = value[0];
+                                temp[sect.value][day][slotNo - 1].teacherId = value[1];
 
-                              setTimetable(temp);
-                            }}
-                            onClear={() => {
-                              let temp = JSON.parse(JSON.stringify(timetable));
-                              temp.A[day][slotNo - 1].class = "";
-                              temp.A[day][slotNo - 1].room = "";
+                                setTimetable(temp);
+                                setClass(option.label);
+                              }}
+                              onClear={() => {
+                                if (room) {
+                                  const temp = JSON.parse(JSON.stringify(availableRooms));
+                                  temp[day][slotNo - 1].push({
+                                    label: room,
+                                    value: timetable[sect.value][day][slotNo - 1].roomId,
+                                  });
+                                  setAvailableRooms(temp);
+                                  setRoom();
+                                }
 
-                              setTimetable(temp);
+                                const temp = JSON.parse(JSON.stringify(timetable));
+                                temp[sect.value][day][slotNo - 1].classId = "";
+                                temp[sect.value][day][slotNo - 1].teacherId = "";
+                                temp[sect.value][day][slotNo - 1].roomId = "";
 
-                              temp = JSON.parse(JSON.stringify(availableRooms));
-                              temp[day].push({ value: room1 });
-                              setAvailableRooms(temp);
+                                setTimetable(temp);
+                                setClass();
+                              }}
+                            />
+                            <Select
+                              value={room}
+                              disabled={timetable[sect.value]?.[day][slotNo - 1].classId == ""}
+                              {...selectProps}
+                              options={availableRooms[day][slotNo - 1]}
+                              onSelect={(value, option) => {
+                                availableRooms[day][slotNo - 1] = availableRooms[day][
+                                  slotNo - 1
+                                ].filter((r) => r.value != value);
 
-                              setRoom1(null);
-                            }}
-                          />
-                          <Select
-                            disabled={timetable.A[day][slotNo - 1].class == ""}
-                            {...selectProps}
-                            value={room1}
-                            options={availableRooms[day]}
-                            onSelect={(value) => {
-                              setRoom1(value);
-                              timetable.A[day][slotNo - 1].room = value;
+                                if (room)
+                                  availableRooms[day][slotNo - 1].push({
+                                    label: room,
+                                    value: timetable[sect.value][day][slotNo - 1].roomId,
+                                  });
 
-                              const temp = JSON.parse(JSON.stringify(availableRooms));
-                              temp[day] = temp[day].filter((r) => r.value != value);
-                              setAvailableRooms(temp);
-                            }}
-                          />
-                        </Row>
-                      ))}
-                      {/* <Row justify="space-around" align="middle" style={{ height: "50%" }}>
-                        <Select
-                          allowClear
-                          {...selectProps}
-                          options={sectBClass}
-                          onSelect={(value) => {
-                            const temp = JSON.parse(JSON.stringify(timetable));
-                            temp.B[day][slotNo - 1].class = value;
-
-                            setTimetable(temp);
-                          }}
-                          onClear={() => {
-                            const temp = JSON.parse(JSON.stringify(timetable));
-                            temp.B[day][slotNo - 1].class = "";
-                            temp.B[day][slotNo - 1].room = "";
-
-                            setTimetable(temp);
-
-                            temp = JSON.parse(JSON.stringify(availableRooms));
-                            temp[day].push({ value: room1 });
-                            setAvailableRooms(temp);
-                            setRoom2(null);
-                          }}
-                        />
-                        <Select
-                          disabled={timetable.B[day][slotNo - 1].class == ""}
-                          {...selectProps}
-                          value={room2}
-                          options={availableRooms[day]}
-                          onSelect={(value) => {
-                            setRoom2(value);
-                            timetable.B[day][slotNo - 1].room = value;
-
-                            const temp = JSON.parse(JSON.stringify(availableRooms));
-                            temp[day] = temp[day].filter((r) => r.value != value);
-                            setAvailableRooms(temp);
-                          }}
-                        />
-                      </Row> */}
+                                timetable[sect.value][day][slotNo - 1].roomId = value;
+                                setRoom(option.label);
+                              }}
+                              onClear={() => {
+                                const temp = JSON.parse(JSON.stringify(availableRooms));
+                                temp[day][slotNo - 1].push({
+                                  label: room,
+                                  value: timetable[sect.value][day][slotNo - 1].roomId,
+                                });
+                                setAvailableRooms(temp);
+                                setRoom();
+                              }}
+                            />
+                          </Row>
+                        );
+                      })}
                     </Col>
                   );
                 else return <Col key={slotNo} span={6} style={{ backgroundColor: "#C4C4C4" }} />;
@@ -249,8 +246,10 @@ const TimetableStruct = ({ shift, program, batch, sections }) => {
         </Row>
       </Col>
       <div style={{ position: "absolute", bottom: 5, right: 50 }}>
-        <Popconfirm title={`Save/Update timetable for ${program}-${batch}`} onConfirm={saveTimetable}>
-          <Button type="primary" size="large">
+        <Popconfirm
+          title={`Save/Update timetable for ${batch.label} - Semester ${batch.semester}`}
+          onConfirm={saveTimetable}>
+          <Button type="primary" size="large" loading={isLoading}>
             Save
           </Button>
         </Popconfirm>
