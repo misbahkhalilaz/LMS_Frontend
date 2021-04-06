@@ -1,61 +1,61 @@
 import { useState } from "react";
-import { Modal, Steps, Button, Radio, Form, Select, Typography } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+import { Modal, Steps, Button, Radio, Form, Select } from "antd";
+
+import { getCourseList, userInfoAction, addClassAction } from "../../redux/actions/AdminActions";
 
 const { Step } = Steps;
 
 const CreateClass = ({ setDestroy }) => {
   const [isModalVisible, setIsModalVisible] = useState(true);
-  const [isComplete, setIsComplete] = useState(false);
   const [current, setCurrent] = useState(0);
 
-  const [courseDetail, setCourseDetail] = useState([]);
-  const [teacherDetail, setTeacherDetail] = useState([]);
+  const [teacherList, setTeacherList] = useState([]);
+  const [courseList, setCourseList] = useState([]);
+  const [courseTemp, setCourseTemp] = useState();
 
-  const [initSubmitInfo, setInitSubmitInfo] = useState();
-  const [courseSubmitInfo, setCourseSubmitInfo] = useState();
+  const [selectedShift, setSelectedShift] = useState();
+  const [selectedProgId, setSelectedProgId] = useState();
+  const [creditHour, setCreditHour] = useState();
+  const [availableSect, setAvailableSect] = useState([]);
+  const [classInfo, setClassInfo] = useState({});
 
-  const initInfoSubmit = (values) => {
-    setInitSubmitInfo(values);
-    getCourseDetail(values); //GET COURSE DETAILS FROM DB HERE
-    setCurrent(current + 1);
+  const isLoading = useSelector((state) => state.loggerReducer.isLoading);
+  const programList = useSelector((state) => state.adminReducer.programList);
+  const batchList = useSelector((state) => state.adminReducer.batchList);
+  const sectionList = useSelector((state) => state.adminReducer.sectionList);
+  const dispatch = useDispatch();
+
+  const initInfoSubmit = ({ programId, batchId, sectionId, shift }) => {
+    const { semester } = batchList[programId][shift].find((x) => x.value === batchId);
+
+    const obj = { programId, semester, sectionId, isActive: true };
+
+    dispatch(getCourseList(obj, setCourseList, setCurrent));
+    setClassInfo({ sectionId });
+    setCourseTemp(obj);
   };
 
-  const courseInfoSubmit = (values) => {
-    setCourseSubmitInfo(values);
-    getTeacherDetail(values); //GET TEACHER DETAILS FROM DB HERE
-    setCurrent(current + 1);
+  const courseInfoSubmit = ({ courseId }) => {
+    setClassInfo((prev) => ({ ...prev, courseId }));
+    const { creditHours } = courseList.find((course) => course.value === courseId);
+    setCreditHour(parseInt(creditHours));
+
+    const obj = { isActive: true, role: "teacher" };
+    dispatch(userInfoAction(obj, setTeacherList, setCurrent));
   };
 
-  const getCourseDetail = (values) => {
-    setCourseDetail([
-      { label: "ICS-1 ", value: 1 },
-      { label: "STATS-1", value: 2 },
-      { label: "CAL-1", value: 3 },
-      { label: "PHY-1", value: 4 },
-      { label: "ENG-1", value: 5 },
-      { label: "PST-1", value: 6 },
-    ]);
-  };
+  const createClass = ({ teacherId, labTeacherId }) => {
+    const obj = labTeacherId
+      ? { ...classInfo, teacherId, labTeacherId }
+      : { ...classInfo, teacherId };
 
-  const getTeacherDetail = (values) => {
-    setTeacherDetail([
-      { label: "Farhan Ahmed Siddique", value: 1 },
-      { label: "HS", value: 420 },
-      { label: "KJ", value: 421 },
-    ]);
-  };
-
-  const createClass = (values) => {
-    //CREATE CLASS FINAL API info at courseSubmitInfo,values
-    console.log(initSubmitInfo, courseSubmitInfo, values);
-    //after successful call
-    setIsComplete(true);
+    dispatch(addClassAction(obj, courseTemp, setCourseList, setCurrent));
   };
 
   const radioStyle = {
     display: "block",
     height: "30px",
-    lineHeight: "30px",
   };
 
   const steps = [
@@ -67,8 +67,7 @@ const CreateClass = ({ setDestroy }) => {
           requiredMark={false}
           onFinish={initInfoSubmit}
           labelCol={{ span: 8 }}
-          wrapperCol={{ span: 12 }}
-        >
+          wrapperCol={{ span: 12 }}>
           <Form.Item
             name="shift"
             label="Shift"
@@ -77,48 +76,71 @@ const CreateClass = ({ setDestroy }) => {
                 required: true,
                 message: "Please select shift!",
               },
-            ]}
-          >
-            <Radio.Group options={["Morning", "Evening"]} />
+            ]}>
+            <Radio.Group
+              value={selectedShift}
+              onChange={(e) => setSelectedShift(e.target.value)}
+              options={["Morning", "Evening"]}
+            />
           </Form.Item>
           <Form.Item
-            name="program"
+            name="programId"
             label="Program"
             rules={[
               {
                 required: true,
                 message: "Please select program!",
               },
-            ]}
-          >
+            ]}>
             <Select
               showSearch
-              options={[{ value: "BSCS" }, { value: "BSSE" }, { value: "MCS" }]}
+              options={programList}
+              disabled={!selectedShift}
+              onSelect={(value) => setSelectedProgId(value)}
               filterOption={(input, option) =>
-                option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
             />
           </Form.Item>
           <Form.Item
-            name="batch"
+            name="batchId"
             label="Batch"
             rules={[
               {
                 required: true,
                 message: "Please select batch!",
               },
-            ]}
-          >
+            ]}>
             <Select
               showSearch
-              options={[{ value: "17" }, { value: "18" }, { value: "19" }]}
+              options={batchList[selectedProgId]?.[selectedShift]}
+              disabled={!selectedProgId}
+              onSelect={(value) => setAvailableSect(sectionList[value])}
               filterOption={(input, option) =>
-                option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+            />
+          </Form.Item>
+          <Form.Item
+            name="sectionId"
+            label="Section"
+            rules={[
+              {
+                required: true,
+                message: "Please select batch's section!",
+              },
+            ]}>
+            <Select
+              showSearch
+              options={availableSect}
+              disabled={availableSect.length == 0}
+              filterOption={(input, option) =>
+                option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
             />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 20 }}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={isLoading}>
               Next
             </Button>
           </Form.Item>
@@ -126,11 +148,11 @@ const CreateClass = ({ setDestroy }) => {
       ),
     },
     {
-      title: "Course Selection",
+      title: "Course",
       content: (
-        <Form colon={false} requiredMark={false} onFinish={courseInfoSubmit}>
+        <Form colon={false} preserve={false} requiredMark={false} onFinish={courseInfoSubmit}>
           <Form.Item
-            name="courseID"
+            name="courseId"
             rules={[
               {
                 required: true,
@@ -138,23 +160,17 @@ const CreateClass = ({ setDestroy }) => {
               },
             ]}
             label=" "
-            labelCol={{ span: 10 }}
-            wrapperCol={{ span: 12 }}
-          >
+            labelCol={{ span: 7 }}>
             <Radio.Group>
-              {courseDetail.map((course) => (
-                <Radio
-                  key={course.value}
-                  value={course.value}
-                  style={radioStyle}
-                >
+              {courseList?.map((course) => (
+                <Radio key={course.value} value={course.value} style={radioStyle}>
                   {course.label}
                 </Radio>
               ))}
             </Radio.Group>
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 20 }}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={isLoading}>
               Next
             </Button>
           </Form.Item>
@@ -162,16 +178,11 @@ const CreateClass = ({ setDestroy }) => {
       ),
     },
     {
-      title: "Teacher Selection",
+      title: "Teacher",
       content: (
-        <Form
-          colon={false}
-          requiredMark={false}
-          onFinish={createClass}
-          labelCol={{ span: 8 }}
-        >
+        <Form colon={false} requiredMark={false} preserve={false} onFinish={createClass}>
           <Form.Item
-            name="teacherID"
+            name="teacherId"
             label="Select Teacher"
             rules={[
               {
@@ -179,20 +190,39 @@ const CreateClass = ({ setDestroy }) => {
                 message: "Please select a teacher!",
               },
             ]}
-            labelCol={{ span: 10 }}
-            wrapperCol={{ span: 12 }}
-          >
+            labelCol={{ span: 10 }}>
             <Select
               showSearch
-              options={teacherDetail}
+              options={teacherList}
               filterOption={(input, option) =>
-                option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
               style={{ width: 200 }}
             />
           </Form.Item>
+          {creditHour == 2 && (
+            <Form.Item
+              name="labTeacherId"
+              label="Select Lab Teacher"
+              rules={[
+                {
+                  required: true,
+                  message: "Please select a lab teacher!",
+                },
+              ]}
+              labelCol={{ span: 10 }}>
+              <Select
+                showSearch
+                options={teacherList}
+                filterOption={(input, option) =>
+                  option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }
+                style={{ width: 200 }}
+              />
+            </Form.Item>
+          )}
           <Form.Item wrapperCol={{ offset: 20 }}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={isLoading}>
               Next
             </Button>
           </Form.Item>
@@ -209,29 +239,14 @@ const CreateClass = ({ setDestroy }) => {
       destroyOnClose
       visible={isModalVisible}
       onCancel={() => setIsModalVisible(false)}
-      afterClose={() => setDestroy()}
-      bodyStyle={{ paddingTop: 50 }}
-    >
-      {!isComplete ? (
-        <>
-          <Steps className="no-select" size="small" current={current}>
-            {steps.map((item) => (
-              <Step key={item.title} title={item.title} />
-            ))}
-          </Steps>
-          <div style={{ marginTop: 20 }}>{steps[current].content}</div>
-        </>
-      ) : (
-        <div style={{ textAlign: "center" }}>
-          <Typography.Title className="no-select subtitle-text" level={4}>
-            Class Successfully Created
-          </Typography.Title>
-          <br />
-          <Button type="primary" onClick={() => setIsModalVisible(false)}>
-            OK
-          </Button>
-        </div>
-      )}
+      afterClose={() => setDestroy(false)}
+      bodyStyle={{ paddingTop: 50 }}>
+      <Steps className="no-select" size="small" current={current}>
+        {steps.map((item) => (
+          <Step key={item.title} title={item.title} />
+        ))}
+      </Steps>
+      <div style={{ marginTop: 20 }}>{steps[current].content}</div>
     </Modal>
   );
 };

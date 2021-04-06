@@ -1,18 +1,21 @@
-import { Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, useRoutes, useLocation, Navigate } from "react-router";
+import { loginTokenAction } from "../redux/actions/LoggerActions";
+
 import { Row, Col } from "antd";
-import React from "react";
+import LoadingBar from "react-redux-loading-bar";
+
+import Navbar from "../components/navbar";
 
 import Login from "../pages/Login";
-import PrivateRoute from "./PrivateRoute";
-
-import StudentNavbar from "../components/student/student-navbar";
 
 import StudentDashboard from "../pages/student/dashboard";
 import StudentHome from "../components/student/dashboard/home/student-dashboard-main";
 import StudentAttendance from "../components/student/dashboard/attendance/student-attendance-main";
 import StudentResult from "../components/student/dashboard/results/student-result-main";
-
 import StudentClass from "../pages/student/class";
+import StudentChat from "../pages/student/chat";
 import StudentClassPost from "../pages/student/class-post";
 
 import TeacherDashboard from "../pages/teacher/dashboard";
@@ -22,6 +25,7 @@ import TeacherShowAttend from "../pages/teacher/show-attendance";
 import TeacherShowMember from "../pages/teacher/member";
 import TeacherCourseResult from "../pages/teacher/course-result";
 import TeacherClass from "../pages/teacher/class";
+import TeacherChat from "../pages/teacher/chat";
 import TeacherClassPost from "../pages/teacher/class-post";
 import TeacherClassAssignGrade from "../pages/teacher/class-post-assigngrade";
 
@@ -29,68 +33,96 @@ import AdminDashboard from "../pages/admin/dashboard";
 import AdminCourseList from "../pages/admin/courses";
 import AdminTeacherList from "../pages/admin/teachers";
 import AdminStudentList from "../pages/admin/students";
+import AdminTimetable from "../pages/admin/timetable";
+
+const routes = [
+  { path: "login", element: <Login /> },
+  {
+    path: "/",
+    children: [
+      {
+        path: "student",
+        element: <StudentDashboard />,
+        children: [
+          { path: "/", element: <StudentHome /> },
+          { path: "attendance", element: <StudentAttendance /> },
+          { path: "results", element: <StudentResult /> },
+          { path: "/*", element: <Navigate to="/student" /> },
+        ],
+      },
+      {
+        path: "student/class",
+        children: [
+          { path: "/", element: <StudentClass /> },
+          { path: "chat", element: <StudentChat /> },
+          { path: "post", element: <StudentClassPost /> },
+          { path: "/*", element: <Navigate to="/student" /> },
+        ],
+      },
+    ],
+  },
+  {
+    path: "teacher",
+    children: [
+      { path: "/", element: <TeacherDashboard /> },
+      { path: "repeat-request", element: <TeacherRepeatReq /> },
+      {
+        path: "class",
+        children: [
+          { path: "/", element: <TeacherClass /> },
+          { path: "mark-attendance", element: <TeacherMarkAttend /> },
+          { path: "show-attendance", element: <TeacherShowAttend /> },
+          { path: "members", element: <TeacherShowMember /> },
+          { path: "result", element: <TeacherCourseResult /> },
+          { path: "chat", element: <TeacherChat /> },
+          {
+            path: "post",
+            children: [
+              { path: "/", element: <TeacherClassPost /> },
+              { path: "assign-grade", element: <TeacherClassAssignGrade /> },
+            ],
+          },
+        ],
+      },
+      { path: "/*", element: <Navigate to="/teacher" replace={true} /> },
+    ],
+  },
+  {
+    path: "admin",
+    children: [
+      { path: "/", element: <AdminDashboard /> },
+      { path: "timetable", element: <AdminTimetable /> },
+      { path: "course-list", element: <AdminCourseList /> },
+      { path: "teacher-list", element: <AdminTeacherList /> },
+      { path: "student-list", element: <AdminStudentList /> },
+      { path: "/*", element: <Navigate to="/admin" replace={true} /> },
+    ],
+  },
+  // { path: "/*", element: <Navigate to="/login" replace={true} /> }, //maybe?
+];
 
 const Router = () => {
+  let element = useRoutes(routes);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const allowRender = useSelector((state) => state.loggerReducer.allowRender);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loginTokenAction(navigate, location.pathname));
+  }, []);
+
   return (
     <Row style={{ height: "100%" }}>
       <Row>
-        <Col span={24} style={{ backgroundColor: "#83000A" }}>
-          <StudentNavbar />
+        <Col span={24}>
+          <Navbar />
+          <LoadingBar updateTime={150} />
         </Col>
       </Row>
-      <Routes>
-        <Route path="login" element={<Login />} />
-        {/* *****************Student Routes********************* */}
-        <PrivateRoute path="student">
-          <PrivateRoute path="dashboard" element={<StudentDashboard />}>
-            <PrivateRoute path="/" element={<StudentHome />} />
-            <PrivateRoute path="attendance" element={<StudentAttendance />} />
-            <PrivateRoute path="results" element={<StudentResult />} />
-          </PrivateRoute>
-          <PrivateRoute path="class">
-            <PrivateRoute path="/" element={<StudentClass />} />
-            <PrivateRoute path="post" element={<StudentClassPost />} />
-          </PrivateRoute>
-        </PrivateRoute>
-        {/* *****************Student Routes********************* */}
-        {/* *****************Teacher Routes********************* */}
-        <PrivateRoute path="teacher">
-          <PrivateRoute path="/" element={<TeacherDashboard />} />
-          <PrivateRoute path="repeat-request" element={<TeacherRepeatReq />} />
-          <PrivateRoute path="class">
-            <PrivateRoute path="/" element={<TeacherClass />} />
-            <PrivateRoute
-              path="mark-attendance"
-              element={<TeacherMarkAttend />}
-            />
-            <PrivateRoute
-              path="show-attendance"
-              element={<TeacherShowAttend />}
-            />
-            <PrivateRoute path="members" element={<TeacherShowMember />} />
-            <PrivateRoute path="result" element={<TeacherCourseResult />} />
-            <PrivateRoute path="post">
-              <PrivateRoute path="/" element={<TeacherClassPost />} />
-              <PrivateRoute
-                path="assign-grade"
-                element={<TeacherClassAssignGrade />}
-              />
-            </PrivateRoute>
-          </PrivateRoute>
-        </PrivateRoute>
-        {/* *****************Teacher Routes********************* */}
-
-        {/* *****************Admin Routes********************* */}
-        <PrivateRoute path="admin">
-          <PrivateRoute path="/" element={<AdminDashboard />} />
-          <PrivateRoute path="course-list" element={<AdminCourseList />} />
-          <PrivateRoute path="teacher-list" element={<AdminTeacherList />} />
-          <PrivateRoute path="student-list" element={<AdminStudentList />} />
-        </PrivateRoute>
-
-        {/* *****************Admin Routes*********************  */}
-      </Routes>
+      {allowRender && element}
     </Row>
   );
 };
+
 export default Router;

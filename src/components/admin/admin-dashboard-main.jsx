@@ -3,7 +3,7 @@ import { Row, Col, Card, Typography } from "antd";
 import { PlusCircleFilled } from "@ant-design/icons";
 
 import CreateBatch from "./admin-create-batch";
-import CreateTeacherProfile from "./admin-addteacher";
+import CreateTeacherProfile from "./admin-create-teacher";
 import CreateClass from "./admin-create-class";
 
 const { Title } = Typography;
@@ -103,12 +103,8 @@ const DashboardMain = () => {
             </Title>
           </Card>
         </Col>
-        {showCreateBatch && (
-          <CreateBatch setDestroy={() => setShowCreateBatch(false)} />
-        )}
-        {showCreateClass && (
-          <CreateClass setDestroy={() => setShowCreateClass(false)} />
-        )}
+        {showCreateBatch && <CreateBatch setDestroy={setShowCreateBatch} />}
+        {showCreateClass && <CreateClass setDestroy={setShowCreateClass} />}
         {showCreateProfile && (
           <CreateTeacherProfile
             setDestroy={() => setShowCreateProfile(false)}

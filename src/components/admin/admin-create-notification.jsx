@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   Modal,
   Steps,
+  Tabs,
   Button,
   Radio,
   Space,
@@ -13,13 +14,15 @@ import {
 } from "antd";
 
 import { UploadOutlined } from "@ant-design/icons";
+const { TabPane } = Tabs;
 const { Step } = Steps;
 
 const CreateNotification = ({ setDestroy }) => {
   const [isModalVisible, setIsModalVisible] = useState(true);
-  const [notificationType, setNotificationType] = useState();
+  const [notificationType, setNotificationType] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
   const [current, setCurrent] = useState(0);
+  const [tabKey, setTabKey] = useState(1);
 
   const [initSubmitInfo, setInitSubmitInfo] = useState();
 
@@ -35,12 +38,6 @@ const CreateNotification = ({ setDestroy }) => {
     setIsComplete(true);
   };
 
-  const radioStyle = {
-    display: "block",
-    height: "50px",
-    lineHeight: "30px",
-  };
-
   const steps = [
     {
       title: "Initial Info",
@@ -53,7 +50,7 @@ const CreateNotification = ({ setDestroy }) => {
           labelCol={{ span: 7 }}
           wrapperCol={{ span: 12 }}
         >
-          <div className="center" style={{ marginBottom: 20 }}>
+          <div style={{ marginBottom: 20, textAlign: "center" }}>
             <Radio.Group
               onChange={(e) => setNotificationType(e.target.value)}
               value={notificationType}
@@ -67,79 +64,116 @@ const CreateNotification = ({ setDestroy }) => {
             </Radio.Group>
           </div>
           {notificationType == 0 && (
-            <>
-              <Form.Item
-                name="Shift"
-                label="Shift"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select shift!",
-                  },
-                ]}
-              >
-                <Select
-                  allowClear
-                  options={[
-                    { value: "Morning" },
-                    { value: "Evening" },
-                    { value: "Both" },
-                  ]}
-                  showSearch
-                  filterOption={(input, option) =>
-                    option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                  }
-                ></Select>
-              </Form.Item>
-              <Form.Item
-                name="program"
-                label="Program"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select program!",
-                  },
-                ]}
-              >
-                <Select
-                  allowClear
-                  showSearch
-                  options={[
-                    { value: "BSCS" },
-                    { value: "BSSE" },
-                    { value: "MCS" },
-                  ]}
-                  filterOption={(input, option) =>
-                    option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                  }
-                />
-              </Form.Item>
-              <Form.Item
-                name="batch"
-                label="Batch"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select batch!",
-                  },
-                ]}
-              >
-                <Select
-                  showSearch
-                  options={[
-                    { value: "B17" },
-                    { value: "MSC17" },
-                    { value: "BSSE17" },
-                  ]}
-                  filterOption={(input, option) =>
-                    option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                  }
-                />
-              </Form.Item>
-              <Form.Item name="depart" label="Universal">
-                <Radio style={radioStyle}></Radio>
-              </Form.Item>
-            </>
+            <Tabs
+              tabPosition="left"
+              onChange={(key) => {
+                setTabKey(key);
+              }}
+            >
+              <TabPane tab="Shift" key="1">
+                {tabKey == 1 && (
+                  <Form.Item
+                    name="shift"
+                    label="Select a shift"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please select shift!",
+                      },
+                    ]}
+                  >
+                    <Select
+                      allowClear
+                      options={[
+                        { value: "Morning" },
+                        { value: "Evening" },
+                        { value: "Both" },
+                      ]}
+                      showSearch
+                      filterOption={(input, option) =>
+                        option.value
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      }
+                    ></Select>
+                  </Form.Item>
+                )}
+              </TabPane>
+              <TabPane tab="Program" key="2">
+                {tabKey == 2 && (
+                  <Form.Item
+                    name="program"
+                    label="Select a program"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please select program!",
+                      },
+                    ]}
+                  >
+                    <Select
+                      allowClear
+                      showSearch
+                      options={[
+                        { value: "BSCS" },
+                        { value: "BSSE" },
+                        { value: "MCS" },
+                      ]}
+                      filterOption={(input, option) =>
+                        option.value
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      }
+                    />
+                  </Form.Item>
+                )}
+              </TabPane>
+              <TabPane tab="Batch" key="3">
+                {tabKey == 3 && (
+                  <Form.Item
+                    name="batch"
+                    label="Select a batch"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please select batch!",
+                      },
+                    ]}
+                  >
+                    <Select
+                      showSearch
+                      options={[
+                        { value: "B17" },
+                        { value: "MSC17" },
+                        { value: "BSSE17" },
+                      ]}
+                      filterOption={(input, option) =>
+                        option.value
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      }
+                    />
+                  </Form.Item>
+                )}
+              </TabPane>
+              <TabPane tab="Universal" key="4">
+                {tabKey == 4 && (
+                  <Form.Item
+                    name="all"
+                    label="To entire depart"
+                    valuePropName="checked"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please select it!",
+                      },
+                    ]}
+                  >
+                    <Radio />
+                  </Form.Item>
+                )}
+              </TabPane>
+            </Tabs>
           )}
           {(notificationType == 1 || notificationType == 2) && (
             <>

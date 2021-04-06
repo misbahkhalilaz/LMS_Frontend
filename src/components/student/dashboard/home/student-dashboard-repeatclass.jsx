@@ -1,14 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Typography,
-  Card,
-  Modal,
-  Steps,
-  Button,
-  Checkbox,
-  Radio,
-  message,
-} from "antd";
+import { Typography, Card, Modal, Steps, Button, Checkbox, Radio, message } from "antd";
 
 import { PlusCircleFilled } from "@ant-design/icons";
 
@@ -32,8 +23,6 @@ const RepeatClass = () => {
 
   let availableCourses = [];
   let selectedInstructorIds = [];
-
-  useEffect(() => console.log(courseDetail), [courseDetail]);
 
   const handleClose = () => {
     setIsModalVisible(false);
@@ -130,7 +119,7 @@ const RepeatClass = () => {
 
     return (
       condition && (
-        <div className="no-select" key={course.id}>
+        <div className='no-select' key={course.id}>
           <Title level={5}>{course.title}</Title>
           <Radio.Group
             options={course.instructors}
@@ -154,18 +143,18 @@ const RepeatClass = () => {
       content: (
         <>
           <Button
-            type="primary"
-            shape="round"
-            size="large"
+            type='primary'
+            shape='round'
+            size='large'
             style={{ width: "80%", height: "80%" }}
             onClick={(e) => getCourseDetails(e)}
           >
             Repeat
           </Button>
           <Button
-            type="primary"
-            shape="round"
-            size="large"
+            type='primary'
+            shape='round'
+            size='large'
             style={{ width: "80%", height: "80%" }}
             onClick={(e) => getCourseDetails(e)}
           >
@@ -178,18 +167,15 @@ const RepeatClass = () => {
       title: "Course Selection",
       content: (
         <Checkbox.Group
-          className="no-select"
+          className='no-select'
           options={courseDetail?.map(
-            (course, i) =>
-              (availableCourses[i] = { label: course.title, value: course.id })
+            (course, i) => (availableCourses[i] = { label: course.title, value: course.id })
           )}
           style={{ display: "contents" }}
           defaultValue={selectedCourseIds}
           onChange={(courseIds) => {
             setSelectedCourseIds(courseIds);
-            courseIds.length > 0
-              ? setnextBtnDisabled(false)
-              : setnextBtnDisabled(true);
+            courseIds.length > 0 ? setnextBtnDisabled(false) : setnextBtnDisabled(true);
           }}
         />
       ),
@@ -203,14 +189,14 @@ const RepeatClass = () => {
   return (
     <>
       <Card
-        className="box-shadow"
+        className='box-shadow'
         hoverable
         bordered={false}
         bodyStyle={styles}
         onClick={() => setIsModalVisible(true)}
       >
         <PlusCircleFilled style={{ fontSize: 64, color: "#9A9A9A" }} />
-        <Title level={5} type="secondary" className="no-select">
+        <Title level={5} type='secondary' className='no-select'>
           Repeat/Improvement
         </Title>
       </Card>
@@ -224,28 +210,20 @@ const RepeatClass = () => {
         onCancel={handleClose}
         bodyStyle={{ padding: "40px 40px 20px" }}
       >
-        <Steps className="no-select" size="small" current={current}>
+        <Steps className='no-select' size='small' current={current}>
           {steps.map((item) => (
             <Step key={item.title} title={item.title} />
           ))}
         </Steps>
-        <div className="repeat-content">{steps[current].content}</div>
+        <div className='repeat-content'>{steps[current].content}</div>
         <div>
           {current === 1 && (
-            <Button
-              disabled={nextBtnDisabled}
-              style={{ float: "right" }}
-              onClick={next}
-            >
+            <Button disabled={nextBtnDisabled} style={{ float: "right" }} onClick={next}>
               Next
             </Button>
           )}
           {current === 2 && (
-            <Button
-              type="primary"
-              style={{ float: "right" }}
-              onClick={generateRequest}
-            >
+            <Button type='primary' style={{ float: "right" }} onClick={generateRequest}>
               Generate request(s)
             </Button>
           )}

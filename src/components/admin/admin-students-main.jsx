@@ -1,71 +1,42 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import useViewport from "../useViewport";
 import { Row, Col, Typography, Select, Input, Table, Switch } from "antd";
+
+import {
+  getStudentListAction,
+  studentSearchAction,
+  chgStudentActiveAction,
+} from "../../redux/actions/AdminActions";
 
 const { Title } = Typography;
 const { Search } = Input;
 
 const StudentListMain = () => {
-  const [data, SetData] = useState(null);
-  const [filteredData, SetFilteredData] = useState([]);
   const [prevTxt, SetPrevTxt] = useState("");
   const { width } = useViewport();
 
-  const [studentData] = useState([
-    {
-      id: 1,
-      seatNo: "B11101032",
-      name: "AA",
-      email: "xyz@email.com",
-      phoneNo: "+92-300-1234567",
-      isActive: true,
-    },
-    {
-      id: 2,
-      seatNo: "B11101032",
-      name: "BB",
-      email: "xyz@email.com",
-      phoneNo: "+92-300-1234567",
-      isActive: true,
-    },
-    {
-      id: 3,
-      seatNo: "B11101032",
-      name: "CC",
-      email: "xyz@email.com",
-      phoneNo: "+92-300-1234567",
-      isActive: true,
-    },
-    {
-      id: 4,
-      seatNo: "B11101032",
-      name: "DD",
-      email: "xyz@email.com",
-      phoneNo: "+92-300-1234567",
-      isActive: false,
-    },
-    {
-      id: 5,
-      seatNo: "B11101032",
-      name: "EE",
-      email: "xyz@email.com",
-      phoneNo: "+92-300-1234567",
-      isActive: false,
-    },
-    {
-      id: 6,
-      seatNo: "B11101032",
-      name: "FF",
-      email: "xyz@email.com",
-      phoneNo: "+92-300-1234567",
-      isActive: true,
-    },
-  ]);
+  const isLoading = useSelector((state) => state.loggerReducer.isLoading);
+  const programList = useSelector((state) => state.adminReducer.programList);
+  const batchList = useSelector((state) => state.adminReducer.batchList);
+  const sectionList = useSelector((state) => state.adminReducer.sectionList);
 
-  useEffect(
-    () => SetData(studentData.map((obj, key) => ({ ...obj, key }))),
-    []
-  );
+  const dispatch = useDispatch();
+
+  const [current, setCurrent] = useState(1);
+  const [pageSize, setPageSize] = useState();
+  const [total, setTotal] = useState();
+
+  const [filters, setFilter] = useState({ role: "student" });
+
+  const [studentList, setStudentList] = useState();
+  const [availableSect, setAvailableSect] = useState();
+  const [programId, setProgramId] = useState();
+  const [batchId, setBatchId] = useState();
+  const [sectionId, setSectionId] = useState();
+
+  const resetparams = { isActive: true, page: 1, pageSize: 20 };
+  const functions = [setStudentList, setFilter, setCurrent, setTotal, setPageSize];
 
   const columns = [
     {
@@ -86,72 +57,83 @@ const StudentListMain = () => {
     {
       align: "center",
       title: "Phone No",
-      dataIndex: "phoneNo",
+      dataIndex: "phone_no",
     },
     {
       align: "center",
       title: "Status",
       render: (std) => (
         <Switch
-          checkedChildren="Active"
-          unCheckedChildren="Inactive"
+          checkedChildren='Active'
+          unCheckedChildren='Inactive'
           checked={std.isActive}
-          onChange={(checked) => {
-            let index = data.findIndex((x) => x.key === std.key);
-
-            SetData([
-              ...data.slice(0, index),
-              { ...std, isActive: checked },
-              ...data.slice(index + 1),
-            ]);
-
-            if (filteredData.length > 0) {
-              index = filteredData.findIndex((x) => x.key === std.key);
-              SetFilteredData([
-                ...filteredData.slice(0, index),
-                { ...std, isActive: checked },
-                ...filteredData.slice(index + 1),
-              ]);
-            }
-          }}
+          onChange={(checked) =>
+            dispatch(
+              chgStudentActiveAction({ id: std.id, isActive: checked }, studentList, setStudentList)
+            )
+          }
         />
       ),
     },
   ];
 
-  const filterStudent = (value) => {
-    if (prevTxt != value)
-      SetFilteredData(
-        value == ""
-          ? []
-          : data.filter((o) =>
-              Object.keys(o).some((k) =>
-                String(o[k]).toLowerCase().includes(value.toLowerCase())
-              )
-            )
-      );
+  const filterStudent = (query) => {
+    if (prevTxt != query) {
+      if (query == "") {
+        let obj = {};
+        if (sectionId) obj.sectionId = sectionId;
+        else if (batchId) obj.batchId = batchId;
+        else if (programId) obj.programId = programId;
 
-    SetPrevTxt(value);
+        if (Object.keys(obj).length != 0) {
+          obj = { ...obj, ...resetparams };
+          dispatch(getStudentListAction(obj, functions));
+        } else {
+          setStudentList();
+          setTotal();
+        }
+      } else dispatch(studentSearchAction({ filters, query }, functions));
+    }
+    SetPrevTxt(query);
+  };
+
+  const pageOptions = (page, pageSize) => {
+    if (prevTxt != "") return;
+    const obj = {};
+    if (sectionId) obj.sectionId = sectionId;
+    else if (batchId) obj.batchId = batchId;
+    else obj.programId = programId;
+    obj.page = page ? page : 1;
+    obj.pageSize = pageSize;
+    obj.isActive = true;
+    dispatch(getStudentListAction(obj, functions));
   };
 
   const tableProps = {
-    scroll: { y: "70vh" },
-    loading: false,
-    pagination: false,
+    scroll: { y: "62vh" },
+    loading: isLoading,
+    pagination: {
+      showSizeChanger: true,
+      current,
+      pageSize,
+      total,
+      onChange: (page, pageSize) => pageOptions(page, pageSize),
+      onShowSizeChange: (_, pageSize) => pageOptions(null, pageSize),
+    },
   };
 
   return (
     <Row>
       <Row
-        className="no-select"
-        align="middle"
-        justify="center"
+        className='no-select'
+        align='middle'
+        justify='center'
         gutter={[20]}
         style={{ height: "10vh" }}
       >
         <Col span={12}>
           <Search
-            placeholder="Search by name/email/phoneNo/status(true/false) (press enter/click search icon). . . ."
+            placeholder='Search by seatNo/name/email/phoneNo (press enter/click search icon). . . .'
             allowClear
             enterButton
             onSearch={filterStudent}
@@ -162,11 +144,28 @@ const StudentListMain = () => {
             Program
           </Title>
           <Select
+            allowClear
             showSearch
-            defaultValue={"BSCS"}
-            options={[{ value: "BSCS" }, { value: "BSSE" }, { value: "MCS" }]}
+            options={programList}
+            value={programId}
+            onSelect={(value) => {
+              dispatch(getStudentListAction({ programId: value, ...resetparams }, functions));
+              setProgramId(value);
+              setBatchId();
+              setSectionId();
+              setAvailableSect();
+            }}
+            onClear={() => {
+              setStudentList();
+              setProgramId();
+              setBatchId();
+              setSectionId();
+              setTotal();
+              setAvailableSect();
+              setFilter({ role: "student" });
+            }}
             filterOption={(input, option) =>
-              option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
             style={{ width: 90 }}
           />
@@ -177,10 +176,26 @@ const StudentListMain = () => {
           </Title>
           <Select
             showSearch
-            defaultValue={17}
-            options={[{ value: 17 }, { value: 18 }, { value: 19 }]}
+            allowClear
+            value={batchId}
+            options={
+              programId && [...batchList[programId].Morning, ...batchList[programId].Evening]
+            }
+            disabled={!programId}
+            onSelect={(value) => {
+              dispatch(getStudentListAction({ batchId: value, ...resetparams }, functions));
+              setBatchId(value);
+              setSectionId();
+              setAvailableSect(sectionList[value]);
+            }}
+            onClear={() => {
+              dispatch(getStudentListAction({ programId, ...resetparams }, functions));
+              setBatchId();
+              setSectionId();
+              setAvailableSect();
+            }}
             filterOption={(input, option) =>
-              option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
             style={{ width: 90 }}
           />
@@ -190,28 +205,25 @@ const StudentListMain = () => {
             Section
           </Title>
           <Select
-            showSearch
-            defaultValue={"All"}
-            options={[
-              { value: "All" },
-              { value: "A" },
-              { value: "B" },
-              { value: "C" },
-            ]}
-            filterOption={(input, option) =>
-              option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
+            allowClear
+            options={availableSect}
+            value={sectionId}
+            onSelect={(value) => {
+              dispatch(getStudentListAction({ sectionId: value, ...resetparams }, functions));
+              setSectionId(value);
+            }}
+            onClear={() => {
+              dispatch(getStudentListAction({ batchId, ...resetparams }, functions));
+              setSectionId();
+            }}
+            disabled={!availableSect}
             style={{ width: 90 }}
           />
         </Col>
       </Row>
       <Row style={{ height: "80vh" }}>
         <Col>
-          <Table
-            {...tableProps}
-            columns={columns}
-            dataSource={filteredData.length == 0 ? data : filteredData}
-          />
+          <Table {...tableProps} columns={columns} dataSource={studentList} />
         </Col>
       </Row>
     </Row>

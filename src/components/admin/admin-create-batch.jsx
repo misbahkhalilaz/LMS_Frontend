@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Modal,
   Steps,
@@ -11,30 +12,55 @@ import {
   DatePicker,
   Typography,
   Upload,
+  message,
 } from "antd";
+
 import locale from "antd/lib/locale/en_GB";
+
+import { addBatchAction } from "../../redux/actions/AdminActions";
 
 const { Step } = Steps;
 const { RangePicker } = DatePicker;
 
-const CreateClass = ({ setDestroy }) => {
+const CreateBatch = ({ setDestroy }) => {
   const [isModalVisible, setIsModalVisible] = useState(true);
-  const [isComplete, setIsComplete] = useState(false);
+
+  const [programDetail] = useState([
+    { label: "BSCS", value: 2 },
+    { label: "BSSE", value: 3 },
+    { label: "MCS", value: 4 },
+  ]);
+  const [batchinfo, setBatchinfo] = useState([]);
   const [current, setCurrent] = useState(0);
 
-  const [initSubmitInfo, setInitSubmitInfo] = useState([]);
+  const isLoading = useSelector((state) => state.loggerReducer.isLoading);
+  const dispatch = useDispatch();
 
   const initInfoSubmit = (values) => {
-    setInitSubmitInfo(values);
+    values["startingYr"] = values["term"][0].format("MMM-YYYY");
+    values["endingYr"] = values["term"][1].format("MMM-YYYY");
+    delete values["term"];
 
+    setBatchinfo(values);
     setCurrent(current + 1);
   };
 
   const batchCreateSubmit = (values) => {
-    //CREATE BATCH FINAL API info at initSubmitInfo,values
-    console.log(initSubmitInfo, values);
-    //after successful call
-    setIsComplete(true);
+    const formData = new FormData();
+
+    Object.entries(batchinfo).forEach(([key, value]) => {
+      if (key != "noSection") formData.append(key, value);
+    });
+
+    try {
+      Object.entries(values).forEach(([key, value]) =>
+        formData.append(key, value.file, value.file.name)
+      );
+
+      dispatch(addBatchAction(formData, setIsModalVisible));
+    } catch {
+      message.error("Please upload remaining student file(s)!", 1);
+    }
   };
 
   const steps = [
@@ -61,7 +87,7 @@ const CreateClass = ({ setDestroy }) => {
             <Radio.Group options={["Morning", "Evening"]} />
           </Form.Item>
           <Form.Item
-            name="program"
+            name="programId"
             label="Program"
             hasFeedback
             rules={[
@@ -73,7 +99,7 @@ const CreateClass = ({ setDestroy }) => {
           >
             <Select
               showSearch
-              options={[{ value: "BSCS" }, { value: "BSSE" }, { value: "MCS" }]}
+              options={programDetail}
               filterOption={(input, option) =>
                 option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
@@ -91,12 +117,13 @@ const CreateClass = ({ setDestroy }) => {
           >
             <RangePicker
               inputReadOnly={true}
-              format={"DD/MM/YYYY"}
+              picker="month"
+              format={"MM/YYYY"}
               locale={locale}
             />
           </Form.Item>
           <Form.Item
-            name="batch"
+            name="name"
             label="Batch Name"
             hasFeedback
             rules={[
@@ -118,7 +145,7 @@ const CreateClass = ({ setDestroy }) => {
               },
             ]}
           >
-            <InputNumber min={1} precision={0} />
+            <InputNumber min={1} precision={0} max={3} />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 20 }}>
             <Button type="primary" htmlType="submit">
@@ -132,7 +159,7 @@ const CreateClass = ({ setDestroy }) => {
       title: "Upload student file",
       content: (
         <Form layout="inline" requiredMark={false} onFinish={batchCreateSubmit}>
-          {[...Array(initSubmitInfo.noSection)].map((sect, index) => (
+          {[...Array(batchinfo.noSection)].map((_, index) => (
             <div
               key={index}
               className="mainarea-bg"
@@ -148,23 +175,28 @@ const CreateClass = ({ setDestroy }) => {
                 Section - {String.fromCharCode(65 + index)} Student List
               </Typography.Title>
               <Form.Item
-                name={`Sect ${String.fromCharCode(65 + index)}`}
+                name={String.fromCharCode(65 + index)}
+                valuePropName="name"
                 rules={[
                   {
                     required: true,
-                    message: "Please upload student list!",
+                    message: "Please upload students list!",
                   },
                 ]}
                 style={{ position: "absolute", bottom: 0, textAlign: "center" }}
               >
-                <Upload>
+                <Upload
+                  maxCount={1}
+                  accept=".xlsx, .xls"
+                  beforeUpload={() => false}
+                >
                   <Button type="primary">Click to upload</Button>
                 </Upload>
               </Form.Item>
             </div>
           ))}
           <Form.Item wrapperCol={{ offset: 17 }}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={isLoading}>
               Create Batch
             </Button>
           </Form.Item>
@@ -181,31 +213,17 @@ const CreateClass = ({ setDestroy }) => {
       destroyOnClose
       visible={isModalVisible}
       onCancel={() => setIsModalVisible(false)}
-      afterClose={() => setDestroy()}
+      afterClose={() => setDestroy(false)}
       bodyStyle={{ paddingTop: 50 }}
     >
-      {!isComplete ? (
-        <>
-          <Steps className="no-select" size="small" current={current}>
-            {steps.map((item) => (
-              <Step key={item.title} title={item.title} />
-            ))}
-          </Steps>
-          <div>{steps[current].content}</div>
-        </>
-      ) : (
-        <div style={{ textAlign: "center" }}>
-          <Typography.Title className="no-select subtitle-text" level={4}>
-            Batch Successfully Created
-          </Typography.Title>
-          <br />
-          <Button type="primary" onClick={() => setIsModalVisible(false)}>
-            OK
-          </Button>
-        </div>
-      )}
+      <Steps className="no-select" size="small" current={current}>
+        {steps.map((item) => (
+          <Step key={item.title} title={item.title} />
+        ))}
+      </Steps>
+      <div>{steps[current].content}</div>
     </Modal>
   );
 };
 
-export default CreateClass;
+export default CreateBatch;

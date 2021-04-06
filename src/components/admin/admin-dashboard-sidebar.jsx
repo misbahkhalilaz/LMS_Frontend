@@ -20,8 +20,7 @@ const DashboardSidebar = () => {
           size="large"
           shape="round"
           style={{ fontSize: 24 }}
-          onClick={() => setShowCreateNotify(true)}
-        >
+          onClick={() => setShowCreateNotify(true)}>
           Create
         </Button>
       </Col>
@@ -33,8 +32,8 @@ const DashboardSidebar = () => {
           icon={<PlusCircleFilled />}
           size="large"
           shape="round"
-          style={{ fontSize: 24 }}
-        >
+          onClick={() => navigate("timetable")}
+          style={{ fontSize: 24 }}>
           Timetable
         </Button>
       </Col>
@@ -46,8 +45,7 @@ const DashboardSidebar = () => {
           size="large"
           shape="round"
           onClick={() => navigate("course-list")}
-          style={{ fontSize: 24 }}
-        >
+          style={{ fontSize: 24 }}>
           Courses List
         </Button>
       </Col>
@@ -59,8 +57,7 @@ const DashboardSidebar = () => {
           size="large"
           shape="round"
           style={{ fontSize: 24 }}
-          onClick={() => navigate("teacher-list")}
-        >
+          onClick={() => navigate("teacher-list")}>
           Teachers List
         </Button>
       </Col>
@@ -72,14 +69,11 @@ const DashboardSidebar = () => {
           size="large"
           shape="round"
           style={{ fontSize: 24 }}
-          onClick={() => navigate("student-list")}
-        >
+          onClick={() => navigate("student-list")}>
           Students List
         </Button>
       </Col>
-      {showCreateNotify && (
-        <CreateNotification setDestroy={() => setShowCreateNotify(false)} />
-      )}
+      {showCreateNotify && <CreateNotification setDestroy={() => setShowCreateNotify(false)} />}
     </Row>
   );
 };

@@ -1,19 +1,23 @@
-const API = (method, end_point, body, token = "") => {
+const API = (method, end_point, body = null, formData = null, token = "") => {
   const requestOptions = {
     method,
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token ? token : ""}`,
     },
-    body: JSON.stringify(body),
+    body: body ? JSON.stringify(body) : formData,
     redirect: "follow",
   };
 
-  return fetch(
-    `https://lms-fyp-devs.herokuapp.com${end_point}`,
-    requestOptions
-  ).then((response) => response.json());
-  // .then((result) => console.log(result))
-  //   .catch((error) => console.log("error", error))
+  if (body) {
+    requestOptions.headers = {
+      ...requestOptions.headers,
+      "Content-Type": "application/json",
+    };
+  }
+
+  return fetch(`https://lms-fyp-devs.herokuapp.com${end_point}`, requestOptions).then((res) =>
+    res.json().then((data) => ({ status: res.status, data }))
+  );
+  //.catch((err) => console.log(err));
 };
 export default API;

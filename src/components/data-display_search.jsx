@@ -10,12 +10,6 @@ const ViewSearchMain = ({ data, columns, searchBy }) => {
 
   useEffect(() => SetDisplay(data), []);
 
-  const tableProps = {
-    scroll: { y: "70vh" },
-    loading: false,
-    pagination: false,
-  };
-
   const filterStudent = (value) => {
     if (prevTxt != value)
       SetFilteredDisplay(
@@ -29,6 +23,12 @@ const ViewSearchMain = ({ data, columns, searchBy }) => {
       );
 
     SetPrevTxt(value);
+  };
+
+  const tableProps = {
+    scroll: { y: "70vh" },
+    loading: false,
+    pagination: false,
   };
 
   return (

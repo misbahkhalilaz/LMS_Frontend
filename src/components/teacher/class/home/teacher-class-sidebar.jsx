@@ -79,7 +79,7 @@ const ClassSidebar = () => {
           Show Final Result
         </Button>
       </Col>
-      <div className="chat-widget">
+      <div className="chat-widget" onClick={() => navigate("chat")}>
         <Badge dot offset={[-5, 10]}>
           <Avatar
             size={50}

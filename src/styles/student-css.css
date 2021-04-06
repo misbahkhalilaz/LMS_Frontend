@@ -23,6 +23,26 @@
   background-color: #645d84 !important;
   border-color: #645d84 !important;
 }
+.button {
+  background-color: #f2f2f2;
+  cursor: pointer;
+  border: none;
+  border-radius: 15px;
+  margin: 20px;
+  color: black;
+  font-size: 16px;
+  font-weight: 500;
+  width: 90%;
+  height: 60px;
+  transition: all 0.2s ease-in-out;
+}
+.button:hover {
+  transform: scale(1.05);
+}
+.button:focus {
+  background-color: #0091ff;
+  color: #ffffff;
+}
 
 .ant-table {
   background: #f2f2f2 !important;
