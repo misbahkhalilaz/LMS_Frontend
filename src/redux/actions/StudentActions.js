@@ -38,7 +38,7 @@ export const getClasses = () => (dispatch) => {
           classes[course_id].labTeacherName = users.name;
         }
       });
-      console.log(classes);
+
       dispatch(setClasses(classes));
     } else message.error(res.data.message, 1);
 

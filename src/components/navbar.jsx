@@ -21,9 +21,9 @@ import { LeftOutlined, HomeFilled, BellFilled, PoweroffOutlined } from "@ant-des
 const { Title, Text } = Typography;
 
 const Navbar = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const { width } = useViewport();
   const isLogged = useSelector((state) => state.loggerReducer.isLogged);
 
@@ -64,15 +64,15 @@ const Navbar = () => {
         <PageHeader
           backIcon={!homePaths.includes(location.pathname) && <LeftOutlined />}
           title={
-            <Title className="no-select" level={2} style={{ margin: 0, color: "#FFFFFF" }}>
+            <Title className='no-select' level={2} style={{ margin: 0, color: "#FFFFFF" }}>
               {width < 700 ? "DCS - UBIT" : "Department of Computer Science - UBIT"}
             </Title>
           }
           extra={
             isLogged && [
-              <Tooltip key={0} placement="bottom" title="Homepage">
+              <Tooltip key={0} placement='bottom' title='Homepage'>
                 <Button
-                  shape="circle"
+                  shape='circle'
                   icon={<HomeFilled />}
                   style={{ color: "rgba(0, 0, 0, 0.65)" }}
                   onClick={() => {
@@ -81,28 +81,29 @@ const Navbar = () => {
                   }}
                 />
               </Tooltip>,
-              <Tooltip key={1} placement="bottom" title="Notifications">
+              <Tooltip key={1} placement='bottom' title='Notifications'>
                 <Button
-                  shape="circle"
+                  shape='circle'
                   icon={<BellFilled />}
                   style={{ color: "rgba(0, 0, 0, 0.65)" }}
                   onClick={() => setDrawerVisible(true)}
                 />
               </Tooltip>,
-              <Tooltip key={2} placement="bottom" title="Logout">
+              <Tooltip key={2} placement='bottom' title='Logout'>
                 <Popconfirm
-                  placement="bottom"
-                  title="Are you sure？"
-                  okText="Yes"
-                  cancelText="No"
+                  placement='bottom'
+                  title='Are you sure？'
+                  okText='Yes'
+                  cancelText='No'
                   onConfirm={() => {
                     dispatch(clearStoreAction());
                     dispatch(loginStatAction(false));
                     //navigate("/login", { replace: true });
                     window.location.replace("/login");
-                  }}>
+                  }}
+                >
                   <Button
-                    shape="circle"
+                    shape='circle'
                     icon={<PoweroffOutlined />}
                     style={{ color: "rgba(0, 0, 0, 0.65)" }}
                   />
@@ -114,30 +115,32 @@ const Navbar = () => {
         />
       </Col>
       <Drawer
-        className="no-select"
-        title="Notifications"
-        placement="right"
+        className='no-select'
+        title='Notifications'
+        placement='right'
         width={330}
         destroyOnClose={true}
         visible={drawerVisible}
-        onClose={() => setDrawerVisible(false)}>
+        onClose={() => setDrawerVisible(false)}
+      >
         <List
           dataSource={notificationData}
-          itemLayout="vertical"
-          size="small"
+          itemLayout='vertical'
+          size='small'
           renderItem={(news) => (
             <List.Item
               actions={[
                 <Button
-                  type="primary"
-                  size="small"
+                  type='primary'
+                  size='small'
                   onClick={() => {
                     Modal.info({
                       title: news.title,
                       content: <Text>{news.description}</Text>,
                       onOk() {},
                     });
-                  }}>
+                  }}
+                >
                   View
                 </Button>,
               ]}
@@ -145,7 +148,8 @@ const Navbar = () => {
                 backgroundColor: "#f2f2f2",
                 marginBottom: 10,
                 borderRadius: 15,
-              }}>
+              }}
+            >
               <Text strong>{`Admin has posted an annoucnement:
               ${news.title}`}</Text>
             </List.Item>
