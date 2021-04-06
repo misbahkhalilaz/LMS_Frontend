@@ -1,91 +1,77 @@
-import { useState, useEffect } from "react";
-import { Row, Col, Typography, Card, Badge, Switch } from "antd";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Row, Col, Typography, Card, Badge, Switch, Tooltip, Skeleton } from "antd";
 import { MessageOutlined } from "@ant-design/icons";
 
-const { Title } = Typography;
+import { getAssignedClasses } from "../../../redux/actions/TeacherActions";
+
+const { Title, Text } = Typography;
 
 const DashboardMain = () => {
-  const [classCardDetail, setClassCardDetail] = useState([]);
+  const isLoading = useSelector((state) => state.loggerReducer.isLoading);
+  const assignedClasses = useSelector((state) => state.teacherReducer.assignedClasses);
+  const dispatch = useDispatch();
 
-  useEffect(
-    () =>
-      setClassCardDetail([
-        {
-          title: "BSCS 602 - ICS I",
-          isChatAllowed: false,
-        },
-        {
-          title: "BSCS 603 - MATHS I",
-          isChatAllowed: false,
-        },
-        {
-          title: "BSCS 604 - STATS I",
-          isChatAllowed: false,
-        },
-        {
-          title: "BSCS 605 - ENG I",
-          isChatAllowed: false,
-        },
-        {
-          title: "BSCS 606 - HISTORY I",
-          isChatAllowed: false,
-        },
-        {
-          title: "BSCS 607 - AI I",
-          isChatAllowed: false,
-        },
-      ]),
-    []
-  );
+  useEffect(() => {
+    if (assignedClasses.length === 0) dispatch(getAssignedClasses());
+  }, []);
 
   return (
     <Row>
       <Row justify="center" className="subtitle-bg">
         <Col>
-          <Title
-            className="no-select subtitle-text"
-            level={2}
-            style={{ marginBottom: 25 }}
-          >
+          <Title className="no-select subtitle-text" level={2} style={{ marginBottom: 25 }}>
             Assigned Classes
           </Title>
         </Col>
       </Row>
       <Row style={{ height: "80vh", overflowY: "auto", paddingTop: 15 }}>
-        {classCardDetail.map((classDetail, index) => (
-          <Col
-            className="center"
-            key={index}
-            xs={{ span: 24 }}
-            md={{ span: 12 }}
-            lg={{ span: 8 }}
-            style={{ marginBottom: 20 }}
-          >
-            <Card
-              className="box-shadow no-select"
-              title={classDetail.title}
-              bordered={false}
-              bodyStyle={{ height: "90px" }}
-              hoverable
-              actions={[
-                <Title level={5}>
-                  Personal Chat
-                  <Switch
-                    defaultChecked={classCardDetail.isChatAllowed}
-                    checkedChildren="Enabled"
-                    unCheckedChildren="Disabled"
-                  />
-                </Title>,
-                <Badge dot style={{ marginTop: 20 }}>
-                  <MessageOutlined
-                    className="classcard-icon"
-                    style={{ marginTop: 20 }}
-                  />
-                </Badge>,
-              ]}
-            ></Card>
-          </Col>
-        ))}
+        {isLoading || assignedClasses.length === 0 ? (
+          <Row gutter={[0, 40]} justify="space-around">
+            {[0, 1, 2, 3, 4, 5].map((index) => (
+              <Skeleton.Avatar
+                key={index}
+                active
+                size={220}
+                shape="square"
+                style={{ width: 300, borderRadius: 25 }}
+              />
+            ))}
+          </Row>
+        ) : (
+          assignedClasses.map((Class) => (
+            <Col
+              className="center"
+              key={Class.id}
+              xs={{ span: 24 }}
+              md={{ span: 12 }}
+              lg={{ span: 8 }}
+              style={{ marginBottom: 20 }}>
+              <Card
+                className="box-shadow "
+                title={<Tooltip title={Class.courseName}>{Class.courseName}</Tooltip>}
+                bordered={false}
+                bodyStyle={{ height: "90px", display: "grid", justifyContent: "center" }}
+                hoverable
+                actions={[
+                  <Title level={5}>
+                    Personal Chat
+                    <Switch
+                      defaultChecked={Class.chatActive}
+                      checkedChildren="Enabled"
+                      unCheckedChildren="Disabled"
+                    />
+                  </Title>,
+                  <Badge dot style={{ marginTop: 20 }}>
+                    <MessageOutlined className="classcard-icon" style={{ marginTop: 20 }} />
+                  </Badge>,
+                ]}>
+                <Text strong>Batch: {Class.batch}</Text>
+                <Text strong>Section: {Class.sectionName}</Text>
+              </Card>
+            </Col>
+          ))
+        )}
       </Row>
     </Row>
   );

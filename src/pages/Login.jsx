@@ -8,17 +8,7 @@ import {
   setPassAction,
 } from "../redux/actions/LoggerActions";
 
-import {
-  Row,
-  Col,
-  Input,
-  Button,
-  Form,
-  Typography,
-  Modal,
-  Steps,
-  message,
-} from "antd";
+import { Row, Col, Input, Button, Form, Typography, Modal, Steps, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 import img from "../assets/loginpage.png";
@@ -32,8 +22,7 @@ const steps = [
       <Form.Item
         name="userId"
         label="UserID"
-        rules={[{ required: true, message: "Please enter your userID!" }]}
-      >
+        rules={[{ required: true, message: "Please enter your userID!" }]}>
         <Input />
       </Form.Item>
     ),
@@ -43,8 +32,7 @@ const steps = [
       <Form.Item
         name="otp"
         label="OTP"
-        rules={[{ required: true, message: "Please enter received Otp!" }]}
-      >
+        rules={[{ required: true, message: "Please enter received Otp!" }]}>
         <Input />
       </Form.Item>
     ),
@@ -54,8 +42,7 @@ const steps = [
       <Form.Item
         name="password"
         label="Password"
-        rules={[{ required: true, message: "Please enter new password!" }]}
-      >
+        rules={[{ required: true, message: "Please enter new password!" }]}>
         <Input.Password />
       </Form.Item>
     ),
@@ -79,10 +66,8 @@ const Login = () => {
   };
 
   const setPassValidation = (values) => {
-    if (current == 0)
-      dispatch(requestOtpAction(values, message, setToken, setCurrent));
-    else if (current == 1)
-      dispatch(verifyOtpAction(values, token, message, setToken, setCurrent));
+    if (current == 0) dispatch(requestOtpAction(values, message, setToken, setCurrent));
+    else if (current == 1) dispatch(verifyOtpAction(values, token, message, setToken, setCurrent));
     else dispatch(setPassAction(values, token, message, setShowSetPass));
   };
 
@@ -97,8 +82,7 @@ const Login = () => {
   }, [OtpTime]);
 
   useEffect(() => {
-    if (current == 1)
-      setTimer(setInterval(() => setOtpTime((prev) => prev - 1), 1000));
+    if (current == 1) setTimer(setInterval(() => setOtpTime((prev) => prev - 1), 1000));
   }, [current]);
 
   return (
@@ -108,26 +92,15 @@ const Login = () => {
       </Col>
       <Col xs={{ span: 20, push: 2 }} lg={{ span: 6, push: 0 }}>
         <Row>
-          <Col
-            className="box-shadow"
-            style={{ textAlign: "center", padding: "40px" }}
-          >
+          <Col className="box-shadow" style={{ textAlign: "center", padding: "40px" }}>
             <Title level={3} className="no-select">
               Welcome
             </Title>
-            <Form
-              layout="vertical"
-              size="large"
-              hideRequiredMark="true"
-              onFinish={login}
-            >
+            <Form layout="vertical" size="large" hideRequiredMark="true" onFinish={login}>
               <Form.Item
                 name="userId"
                 label="UserID"
-                rules={[
-                  { required: true, message: "Please enter your userID!" },
-                ]}
-              >
+                rules={[{ required: true, message: "Please enter your userID!" }]}>
                 <Input
                   className="form-input-radius"
                   placeholder="UserID"
@@ -137,10 +110,7 @@ const Login = () => {
               <Form.Item
                 name="password"
                 label="Password"
-                rules={[
-                  { required: true, message: "Please enter your password!" },
-                ]}
-              >
+                rules={[{ required: true, message: "Please enter your password!" }]}>
                 <Input.Password
                   className="form-input-radius"
                   placeholder="Password"
@@ -153,8 +123,7 @@ const Login = () => {
                   type="primary"
                   htmlType="submit"
                   shape="round"
-                  loading={isLoading}
-                >
+                  loading={isLoading}>
                   Log in
                 </Button>
                 <Button type="link" onClick={() => setShowSetPass(true)}>
@@ -177,32 +146,18 @@ const Login = () => {
           setOtpTime(120);
           clearInterval(timer);
         }}
-        bodyStyle={{ padding: 50 }}
-      >
-        <Steps className="no-select" size="small" current={current}>
+        bodyStyle={{ padding: 50 }}>
+        <Steps className="no-select" progressDot size="small" current={current}>
           <Step title="User Validation" />
-          <Step
-            title="Otp Validation"
-            subTitle={!isLoading && "TTL: " + OtpTime}
-          />
+          <Step title="Otp Validation" subTitle={!isLoading && "TTL: " + OtpTime} />
           <Step title="Set Password" />
         </Steps>
-        <Form
-          colon={false}
-          preserve={false}
-          hideRequiredMark="true"
-          onFinish={setPassValidation}
-        >
+        <Form colon={false} preserve={false} hideRequiredMark="true" onFinish={setPassValidation}>
           <div className="center" style={{ height: 120 }}>
             {steps[current].content}
           </div>
           <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={isLoading}
-              style={{ float: "right" }}
-            >
+            <Button type="primary" htmlType="submit" loading={isLoading} style={{ float: "right" }}>
               {current < 2 ? "Next" : "Set Password"}
             </Button>
           </Form.Item>

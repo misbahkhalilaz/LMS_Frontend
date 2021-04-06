@@ -28,6 +28,7 @@ const CreateClass = ({ setDestroy }) => {
 
   const initInfoSubmit = ({ programId, batchId, sectionId, shift }) => {
     const { semester } = batchList[programId][shift].find((x) => x.value === batchId);
+
     const obj = { programId, semester, sectionId, isActive: true };
 
     dispatch(getCourseList(obj, setCourseList, setCurrent));
@@ -66,18 +67,16 @@ const CreateClass = ({ setDestroy }) => {
           requiredMark={false}
           onFinish={initInfoSubmit}
           labelCol={{ span: 8 }}
-          wrapperCol={{ span: 12 }}
-        >
+          wrapperCol={{ span: 12 }}>
           <Form.Item
-            name='shift'
-            label='Shift'
+            name="shift"
+            label="Shift"
             rules={[
               {
                 required: true,
                 message: "Please select shift!",
               },
-            ]}
-          >
+            ]}>
             <Radio.Group
               value={selectedShift}
               onChange={(e) => setSelectedShift(e.target.value)}
@@ -85,15 +84,14 @@ const CreateClass = ({ setDestroy }) => {
             />
           </Form.Item>
           <Form.Item
-            name='programId'
-            label='Program'
+            name="programId"
+            label="Program"
             rules={[
               {
                 required: true,
                 message: "Please select program!",
               },
-            ]}
-          >
+            ]}>
             <Select
               showSearch
               options={programList}
@@ -105,15 +103,14 @@ const CreateClass = ({ setDestroy }) => {
             />
           </Form.Item>
           <Form.Item
-            name='batchId'
-            label='Batch'
+            name="batchId"
+            label="Batch"
             rules={[
               {
                 required: true,
                 message: "Please select batch!",
               },
-            ]}
-          >
+            ]}>
             <Select
               showSearch
               options={batchList[selectedProgId]?.[selectedShift]}
@@ -125,15 +122,14 @@ const CreateClass = ({ setDestroy }) => {
             />
           </Form.Item>
           <Form.Item
-            name='sectionId'
-            label='Section'
+            name="sectionId"
+            label="Section"
             rules={[
               {
                 required: true,
                 message: "Please select batch's section!",
               },
-            ]}
-          >
+            ]}>
             <Select
               showSearch
               options={availableSect}
@@ -144,7 +140,7 @@ const CreateClass = ({ setDestroy }) => {
             />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 20 }}>
-            <Button type='primary' htmlType='submit' loading={isLoading}>
+            <Button type="primary" htmlType="submit" loading={isLoading}>
               Next
             </Button>
           </Form.Item>
@@ -156,16 +152,15 @@ const CreateClass = ({ setDestroy }) => {
       content: (
         <Form colon={false} preserve={false} requiredMark={false} onFinish={courseInfoSubmit}>
           <Form.Item
-            name='courseId'
+            name="courseId"
             rules={[
               {
                 required: true,
                 message: "Please select a course!",
               },
             ]}
-            label=' '
-            labelCol={{ span: 7 }}
-          >
+            label=" "
+            labelCol={{ span: 7 }}>
             <Radio.Group>
               {courseList?.map((course) => (
                 <Radio key={course.value} value={course.value} style={radioStyle}>
@@ -175,7 +170,7 @@ const CreateClass = ({ setDestroy }) => {
             </Radio.Group>
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 20 }}>
-            <Button type='primary' htmlType='submit' loading={isLoading}>
+            <Button type="primary" htmlType="submit" loading={isLoading}>
               Next
             </Button>
           </Form.Item>
@@ -187,16 +182,15 @@ const CreateClass = ({ setDestroy }) => {
       content: (
         <Form colon={false} requiredMark={false} preserve={false} onFinish={createClass}>
           <Form.Item
-            name='teacherId'
-            label='Select Teacher'
+            name="teacherId"
+            label="Select Teacher"
             rules={[
               {
                 required: true,
                 message: "Please select a teacher!",
               },
             ]}
-            labelCol={{ span: 10 }}
-          >
+            labelCol={{ span: 10 }}>
             <Select
               showSearch
               options={teacherList}
@@ -208,16 +202,15 @@ const CreateClass = ({ setDestroy }) => {
           </Form.Item>
           {creditHour == 2 && (
             <Form.Item
-              name='labTeacherId'
-              label='Select Lab Teacher'
+              name="labTeacherId"
+              label="Select Lab Teacher"
               rules={[
                 {
                   required: true,
                   message: "Please select a lab teacher!",
                 },
               ]}
-              labelCol={{ span: 10 }}
-            >
+              labelCol={{ span: 10 }}>
               <Select
                 showSearch
                 options={teacherList}
@@ -229,7 +222,7 @@ const CreateClass = ({ setDestroy }) => {
             </Form.Item>
           )}
           <Form.Item wrapperCol={{ offset: 20 }}>
-            <Button type='primary' htmlType='submit' loading={isLoading}>
+            <Button type="primary" htmlType="submit" loading={isLoading}>
               Next
             </Button>
           </Form.Item>
@@ -247,9 +240,8 @@ const CreateClass = ({ setDestroy }) => {
       visible={isModalVisible}
       onCancel={() => setIsModalVisible(false)}
       afterClose={() => setDestroy(false)}
-      bodyStyle={{ paddingTop: 50 }}
-    >
-      <Steps className='no-select' size='small' current={current}>
+      bodyStyle={{ paddingTop: 50 }}>
+      <Steps className="no-select" size="small" current={current}>
         {steps.map((item) => (
           <Step key={item.title} title={item.title} />
         ))}

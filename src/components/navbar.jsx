@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  loginStatAction,
-  clearStoreAction,
-} from "../redux/actions/LoggerActions";
+import { loginStatAction, clearStoreAction } from "../redux/actions/LoggerActions";
 import useViewport from "./useViewport";
 import {
   Row,
@@ -19,12 +16,7 @@ import {
   PageHeader,
 } from "antd";
 
-import {
-  LeftOutlined,
-  HomeFilled,
-  BellFilled,
-  PoweroffOutlined,
-} from "@ant-design/icons";
+import { LeftOutlined, HomeFilled, BellFilled, PoweroffOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 
@@ -72,14 +64,8 @@ const Navbar = () => {
         <PageHeader
           backIcon={!homePaths.includes(location.pathname) && <LeftOutlined />}
           title={
-            <Title
-              className="no-select"
-              level={2}
-              style={{ margin: 0, color: "#FFFFFF" }}
-            >
-              {width < 700
-                ? "DCS - UBIT"
-                : "Department of Computer Science - UBIT"}
+            <Title className="no-select" level={2} style={{ margin: 0, color: "#FFFFFF" }}>
+              {width < 700 ? "DCS - UBIT" : "Department of Computer Science - UBIT"}
             </Title>
           }
           extra={
@@ -91,8 +77,7 @@ const Navbar = () => {
                   style={{ color: "rgba(0, 0, 0, 0.65)" }}
                   onClick={() => {
                     const homePath = location.pathname.split("/")[1];
-                    if (homePath != location.pathname)
-                      navigate(homePath, { replace: true });
+                    if (homePath != location.pathname) navigate(homePath, { replace: true });
                   }}
                 />
               </Tooltip>,
@@ -111,11 +96,11 @@ const Navbar = () => {
                   okText="Yes"
                   cancelText="No"
                   onConfirm={() => {
-                    dispatch(loginStatAction(false));
                     dispatch(clearStoreAction());
-                    navigate("/login", { replace: true });
-                  }}
-                >
+                    dispatch(loginStatAction(false));
+                    //navigate("/login", { replace: true });
+                    window.location.replace("/login");
+                  }}>
                   <Button
                     shape="circle"
                     icon={<PoweroffOutlined />}
@@ -135,8 +120,7 @@ const Navbar = () => {
         width={330}
         destroyOnClose={true}
         visible={drawerVisible}
-        onClose={() => setDrawerVisible(false)}
-      >
+        onClose={() => setDrawerVisible(false)}>
         <List
           dataSource={notificationData}
           itemLayout="vertical"
@@ -153,8 +137,7 @@ const Navbar = () => {
                       content: <Text>{news.description}</Text>,
                       onOk() {},
                     });
-                  }}
-                >
+                  }}>
                   View
                 </Button>,
               ]}
@@ -162,8 +145,7 @@ const Navbar = () => {
                 backgroundColor: "#f2f2f2",
                 marginBottom: 10,
                 borderRadius: 15,
-              }}
-            >
+              }}>
               <Text strong>{`Admin has posted an annoucnement:
               ${news.title}`}</Text>
             </List.Item>

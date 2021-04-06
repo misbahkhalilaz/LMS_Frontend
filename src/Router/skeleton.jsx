@@ -4,18 +4,11 @@ const CustomSkeleton = () => {
   return (
     <Row style={{ height: "90vh" }}>
       <Col xs={{ span: 24 }} lg={{ span: 19 }}>
-        <Row
-          className="subtitle-bg"
-          justify="space-around"
-          style={{ marginBottom: 20 }}
-        >
-          <Skeleton.Input
-            active
-            style={{ width: 300, margin: "10px 0", borderRadius: 15 }}
-          />
+        <Row className="subtitle-bg" justify="space-around" style={{ marginBottom: 20 }}>
+          <Skeleton.Input active style={{ width: 300, margin: "10px 0", borderRadius: 15 }} />
         </Row>
         <Row gutter={[0, 40]} justify="space-around">
-          {[0, 1, 2, 3, 4].map((index) => (
+          {[0, 1, 2, 3, 4, 5].map((index) => (
             <Skeleton.Avatar
               key={index}
               active

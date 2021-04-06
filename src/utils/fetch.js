@@ -1,5 +1,4 @@
 const API = (method, end_point, body = null, formData = null, token = "") => {
-  //for formdata, API('post', endpVal, null, tokenStr, formDataObject)
   const requestOptions = {
     method,
     headers: {
@@ -16,10 +15,9 @@ const API = (method, end_point, body = null, formData = null, token = "") => {
     };
   }
 
-  return fetch(
-    `https://lms-fyp-devs.herokuapp.com${end_point}`,
-    requestOptions
-  ).then((res) => res.json().then((data) => ({ status: res.status, data })));
-  //.catch((err) => console.log(err));    //catch must be there
+  return fetch(`https://lms-fyp-devs.herokuapp.com${end_point}`, requestOptions).then((res) =>
+    res.json().then((data) => ({ status: res.status, data }))
+  );
+  //.catch((err) => console.log(err));
 };
 export default API;

@@ -49,6 +49,7 @@ export const getClassBySect = (queryParams, queryParams1, setClassBySect, setRoo
 ) => {
   const cookie = new Cookies();
   const token = cookie.get("token");
+
   dispatch(loadingAction(true));
 
   Promise.all([
@@ -66,7 +67,7 @@ export const getClassBySect = (queryParams, queryParams1, setClassBySect, setRoo
       const rooms = [];
       Class.map(({ id, section_id, teacher_id, users, courses }) => {
         const className = `${courses.name} - ${users.name}`;
-        const value = [id, teacher_id]; //, section_id
+        const value = [id, teacher_id];
         if (!classesBySect[section_id]) classesBySect[section_id] = [];
 
         classesBySect[section_id].push({ label: className, value });
@@ -149,7 +150,7 @@ export const getCourseList = (queryParams, setCourseList, setCurrent) => (dispat
   const token = cookie.get("token");
 
   dispatch(loadingAction(true));
-
+  console.log(queryParams);
   API("GET", "/admin/getCourses?" + new URLSearchParams(queryParams), "", null, token).then(
     (res) => {
       if (res.status >= 200 && res.status < 300) {
@@ -253,11 +254,11 @@ export const addBatchAction = (formData, setIsModalVisible) => (dispatch, getSta
 
   API("POST", "/admin/createBatch", null, formData, token).then((res) => {
     if (res.status >= 200 && res.status < 300) {
-      const { id, name, program_id, shift, sections } = res.data.data;
+      const { id, name, program_id, shift, sections, current_semester } = res.data.data;
 
       const obj = { ...adminState.batchList };
 
-      obj[program_id][shift].push({ label: name, value: id });
+      obj[program_id][shift].push({ label: name, value: id, semester: current_semester });
 
       dispatch(setBatchList(obj));
 

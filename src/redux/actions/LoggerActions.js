@@ -1,3 +1,4 @@
+import { showLoading, hideLoading } from "react-redux-loading-bar";
 import API from "../../utils/fetch";
 import Cookies from "universal-cookie";
 import {
@@ -24,7 +25,7 @@ export const checkTokenAction = (payload) => {
 
 export const loginStatAction = (payload) => {
   const cookie = new Cookies();
-  if (!payload) cookie.remove("token");
+  if (!payload) cookie.remove("token", { path: "/", maxAge: 2000 });
 
   return { type: LOGGED_IN, payload };
 };
@@ -49,21 +50,25 @@ export const loginAction = (payload, navigate, message) => (dispatch) => {
 export const loginTokenAction = (navigate, requestedPath) => (dispatch) => {
   const cookie = new Cookies();
   const token = cookie.get("token");
+
+  dispatch(showLoading());
   dispatch(checkTokenAction(false));
   API("POST", "/auth", {}, null, token).then((res) => {
     if (res.status >= 200 && res.status < 300) {
       res.data.role == requestedPath.split("/")[1]
-        ? navigate(requestedPath)
+        ? navigate(requestedPath, { replace: true })
         : navigate("/" + res.data.role, { replace: true });
 
       dispatch(loginStatAction(true));
       dispatch(setAdminValues(res.data.role, token));
     } else {
       dispatch(loginStatAction(false));
+
       navigate("/login", { replace: true });
     }
 
     dispatch(checkTokenAction(true));
+    dispatch(hideLoading());
   });
 };
 

@@ -4,7 +4,8 @@ import { useNavigate, useRoutes, useLocation, Navigate } from "react-router";
 import { loginTokenAction } from "../redux/actions/LoggerActions";
 
 import { Row, Col } from "antd";
-import Skeleton from "./skeleton";
+import LoadingBar from "react-redux-loading-bar";
+
 import Navbar from "../components/navbar";
 
 import Login from "../pages/Login";
@@ -83,7 +84,7 @@ const routes = [
           },
         ],
       },
-      { path: "/*", element: <Navigate to="/teacher" /> },
+      { path: "/*", element: <Navigate to="/teacher" replace={true} /> },
     ],
   },
   {
@@ -94,10 +95,10 @@ const routes = [
       { path: "course-list", element: <AdminCourseList /> },
       { path: "teacher-list", element: <AdminTeacherList /> },
       { path: "student-list", element: <AdminStudentList /> },
-      { path: "/*", element: <Navigate to="/admin" /> },
+      { path: "/*", element: <Navigate to="/admin" replace={true} /> },
     ],
   },
-  { path: "/*", element: <Navigate to="/login" replace /> }, //maybe?
+  // { path: "/*", element: <Navigate to="/login" replace={true} /> }, //maybe?
 ];
 
 const Router = () => {
@@ -107,17 +108,19 @@ const Router = () => {
   const allowRender = useSelector((state) => state.loggerReducer.allowRender);
   const dispatch = useDispatch();
 
-  useEffect(() => dispatch(loginTokenAction(navigate, location.pathname)), []);
+  useEffect(() => {
+    dispatch(loginTokenAction(navigate, location.pathname));
+  }, []);
 
   return (
     <Row style={{ height: "100%" }}>
       <Row>
         <Col span={24}>
           <Navbar />
+          <LoadingBar updateTime={150} />
         </Col>
       </Row>
-
-      {allowRender ? element : <Skeleton />}
+      {allowRender && element}
     </Row>
   );
 };
