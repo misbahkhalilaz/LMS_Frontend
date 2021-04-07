@@ -84,42 +84,39 @@ const ClassMain = () => {
 
   return (
     <Row>
-      <Row align='middle' justify='center' style={{ height: "10vh" }}>
+      <Row align="middle" justify="center" style={{ height: "10vh" }}>
         <Col xs={{ span: 3 }} lg={{ span: 1, pull: 2 }}>
-          <Title className='no-select subtitle-text' level={5} style={{ margin: 0 }}>
+          <Title className="no-select subtitle-text" level={5} style={{ margin: 0 }}>
             WEEK
           </Title>
         </Col>
         <Col xs={{ span: 5 }} lg={{ span: 6, pull: 1 }}>
           <Button
-            className='postfilter-btn'
+            className="postfilter-btn"
             block
-            shape='round'
-            size='large'
-            onClick={() => setSelectedPosts("All")}
-          >
+            shape="round"
+            size="large"
+            onClick={() => setSelectedPosts("All")}>
             All
           </Button>
         </Col>
         <Col xs={{ span: 8 }} lg={{ span: 6 }}>
           <Button
-            className='postfilter-btn'
+            className="postfilter-btn"
             block
-            shape='round'
-            size='large'
-            onClick={() => setSelectedPosts(true)}
-          >
+            shape="round"
+            size="large"
+            onClick={() => setSelectedPosts(true)}>
             Assignments
           </Button>
         </Col>
         <Col xs={{ span: 7 }} lg={{ span: 6, push: 1 }}>
           <Button
-            className='postfilter-btn'
+            className="postfilter-btn"
             block
-            shape='round'
-            size='large'
-            onClick={() => setSelectedPosts(false)}
-          >
+            shape="round"
+            size="large"
+            onClick={() => setSelectedPosts(false)}>
             Materials
           </Button>
         </Col>
@@ -130,8 +127,7 @@ const ClassMain = () => {
             getContainer={() => document.getElementById("class-posts")}
             onClick={(e) => e.preventDefault()}
             showInkInFixed={true}
-            style={{ paddingLeft: 15, margin: "0 5px 0" }}
-          >
+            style={{ paddingLeft: 15, margin: "0 5px 0" }}>
             {/* {Object.keys(classDetails).map((key, index) => (
               <Link key={index} href={"#" + key} title={index + 1} />
             ))} */}
@@ -140,18 +136,17 @@ const ClassMain = () => {
         <Col
           xs={{ span: 20 }}
           lg={{ span: 22 }}
-          id='class-posts'
-          style={{ height: "80vh", overflowY: "auto" }}
-        >
-          <Row justify='center' style={{ marginTop: 20 }}>
-            {isLoading || classPosts.length === 0
+          id="class-posts"
+          style={{ height: "80vh", overflowY: "auto" }}>
+          <Row justify="center" style={{ marginTop: 20 }}>
+            {isLoading
               ? [0, 1, 2, 3].map((index) => (
                   <Col key={index} span={23}>
                     <Skeleton.Avatar
                       key={index}
                       active
                       size={70}
-                      shape='square'
+                      shape="square"
                       style={{ width: "65vw", borderRadius: 25, margin: "15px 0" }}
                     />
                   </Col>

@@ -9,6 +9,7 @@ import {
   SET_SELECTEDCLASS,
   LOAD_CLASSPOSTLIST,
   SET_SELECTEDPOST,
+  LOAD_CLASSSTUDENTS,
 } from "../constants";
 
 export const loadingAction = (payload) => {
@@ -33,6 +34,25 @@ export const setClassPostList = (payload) => {
 
 export const setClassPost = (payload) => {
   return { type: SET_SELECTEDPOST, payload };
+};
+
+export const setClassStudents = (payload) => {
+  return { type: LOAD_CLASSSTUDENTS, payload };
+};
+
+export const getClassStudent = (classId) => (dispatch) => {
+  const cookie = new Cookies();
+  const token = cookie.get("token");
+  //dispatch(loadingAction(true));
+  dispatch(setSelectedClass(classId));
+
+  API("GET", "/teacher/getClassStudents?classId=" + classId, "", null, token).then((res) => {
+    if (res.status >= 200 && res.status < 300) {
+      dispatch(setClassStudents(res.data.data));
+    } else message.error(res.data.message, 1);
+
+    // dispatch(loadingAction(false));
+  });
 };
 
 export const getClassInfo = (classId, navigate) => (dispatch) => {

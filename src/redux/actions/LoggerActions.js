@@ -9,6 +9,8 @@ import {
   LOAD_PROGRAMLIST,
   LOAD_BATCHLIST,
   LOAD_SECTIONLIST,
+  SET_USERID,
+  SET_ROOMID,
 } from "../constants";
 
 export const clearStoreAction = () => {
@@ -30,6 +32,14 @@ export const loginStatAction = (payload) => {
   return { type: LOGGED_IN, payload };
 };
 
+export const setUserId = (payload) => {
+  return { type: SET_USERID, payload };
+};
+
+export const setRoomId = (payload) => {
+  return { type: SET_ROOMID, payload };
+};
+
 export const loginAction = (payload, navigate, message) => (dispatch) => {
   const cookie = new Cookies();
   dispatch(loadingAction(true));
@@ -37,6 +47,7 @@ export const loginAction = (payload, navigate, message) => (dispatch) => {
   API("POST", "/auth/login", payload).then((res) => {
     if (res.status >= 200 && res.status < 300) {
       dispatch(loginStatAction(true));
+      dispatch(setUserId(res.data.userId));
       cookie.set("token", res.data.token, { path: "/", maxAge: 2000 });
       navigate("/" + res.data.role, { replace: true });
 
