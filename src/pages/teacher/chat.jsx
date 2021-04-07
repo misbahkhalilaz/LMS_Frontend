@@ -5,9 +5,9 @@ import Main from "../../components/chat-main";
 import { useEffect, useState } from "react";
 
 const Chat = () => {
-  const [selectedChat, setSelectedChat] = useState();
+  const [selectedChat, setSelectedChat] = useState({ roomId: '', userId: '' });
 
-  //useEffect(() => console.log(selectedStd), [selectedStd]);
+  useEffect(() => console.log(selectedChat), [selectedChat]);
 
   return (
     <Row>
@@ -15,7 +15,7 @@ const Chat = () => {
         <Sidebar setSelectedChat={setSelectedChat} />
       </Col>
       <Col className="mainarea-bg" lg={{ span: 18 }} xs={{ span: 24 }}>
-        {selectedChat && <Main selectedChat={selectedChat} />}
+        <Main selectedChat={selectedChat} />
       </Col>
     </Row>
   );

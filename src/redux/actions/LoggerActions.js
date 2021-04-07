@@ -72,6 +72,7 @@ export const loginTokenAction = (navigate, requestedPath) => (dispatch) => {
 
       dispatch(loginStatAction(true));
       dispatch(setAdminValues(res.data.role, token));
+      dispatch(setUserId(res.data.userId));
     } else {
       dispatch(loginStatAction(false));
 
@@ -142,15 +143,15 @@ const setAdminValues = (role, token) => async (dispatch) => {
 
           batch.shift == "Morning"
             ? shiftWise.Morning.push({
-                label: batch.name,
-                value: batch.id,
-                semester: batch.current_semester,
-              })
+              label: batch.name,
+              value: batch.id,
+              semester: batch.current_semester,
+            })
             : shiftWise.Evening.push({
-                label: batch.name,
-                value: batch.id,
-                semester: batch.current_semester,
-              });
+              label: batch.name,
+              value: batch.id,
+              semester: batch.current_semester,
+            });
         });
 
         batchInfo[program.id] = shiftWise;

@@ -17,9 +17,7 @@ const ChatMain = ({ setSelectedChat }) => {
   const userId = useSelector((state) => state.loggerReducer.userId);
 
   const setRoom = (stdId) => {
-    setSelectedChat({ roomId: `${stdId}_${selectedClassId}`, senderId: userId });
-    // const roomId = `${stdId}_${selectedClassId}`;
-    // dispatch(setRoomId(roomId));
+    setSelectedChat({ roomId: `${stdId}_${selectedClassId}`, userId })
   };
 
   const filterStudent = (value) => {
@@ -28,8 +26,8 @@ const ChatMain = ({ setSelectedChat }) => {
         value == ""
           ? []
           : data.filter((o) =>
-              Object.keys(o).some((k) => String(o[k]).toLowerCase().includes(value.toLowerCase()))
-            )
+            Object.keys(o).some((k) => String(o[k]).toLowerCase().includes(value.toLowerCase()))
+          )
       );
 
     SetPrevTxt(value);

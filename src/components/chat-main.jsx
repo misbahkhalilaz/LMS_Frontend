@@ -8,13 +8,13 @@ import { io } from "socket.io-client";
 const { TextArea } = Input;
 
 const ChatMain = ({ selectedChat }) => {
+  const { roomId, userId } = selectedChat;
   const [value, Setvalue] = useState("");
   const [data, setData] = useState([]);
   const [socket, setSocket] = useState(io.connect("https://socket-lms.herokuapp.com/"));
   const [newMsg, setNewMsg] = useState({});
 
-  //const roomId = useSelector((state) => state.loggerReducer.roomId);
-  //const senderId = useSelector((state) => state.loggerReducer.userId);
+  useEffect(() => setData([]), [selectedChat])
 
   useEffect(() => {
     setData([...data, newMsg]);
@@ -23,15 +23,12 @@ const ChatMain = ({ selectedChat }) => {
   useEffect(() => {
     socket.emit("join", selectedChat.roomId);
     socket.on("rcv_msg", (msg) => {
-      setNewMsg({
-        type: msg.senderId === selectedChat.senderId ? "send" : "receive",
-        msg: msg.message,
-      });
+      setNewMsg({ type: msg.senderId === userId ? "send" : "receive", msg: msg.message });
     });
     socket.on("rcv_prev_chat", (messages) => {
       setData(
         messages.map((msg) => ({
-          type: msg.senderId === selectedChat.senderId ? "send" : "receive",
+          type: msg.senderId === userId ? "send" : "receive",
           msg: msg.message,
         }))
       );
@@ -42,7 +39,7 @@ const ChatMain = ({ selectedChat }) => {
   }, []);
 
   const handleSubmit = () => {
-    socket.emit("send_msg", value, selectedChat.senderId);
+    socket.emit("send_msg", value, userId);
     Setvalue("");
   };
 
