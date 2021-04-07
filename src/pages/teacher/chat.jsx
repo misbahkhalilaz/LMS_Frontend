@@ -5,17 +5,17 @@ import Main from "../../components/chat-main";
 import { useEffect, useState } from "react";
 
 const Chat = () => {
-  const [selectedStd, setSelectedStd] = useState({});
+  const [selectedChat, setSelectedChat] = useState();
 
-  useEffect(() => console.log(selectedStd), [selectedStd]);
+  //useEffect(() => console.log(selectedStd), [selectedStd]);
 
   return (
     <Row>
       <Col className="mainarea-bg" lg={{ span: 6 }} xs={{ span: 23 }}>
-        <Sidebar setSelectedStd={setSelectedStd} />
+        <Sidebar setSelectedChat={setSelectedChat} />
       </Col>
       <Col className="mainarea-bg" lg={{ span: 18 }} xs={{ span: 24 }}>
-        <Main selectedStd={selectedStd} />
+        {selectedChat && <Main selectedChat={selectedChat} />}
       </Col>
     </Row>
   );

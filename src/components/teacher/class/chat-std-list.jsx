@@ -6,7 +6,7 @@ import { setRoomId } from "../../../redux/actions/LoggerActions";
 
 const { Search } = Input;
 
-const ChatMain = ({ setSelectedStd }) => {
+const ChatMain = ({ setSelectedChat }) => {
   const [filteredDisplay, SetFilteredDisplay] = useState([]);
   const [prevTxt, SetPrevTxt] = useState("");
 
@@ -14,10 +14,12 @@ const ChatMain = ({ setSelectedStd }) => {
 
   const studentList = useSelector((state) => state.teacherReducer.studentList);
   const selectedClassId = useSelector((state) => state.teacherReducer.selectedClassId);
+  const userId = useSelector((state) => state.loggerReducer.userId);
 
   const setRoom = (stdId) => {
-    const roomId = `${stdId}_${selectedClassId}`;
-    dispatch(setRoomId(roomId));
+    setSelectedChat({ roomId: `${stdId}_${selectedClassId}`, senderId: userId });
+    // const roomId = `${stdId}_${selectedClassId}`;
+    // dispatch(setRoomId(roomId));
   };
 
   const filterStudent = (value) => {
