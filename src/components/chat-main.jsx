@@ -1,34 +1,39 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Row, Col, Button, Typography, List, Input } from "antd";
 import { RightCircleFilled } from "@ant-design/icons";
+import { io } from "socket.io-client";
 
 const { TextArea } = Input;
 
-const ChatMain = () => {
+const ChatMain = ({ roomId, senderId }) => {
   const [value, Setvalue] = useState("");
+  const [data, setData] = useState([]);
+  const [socket, setSocket] = useState(io.connect('https://socket-lms.herokuapp.com/'));
+  const [newMsg, setNewMsg] = useState({})
 
-  const data = [
-    { type: "receive", msg: "Japanese princess to wed commoner." },
-    { type: "receive", msg: "Japanese princess to wed commoner." },
-    { type: "receive", msg: "Japanese princess to wed commoner." },
+  useEffect(() => {
+    setData([...data, newMsg])
+  }, [newMsg])
 
-    { type: "receive", msg: "Japanese princess to wed commoner." },
-    { type: "receive", msg: "Japanese princess to wed commoner." },
-    { type: "receive", msg: "Japanese princess to wed commoner." },
-
-    {
-      type: "send",
-      msg:
-        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nostrum sunt, perferendis at maxime odit quibusdam expedita, ullam, vero ipsum asperiores possimus minima? Incidunt illo soluta sed magni libero neque cupiditate?",
-    },
-    { type: "receive", msg: "Australian walks 100km after outback crash." },
-    { type: "send", msg: "Man charged over missing wedding girl." },
-    { type: "receive", msg: "Los Angeles battles huge wildfires." },
-  ];
+  useEffect(() => {
+    socket.emit('join', roomId);
+    socket.on("rcv_msg", (msg) => {
+      setNewMsg({ type: msg.senderId === senderId ? "send" : "receive", msg: msg.message })
+    })
+    socket.on("rcv_prev_chat", messages => {
+      setData(messages.map(msg => ({ type: msg.senderId === senderId ? "send" : "receive", msg: msg.message })));
+    })
+    socket.on("err_msg", err => console.log(err))
+    socket.on("msg_success", () => console.log('success'))
+    return () => socket.disconnect();
+  }, []);
 
   const handleSubmit = () => {
+    socket.emit('send_msg', value, 'mata');
     Setvalue("");
   };
+
+  useEffect(() => document.getElementById('last_msg')?.scrollIntoView(true))
 
   return (
     <Row>
@@ -50,8 +55,8 @@ const ChatMain = () => {
               split={false}
               size="small"
               itemLayout="vertical"
-              renderItem={(item) => (
-                <List.Item style={{ float: "left", width: "100%" }}>
+              renderItem={(item, i) => (
+                < List.Item id={i == data.length - 1 ? "last_msg" : undefined} style={{ float: "left", width: "100%" }}>
                   <div
                     className="chat-item"
                     style={{
