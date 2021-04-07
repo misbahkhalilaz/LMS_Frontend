@@ -14,12 +14,15 @@ const CreateEditPost = ({ setDestroy, action, type = true, prevValues }) => {
   const [isModalVisible, setIsModalVisible] = useState(true);
   const [postType, setPostType] = useState();
   const isLoading = useSelector((state) => state.loggerReducer.isLoading);
+  const classId = useSelector((state) => state.teacherReducer.selectedClassId);
   const dispatch = useDispatch();
 
   useEffect(() => setPostType(type), []);
 
   const postSubmit = (values) => {
     const formData = new FormData();
+    formData.append("classId", classId);
+    formData.append("isAssignment", postType);
 
     Object.entries(values).forEach(([key, value]) => {
       if (key != "files" && key != "deadline") formData.append(key, value);
@@ -29,7 +32,7 @@ const CreateEditPost = ({ setDestroy, action, type = true, prevValues }) => {
     if (values.files)
       values.files.fileList.map((file) => formData.append("files", file.originFileObj, file.name));
 
-    dispatch(addPost(formData, setIsModalVisible));
+    if (action === "Create") dispatch(addPost(formData, setIsModalVisible));
     // message.success(`Post ${action}d!`, [1.8], () => {
     //   console.log(values);
     //   message.destroy();

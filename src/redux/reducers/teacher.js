@@ -2,6 +2,7 @@ import {
   LOAD_ASSIGNEDCLASS,
   LOAD_TEACHERID,
   SET_SELECTEDCLASS,
+  SET_SELECTEDPOST,
   LOAD_CLASSPOSTLIST,
 } from "../constants";
 
@@ -15,6 +16,8 @@ const teacherReducer = (state = { assignedClasses: [], classPosts: [] }, action)
       return { ...state, selectedClassId: action.payload };
     case LOAD_CLASSPOSTLIST:
       return { ...state, classPosts: action.payload };
+    case SET_SELECTEDPOST:
+      return { ...state, selectedPost: action.payload };
     default:
       return state;
   }
