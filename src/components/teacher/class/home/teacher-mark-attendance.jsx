@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import useViewport from "../../../useViewport";
 import { Row, Col, Button, Input, Table, Radio } from "antd";
+
+import { getClasses } from "../../../../redux/actions/StudentActions";
 
 const { Search } = Input;
 
@@ -9,61 +12,16 @@ const MarkAttendanceMain = () => {
   const [filteredData, SetFilteredData] = useState([]);
   const [prevTxt, SetPrevTxt] = useState("");
 
+  const isLoading = useSelector((state) => state.loggerReducer.isLoading);
+  const studentList = useSelector((state) => state.teacherReducer.studentList);
+  const dispatch = useDispatch();
+
   const { width } = useViewport();
 
-  const [attendanceData] = useState([
-    {
-      stdID: 1,
-      stdSeatNo: "B11101032",
-      stdName: "AA",
-    },
-    {
-      stdID: 2,
-      stdSeatNo: "B11101011",
-      stdName: "BB",
-    },
-    {
-      stdID: 3,
-      stdSeatNo: "B11101011",
-      stdName: "CC",
-    },
-    {
-      stdID: 4,
-      stdSeatNo: "B11101011",
-      stdName: "DD",
-    },
-    {
-      stdID: 5,
-      stdSeatNo: "B11101011",
-      stdName: "EE",
-    },
-    {
-      stdID: 6,
-      stdSeatNo: "B11101011",
-      stdName: "FFEE",
-    },
-    {
-      stdID: 6,
-      stdSeatNo: "B11101011",
-      stdName: "FFEE",
-    },
-    {
-      stdID: 6,
-      stdSeatNo: "B11101011",
-      stdName: "FFEE",
-    },
-    {
-      stdID: 6,
-      stdSeatNo: "B11101011",
-      stdName: "FFEE",
-    },
-  ]);
+  const [attendanceData] = useState(studentList);
 
   useEffect(
-    () =>
-      SetData(
-        attendanceData.map((obj, key) => ({ ...obj, isPresent: null, key }))
-      ),
+    () => SetData(attendanceData.map((obj, key) => ({ ...obj, isPresent: null, key }))),
     []
   );
 
@@ -71,12 +29,12 @@ const MarkAttendanceMain = () => {
     {
       align: "center",
       title: "Seat No",
-      dataIndex: "stdSeatNo",
+      dataIndex: "user_id",
     },
     {
       align: "center",
       title: "Name",
-      dataIndex: "stdName",
+      dataIndex: "name",
     },
     {
       align: "center",
@@ -99,8 +57,7 @@ const MarkAttendanceMain = () => {
               ...data.slice(std.key + 1),
             ]);
           }}
-          buttonStyle="solid"
-        >
+          buttonStyle="solid">
           <Radio.Button value={true}>Present</Radio.Button>
           <Radio.Button value={false}>Absent</Radio.Button>
         </Radio.Group>
@@ -120,9 +77,7 @@ const MarkAttendanceMain = () => {
         value == ""
           ? []
           : data.filter((o) =>
-              Object.keys(o).some((k) =>
-                String(o[k]).toLowerCase().includes(value.toLowerCase())
-              )
+              Object.keys(o).some((k) => String(o[k]).toLowerCase().includes(value.toLowerCase()))
             )
       );
 

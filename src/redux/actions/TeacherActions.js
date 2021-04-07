@@ -8,6 +8,8 @@ import {
   LOAD_TEACHERID,
   SET_SELECTEDCLASS,
   LOAD_CLASSPOSTLIST,
+  SET_SELECTEDPOST,
+  LOAD_CLASSSTUDENTS,
 } from "../constants";
 
 export const loadingAction = (payload) => {
@@ -30,9 +32,43 @@ export const setClassPostList = (payload) => {
   return { type: LOAD_CLASSPOSTLIST, payload };
 };
 
-export const getClassInfo = (classId, navigate) => (dispatch) => {
+export const setClassPost = (payload) => {
+  return { type: SET_SELECTEDPOST, payload };
+};
+
+export const setClassStudents = (payload) => {
+  return { type: LOAD_CLASSSTUDENTS, payload };
+};
+
+export const getClassStudent = (classId) => (dispatch) => {
+  const cookie = new Cookies();
+  const token = cookie.get("token");
+  //dispatch(loadingAction(true));
   dispatch(setSelectedClass(classId));
+
+  API("GET", "/teacher/getClassStudents?classId=" + classId, "", null, token).then((res) => {
+    if (res.status >= 200 && res.status < 300) {
+      dispatch(setClassStudents(res.data.data));
+    } else message.error(res.data.message, 1);
+
+    // dispatch(loadingAction(false));
+  });
+};
+
+export const getClassInfo = (classId, navigate) => (dispatch) => {
   navigate("class");
+  const cookie = new Cookies();
+  const token = cookie.get("token");
+  dispatch(loadingAction(true));
+  dispatch(setSelectedClass(classId));
+
+  API("GET", "/teacher/getPosts?classId=" + classId, "", null, token).then((res) => {
+    if (res.status >= 200 && res.status < 300) {
+      dispatch(setClassPostList(res.data.data));
+    } else message.error(res.data.message, 1);
+
+    dispatch(loadingAction(false));
+  });
 };
 
 export const getAssignedClasses = () => (dispatch) => {
@@ -72,16 +108,9 @@ export const addPost = (formData, setIsModalVisible) => (dispatch, getState) => 
 
   API("POST", "/teacher/createPost", null, formData, token).then((res) => {
     if (res.status >= 200 && res.status < 300) {
-      const { id, title, date, isAssignment, deadline } = res.data.data;
-
-      console.log(res.data, date, deadline);
-      date = dayjs(date).format("DD MMM");
-      deadline = dayjs(deadline).format("DD MMM");
-      console.log(date, deadline);
-
       const posts = [...teacherState.classPosts];
 
-      posts.push({ id, title, date, isAssignment, deadline });
+      posts.push(res.data.data);
 
       dispatch(setClassPostList(posts));
 

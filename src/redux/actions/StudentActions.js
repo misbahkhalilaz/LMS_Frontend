@@ -1,7 +1,16 @@
 import { message } from "antd";
 import API from "../../utils/fetch";
 import Cookies from "universal-cookie";
-import { LOADING, LOAD_CLASSES, LOAD_STUDENTID } from "../constants";
+import {
+  LOADING,
+  LOAD_CLASSES,
+  LOAD_STUDENTID,
+  SET_STDSELECTEDCLASS,
+  LOAD_POSTLIST,
+  SET_STDSELECTEDPOST,
+} from "../constants";
+
+import { setRoomId } from "../actions/LoggerActions";
 
 export const loadingAction = (payload) => {
   return { type: LOADING, payload };
@@ -13,6 +22,37 @@ export const setClasses = (payload) => {
 
 export const setStudentId = (payload) => {
   return { type: LOAD_STUDENTID, payload };
+};
+
+export const setSelectedClass = (payload) => {
+  return { type: SET_STDSELECTEDCLASS, payload };
+};
+
+export const setClassPostList = (payload) => {
+  return { type: LOAD_POSTLIST, payload };
+};
+
+export const setClassPost = (payload) => {
+  return { type: SET_STDSELECTEDPOST, payload };
+};
+
+export const getClassInfo = (classId, navigate) => (dispatch, getState) => {
+  navigate("class");
+  const cookie = new Cookies();
+  const token = cookie.get("token");
+  const loggerState = getState().loggerReducer;
+  const stdId = loggerState.userId;
+  dispatch(loadingAction(true));
+  dispatch(setSelectedClass(classId));
+  dispatch(setRoomId(`${stdId}_${classId}`));
+
+  API("GET", "/student/getPosts?classId=" + classId, "", null, token).then((res) => {
+    if (res.status >= 200 && res.status < 300) {
+      dispatch(setClassPostList(res.data.data));
+    } else message.error(res.data.message, 1);
+
+    dispatch(loadingAction(false));
+  });
 };
 
 export const getClasses = () => (dispatch) => {
