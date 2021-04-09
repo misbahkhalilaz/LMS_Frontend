@@ -4,11 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Typography, Card, Badge, Switch, Tooltip, Skeleton } from "antd";
 import { MessageOutlined } from "@ant-design/icons";
 
-import {
-  getAssignedClasses,
-  getClassInfo,
-  getClassStudent,
-} from "../../../redux/actions/TeacherActions";
+import { getAssignedClasses, getClassInfo } from "../../../redux/actions/TeacherActions";
 
 const { Title, Text } = Typography;
 
@@ -19,12 +15,12 @@ const DashboardMain = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (assignedClasses.length === 0) dispatch(getAssignedClasses());
+    !assignedClasses && dispatch(getAssignedClasses());
   }, []);
 
   const goToClass = (id) => {
     dispatch(getClassInfo(id, navigate));
-    dispatch(getClassStudent(id));
+    // dispatch(getClassStudent(id));
   };
 
   return (
@@ -37,7 +33,7 @@ const DashboardMain = () => {
         </Col>
       </Row>
       <Row style={{ height: "80vh", overflowY: "auto", paddingTop: 15 }}>
-        {isLoading ? (
+        {(assignedClasses?.length ?? 0) === 0 ? (
           <Row gutter={[0, 40]} justify="space-around">
             {[0, 1, 2, 3, 4, 5].map((index) => (
               <Skeleton.Avatar

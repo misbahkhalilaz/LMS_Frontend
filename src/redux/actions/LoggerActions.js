@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { showLoading, hideLoading } from "react-redux-loading-bar";
 import API from "../../utils/fetch";
 import Cookies from "universal-cookie";
@@ -13,119 +14,121 @@ import {
   SET_ROOMID,
 } from "../constants";
 
-export const clearStoreAction = () => {
-  return { type: CLEAR_STORE };
-};
+export const clearStoreAction = () => ({ type: CLEAR_STORE });
 
-export const loadingAction = (payload) => {
-  return { type: LOADING, payload };
-};
+export const setLoading = (payload) => ({ type: LOADING, payload });
 
-export const checkTokenAction = (payload) => {
-  return { type: CHECKING_TOKEN, payload };
-};
+export const setCheckToken = (payload) => ({ type: CHECKING_TOKEN, payload });
 
-export const loginStatAction = (payload) => {
-  const cookie = new Cookies();
-  if (!payload) cookie.remove("token", { path: "/", maxAge: 2000 });
+export const setUserId = (payload) => ({ type: SET_USERID, payload });
+
+export const loginStatusAction = (payload) => {
+  if (!payload) new Cookies().remove("token", { path: "/", maxAge: 86400 });
 
   return { type: LOGGED_IN, payload };
 };
 
-export const setUserId = (payload) => {
-  return { type: SET_USERID, payload };
-};
+// export const setRoomId = (payload) => {
+//   return { type: SET_ROOMID, payload };
+// };
 
-export const setRoomId = (payload) => {
-  return { type: SET_ROOMID, payload };
-};
-
-export const loginAction = (payload, navigate, message) => (dispatch) => {
+export const loginAction = (payload, navigate) => (dispatch) => {
   const cookie = new Cookies();
-  dispatch(loadingAction(true));
+  dispatch(setLoading(true));
 
   API("POST", "/auth/login", payload).then((res) => {
     if (res.status >= 200 && res.status < 300) {
-      dispatch(loginStatAction(true));
-      dispatch(setUserId(res.data.userId));
-      cookie.set("token", res.data.token, { path: "/", maxAge: 2000 });
-      navigate("/" + res.data.role, { replace: true });
+      const { userId, token, role, name } = res.data;
 
-      dispatch(setAdminValues(res.data.role, res.data.token));
-    } else message.error(res.data.message, 1);
+      if (role === "admin") dispatch(setAdminValues(token));
+      dispatch(loginStatusAction(true));
+      dispatch(setUserId(userId));
 
-    dispatch(loadingAction(false));
+      cookie.set("token", token, { path: "/", maxAge: 86400 });
+      navigate("/" + role, { replace: true });
+
+      message.success(`Welcome ${name}!`, 1);
+    } else message.error(res.data.message);
+
+    dispatch(setLoading(false));
   });
 };
 
-export const loginTokenAction = (navigate, requestedPath) => (dispatch) => {
+export const tokenAuthAction = (navigate) => (dispatch) => {
   const cookie = new Cookies();
   const token = cookie.get("token");
 
   dispatch(showLoading());
-  dispatch(checkTokenAction(false));
+  dispatch(setCheckToken(true));
   API("POST", "/auth", {}, null, token).then((res) => {
     if (res.status >= 200 && res.status < 300) {
-      res.data.role == requestedPath.split("/")[1]
-        ? navigate(requestedPath, { replace: true })
-        : navigate("/" + res.data.role, { replace: true });
+      const { userId, role } = res.data;
 
-      dispatch(loginStatAction(true));
-      dispatch(setAdminValues(res.data.role, token));
-      dispatch(setUserId(res.data.userId));
+      dispatch(loginStatusAction(true));
+      if (role === "admin") {
+        dispatch(setAdminValues(token));
+        dispatch(setUserId(userId));
+      }
+
+      if ("/" + window.location.pathname.split("/")[1] !== window.location.pathname) navigate(-1);
+      navigate(role, { replace: true });
     } else {
-      dispatch(loginStatAction(false));
-
+      dispatch(loginStatusAction(false));
       navigate("/login", { replace: true });
+      dispatch(clearStoreAction());
     }
 
-    dispatch(checkTokenAction(true));
+    dispatch(setCheckToken(false));
     dispatch(hideLoading());
   });
 };
 
-export const requestOtpAction = (userId, message, setToken, setCurrent) => (dispatch) => {
-  dispatch(loadingAction(true));
+export const requestOtpAction = (userId, setToken, setCurrent) => (dispatch) => {
+  dispatch(setLoading(true));
+
   API("POST", "/auth/forgetPassword", userId).then((res) => {
     if (res.status >= 200 && res.status < 300) {
       setToken(res.data.token);
       setCurrent((prev) => prev + 1);
+
       message.success(res.data.message);
     } else message.error(res.data.message);
 
-    dispatch(loadingAction(false));
+    dispatch(setLoading(false));
   });
 };
 
-export const verifyOtpAction = (otp, token, message, setToken, setCurrent) => (dispatch) => {
-  dispatch(loadingAction(true));
+export const verifyOtpAction = (otp, token, setToken, setCurrent) => (dispatch) => {
+  dispatch(setLoading(true));
+
   API("POST", "/auth/verifyOtp", otp, null, token).then((res) => {
     if (res.status >= 200 && res.status < 300) {
       setToken(res.data.token);
       setCurrent((prev) => prev + 1);
+
       message.success(res.data.message);
     } else message.error(res.data.message);
 
-    dispatch(loadingAction(false));
+    dispatch(setLoading(false));
   });
 };
 
-export const setPassAction = (password, token, message, setShowSetPass) => (dispatch) => {
-  dispatch(loadingAction(true));
+export const setPasswordAction = (password, token, setShowSetPass) => (dispatch) => {
+  dispatch(setLoading(true));
+
   API("POST", "/auth/resetPassword", password, null, token).then((res) => {
     if (res.status >= 200 && res.status < 300) {
       setShowSetPass(false);
+
       message.success(res.data.message);
     } else message.error(res.data.message);
 
-    dispatch(loadingAction(false));
+    dispatch(setLoading(false));
   });
 };
 
 //IMPACT IN ADMIN REDUCER
-const setAdminValues = (role, token) => async (dispatch) => {
-  if (role != "admin") return;
-
+const setAdminValues = (token) => async (dispatch) => {
   let programInfo;
   const batchInfo = {};
   const sectInfo = {};
@@ -143,15 +146,15 @@ const setAdminValues = (role, token) => async (dispatch) => {
 
           batch.shift == "Morning"
             ? shiftWise.Morning.push({
-              label: batch.name,
-              value: batch.id,
-              semester: batch.current_semester,
-            })
+                label: batch.name,
+                value: batch.id,
+                semester: batch.current_semester,
+              })
             : shiftWise.Evening.push({
-              label: batch.name,
-              value: batch.id,
-              semester: batch.current_semester,
-            });
+                label: batch.name,
+                value: batch.id,
+                semester: batch.current_semester,
+              });
         });
 
         batchInfo[program.id] = shiftWise;

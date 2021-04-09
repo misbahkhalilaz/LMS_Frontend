@@ -17,7 +17,7 @@ const ChatMain = ({ setSelectedChat }) => {
   const userId = useSelector((state) => state.loggerReducer.userId);
 
   const setRoom = (stdId) => {
-    setSelectedChat({ roomId: `${stdId}_${selectedClassId}`, userId })
+    setSelectedChat({ roomId: `${stdId}_${selectedClassId}`, userId });
   };
 
   const filterStudent = (value) => {
@@ -26,8 +26,8 @@ const ChatMain = ({ setSelectedChat }) => {
         value == ""
           ? []
           : data.filter((o) =>
-            Object.keys(o).some((k) => String(o[k]).toLowerCase().includes(value.toLowerCase()))
-          )
+              Object.keys(o).some((k) => String(o[k]).toLowerCase().includes(value.toLowerCase()))
+            )
       );
 
     SetPrevTxt(value);
@@ -52,7 +52,12 @@ const ChatMain = ({ setSelectedChat }) => {
           size="large"
           itemLayout="vertical"
           renderItem={(std) => (
-            <button className="button" onClick={() => setRoom(std.user_id)}>
+            <button
+              className="button"
+              onClick={() => setRoom(std.user_id)}
+              onBlur={(e) => {
+                // e.view.focus();
+              }}>
               {std.user_id} - {std.name}
             </button>
           )}

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Row, Col, Input, Table } from "antd";
 
 const { Search } = Input;
@@ -8,6 +9,8 @@ const ViewSearchMain = ({ data, columns, searchBy }) => {
   const [filteredDisplay, SetFilteredDisplay] = useState([]);
   const [prevTxt, SetPrevTxt] = useState("");
 
+  const isLoading = useSelector((state) => state.loggerReducer.isLoading);
+
   useEffect(() => SetDisplay(data), []);
 
   const filterStudent = (value) => {
@@ -16,9 +19,7 @@ const ViewSearchMain = ({ data, columns, searchBy }) => {
         value == ""
           ? []
           : display.filter((o) =>
-              Object.keys(o).some((k) =>
-                String(o[k]).toLowerCase().includes(value.toLowerCase())
-              )
+              Object.keys(o).some((k) => String(o[k]).toLowerCase().includes(value.toLowerCase()))
             )
       );
 
@@ -27,7 +28,7 @@ const ViewSearchMain = ({ data, columns, searchBy }) => {
 
   const tableProps = {
     scroll: { y: "70vh" },
-    loading: false,
+    loading: isLoading,
     pagination: false,
   };
 

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import {
   loginAction,
   requestOtpAction,
   verifyOtpAction,
-  setPassAction,
+  setPasswordAction,
 } from "../redux/actions/LoggerActions";
 
 import { Row, Col, Input, Button, Form, Typography, Modal, Steps, message } from "antd";
@@ -57,18 +57,19 @@ const Login = () => {
   const [token, setToken] = useState();
   const [timer, setTimer] = useState();
 
-  const navigate = useNavigate();
   const isLoading = useSelector((state) => state.loggerReducer.isLoading);
+
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const login = ({ userId, password }) => {
-    dispatch(loginAction({ userId, password }, navigate, message));
+    dispatch(loginAction({ userId, password }, navigate));
   };
 
   const setPassValidation = (values) => {
-    if (current == 0) dispatch(requestOtpAction(values, message, setToken, setCurrent));
-    else if (current == 1) dispatch(verifyOtpAction(values, token, message, setToken, setCurrent));
-    else dispatch(setPassAction(values, token, message, setShowSetPass));
+    if (current == 0) dispatch(requestOtpAction(values, setToken, setCurrent));
+    else if (current == 1) dispatch(verifyOtpAction(values, token, setToken, setCurrent));
+    else dispatch(setPasswordAction(values, token, setShowSetPass));
   };
 
   useEffect(() => {
@@ -121,8 +122,8 @@ const Login = () => {
                 <Button
                   className="login-form-button"
                   type="primary"
-                  htmlType="submit"
                   shape="round"
+                  htmlType="submit"
                   loading={isLoading}>
                   Log in
                 </Button>

@@ -10,7 +10,7 @@ import {
   SET_STDSELECTEDPOST,
 } from "../constants";
 
-import { setRoomId } from "../actions/LoggerActions";
+//import { setRoomId } from "../actions/LoggerActions";
 
 export const loadingAction = (payload) => {
   return { type: LOADING, payload };
@@ -44,7 +44,7 @@ export const getClassInfo = (classId, navigate) => (dispatch, getState) => {
   const stdId = loggerState.userId;
   dispatch(loadingAction(true));
   dispatch(setSelectedClass(classId));
-  dispatch(setRoomId(`${stdId}_${classId}`));
+  //dispatch(setRoomId(`${stdId}_${classId}`));
 
   API("GET", "/student/getPosts?classId=" + classId, "", null, token).then((res) => {
     if (res.status >= 200 && res.status < 300) {

@@ -9,7 +9,7 @@ import {
   LOAD_COURSELIST,
 } from "../constants";
 
-const adminReducer = (state = { teacherList: [], batchList: [] }, action) => {
+const adminReducer = (state = {}, action) => {
   switch (action.type) {
     case LOAD_PROGRAMLIST:
       return { ...state, programList: action.payload };

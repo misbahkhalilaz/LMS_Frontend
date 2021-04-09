@@ -7,7 +7,7 @@ const loggerReducer = (state = {}, action) => {
     case LOGGED_IN:
       return { ...state, isLogged: action.payload };
     case CHECKING_TOKEN:
-      return { ...state, allowRender: action.payload };
+      return { ...state, allowRender: !action.payload };
     case SET_USERID:
       return { ...state, userId: action.payload };
     case SET_ROOMID:

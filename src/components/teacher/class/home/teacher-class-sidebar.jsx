@@ -22,8 +22,7 @@ const ClassSidebar = () => {
           type="primary"
           size="large"
           shape="round"
-          onClick={() => setShowPostCreate(!showPostCreate)}
-        >
+          onClick={() => setShowPostCreate(!showPostCreate)}>
           Create Post
         </Button>
       </Col>
@@ -34,8 +33,7 @@ const ClassSidebar = () => {
           type="primary"
           size="large"
           shape="round"
-          onClick={() => navigate("mark-attendance")}
-        >
+          onClick={() => navigate("mark-attendance")}>
           Mark Attendance
         </Button>
       </Col>
@@ -45,8 +43,7 @@ const ClassSidebar = () => {
           block
           size="large"
           shape="round"
-          onClick={() => navigate("members")}
-        >
+          onClick={() => navigate("student-list")}>
           Members
         </Button>
       </Col>
@@ -57,8 +54,7 @@ const ClassSidebar = () => {
           type="primary"
           size="large"
           shape="round"
-          onClick={() => navigate("show-attendance")}
-        >
+          onClick={() => navigate("show-attendance")}>
           Show Attendance
         </Button>
       </Col>
@@ -74,8 +70,7 @@ const ClassSidebar = () => {
           type="primary"
           size="large"
           shape="round"
-          onClick={() => navigate("result")}
-        >
+          onClick={() => navigate("result")}>
           Show Final Result
         </Button>
       </Col>

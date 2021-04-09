@@ -5,7 +5,6 @@ import Cookies from "universal-cookie";
 import {
   LOADING,
   LOAD_ASSIGNEDCLASS,
-  LOAD_TEACHERID,
   SET_SELECTEDCLASS,
   LOAD_CLASSPOSTLIST,
   SET_SELECTEDPOST,
@@ -18,10 +17,6 @@ export const loadingAction = (payload) => {
 
 export const setAssignedClasses = (payload) => {
   return { type: LOAD_ASSIGNEDCLASS, payload };
-};
-
-export const setTeacherId = (payload) => {
-  return { type: LOAD_TEACHERID, payload };
 };
 
 export const setSelectedClass = (payload) => {
@@ -56,34 +51,55 @@ export const getClassStudent = (classId) => (dispatch) => {
 };
 
 export const getClassInfo = (classId, navigate) => (dispatch) => {
-  navigate("class");
   const cookie = new Cookies();
   const token = cookie.get("token");
+  if (navigate) navigate("class");
   dispatch(loadingAction(true));
+  dispatch(setClassPostList([]));
+  dispatch(setClassStudents());
+
+  if (classId) localStorage.setItem("classId", classId);
+  else classId = localStorage.getItem("classId");
+
   dispatch(setSelectedClass(classId));
 
-  API("GET", "/teacher/getPosts?classId=" + classId, "", null, token).then((res) => {
-    if (res.status >= 200 && res.status < 300) {
-      dispatch(setClassPostList(res.data.data));
-    } else message.error(res.data.message, 1);
+  Promise.all([
+    API("GET", "/teacher/getPosts?classId=" + classId, "", null, token).then((res) => {
+      if (res.status < 200 || res.status >= 300)
+        throw new Error(res.data.message + " Please select class again!");
+      else return res.data.data;
+    }),
+    API("GET", "/teacher/getClassStudents?classId=" + classId, "", null, token).then((res) => {
+      if (res.status < 200 || res.status >= 300)
+        throw new Error(res.data.message + " Please select class again!");
+      else return res.data.data;
+    }),
+  ])
+    .then(([posts, students]) => {
+      students = students.map(({ id, user_id, name }) => ({ id, seatNo: user_id, name }));
+      dispatch(setClassPostList(posts));
+      dispatch(setClassStudents(students));
 
-    dispatch(loadingAction(false));
-  });
+      dispatch(loadingAction(false));
+    })
+    .catch((err) => {
+      navigate(-1);
+      message.error(err.message);
+      dispatch(loadingAction(false));
+    });
 };
 
 export const getAssignedClasses = () => (dispatch) => {
   const cookie = new Cookies();
   const token = cookie.get("token");
+  dispatch(setAssignedClasses([]));
   dispatch(loadingAction(true));
-  let teacherId;
 
   API("GET", "/teacher/getClasses", "", null, token).then((res) => {
     if (res.status >= 200 && res.status < 300) {
       const classes = res.data.data.map(
         ({ id, course_id, section_id, courses, type, sections }) => ({
           id,
-          courseId: course_id,
-          sectionId: section_id,
           courseName: `${courses.code} ━━ ${courses.name}${type === "Lab" ? " (Lab)" : ""}`,
           chatActive: true,
           sectionName: sections.name,
@@ -91,9 +107,7 @@ export const getAssignedClasses = () => (dispatch) => {
         })
       );
 
-      teacherId = res.data.data[0]?.teacher_id;
       dispatch(setAssignedClasses(classes));
-      dispatch(setTeacherId(teacherId));
     } else message.error(res.data.message, 1);
 
     dispatch(loadingAction(false));
@@ -107,6 +121,30 @@ export const addPost = (formData, setIsModalVisible) => (dispatch, getState) => 
   dispatch(loadingAction(true));
 
   API("POST", "/teacher/createPost", null, formData, token).then((res) => {
+    if (res.status >= 200 && res.status < 300) {
+      const posts = [...teacherState.classPosts];
+
+      posts.push(res.data.data);
+
+      dispatch(setClassPostList(posts));
+
+      setIsModalVisible(false);
+      message.success("Post created successfully!");
+    } else message.error(res.data.message, 1);
+
+    dispatch(loadingAction(false));
+  });
+};
+
+export const markAttendanceAction = (attendanceInfo) => (dispatch, getState) => {
+  const cookie = new Cookies();
+  const token = cookie.get("token");
+  const teacherState = getState().teacherReducer;
+  const classId = teacherState.selectedClassId;
+  attendanceInfo.classId = classId;
+  dispatch(loadingAction(true));
+
+  API("POST", "/teacher/markAttendance", attendanceInfo, null, token).then((res) => {
     if (res.status >= 200 && res.status < 300) {
       const posts = [...teacherState.classPosts];
 

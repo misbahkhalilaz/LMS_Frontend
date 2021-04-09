@@ -6,8 +6,8 @@ import { CLEAR_STORE } from "./constants";
 const rootReducer = (state, action) => {
   if (action.type === CLEAR_STORE) {
     return (state = {
-      loggerReducer: { allowRender: true },
-      adminReducer: { teacherList: [], batchList: [] },
+      loadingBar: { default: state.loadingBar.default },
+      loggerReducer: { allowRender: true, isLogged: false },
     });
   }
 

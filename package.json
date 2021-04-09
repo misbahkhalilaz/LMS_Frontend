@@ -4,7 +4,7 @@
   "description": "FYP for UBIT UoK",
   "main": "index.js",
   "scripts": {
-    "start": "serve -s build",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
