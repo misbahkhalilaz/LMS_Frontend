@@ -39,7 +39,7 @@
 .button:hover {
   transform: scale(1.05);
 }
-.button:focus {
+.button.active {
   background-color: #0091ff;
   color: #ffffff;
 }

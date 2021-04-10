@@ -4,7 +4,6 @@ export const LOADING = "LOADING";
 export const LOGGED_IN = "LOGGED_IN";
 export const CHECKING_TOKEN = "CHECKING_TOKEN";
 export const SET_USERID = "SET_USERID";
-export const SET_ROOMID = "SET_ROOMID";
 
 //ADMIN CONSTANTS
 export const LOAD_PROGRAMLIST = "LOAD_PROGRAMLIST";

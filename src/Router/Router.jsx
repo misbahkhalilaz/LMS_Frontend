@@ -49,7 +49,7 @@ const Router = () => {
       children: [
         {
           path: "/",
-          path: "student",
+          // path: "student",
           element: isLogged ? <StudentDashboard /> : <Navigate to="/login" replace={true} />,
           children: [
             { path: "/", element: <StudentHome /> },

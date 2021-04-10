@@ -11,7 +11,6 @@ import {
   LOAD_BATCHLIST,
   LOAD_SECTIONLIST,
   SET_USERID,
-  SET_ROOMID,
 } from "../constants";
 
 export const clearStoreAction = () => ({ type: CLEAR_STORE });
@@ -27,10 +26,6 @@ export const loginStatusAction = (payload) => {
 
   return { type: LOGGED_IN, payload };
 };
-
-// export const setRoomId = (payload) => {
-//   return { type: SET_ROOMID, payload };
-// };
 
 export const loginAction = (payload, navigate) => (dispatch) => {
   const cookie = new Cookies();
@@ -65,12 +60,11 @@ export const tokenAuthAction = (navigate) => (dispatch) => {
       const { userId, role } = res.data;
 
       dispatch(loginStatusAction(true));
-      if (role === "admin") {
-        dispatch(setAdminValues(token));
-        dispatch(setUserId(userId));
-      }
+      dispatch(setUserId(userId));
+      if (role === "admin") dispatch(setAdminValues(token));
 
       if ("/" + window.location.pathname.split("/")[1] !== window.location.pathname) navigate(-1);
+
       navigate(role, { replace: true });
     } else {
       dispatch(loginStatusAction(false));

@@ -7,6 +7,7 @@ import { setRoomId } from "../../../redux/actions/LoggerActions";
 const { Search } = Input;
 
 const ChatMain = ({ setSelectedChat }) => {
+  const [stdId, setStdId] = useState();
   const [filteredDisplay, SetFilteredDisplay] = useState([]);
   const [prevTxt, SetPrevTxt] = useState("");
 
@@ -53,12 +54,15 @@ const ChatMain = ({ setSelectedChat }) => {
           itemLayout="vertical"
           renderItem={(std) => (
             <button
+              id={std.id}
               className="button"
-              onClick={() => setRoom(std.user_id)}
-              onBlur={(e) => {
-                // e.view.focus();
+              onClick={() => {
+                document.getElementById(stdId)?.classList.remove("active");
+                document.getElementById(std.id).classList.add("active");
+                setRoom(std.seatNo);
+                setStdId(std.id);
               }}>
-              {std.user_id} - {std.name}
+              {std.seatNo} - {std.name}
             </button>
           )}
         />
