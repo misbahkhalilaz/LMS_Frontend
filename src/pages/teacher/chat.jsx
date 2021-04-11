@@ -1,13 +1,11 @@
+import { useState } from "react";
 import { Row, Col } from "antd";
 
 import Sidebar from "../../components/teacher/class/chat-std-list";
 import Main from "../../components/chat-main";
-import { useEffect, useState } from "react";
 
 const Chat = () => {
-  const [selectedChat, setSelectedChat] = useState({ roomId: '', userId: '' });
-
-  useEffect(() => console.log(selectedChat), [selectedChat]);
+  const [selectedChat, setSelectedChat] = useState({ roomId: "", userId: "" });
 
   return (
     <Row>

@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Card, Typography, Button, Divider, Space } from "antd";
-import * as dayjs from "dayjs";
-import Comment from "./teacher-classpost-comment";
 import { BookOutlined, FileTextOutlined, DownloadOutlined } from "@ant-design/icons";
+
+import * as dayjs from "dayjs";
+
+import Comment from "./teacher-classpost-comment";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -22,45 +23,37 @@ const ClasspostMain = () => {
     }*/
 
   const postIcon = post.isAssignment ? (
-    <FileTextOutlined className='postcard-icon' />
+    <FileTextOutlined className="postcard-icon" />
   ) : (
-    <BookOutlined className='postcard-icon' />
+    <BookOutlined className="postcard-icon" />
   );
 
   return (
     <Row>
       <Row>
-        <Col>
-          <Title
-            className='no-select '
-            level={2}
-            style={{
-              marginBottom: 25,
-              color: "#FFFFFF" /*JUST FOR ADJUSTMENT */,
-            }}
-          >
+        {/* <Col>
+          <Title className="no-select " level={2} style={{ marginBottom: 0, color: "#FFFFFF" }}>
             '
           </Title>
-        </Col>
+        </Col> */}
       </Row>
-      <Row justify='center' style={{ height: "80vh", overflowY: "auto" }}>
+      <Row justify="center" style={{ height: "80vh", paddingTop: 10, overflowY: "auto" }}>
         <Col span={23}>
           <Card
-            className='box-shadow no-select post-bg'
+            className="box-shadow no-select post-bg"
             bordered={false}
             bodyStyle={{ height: 340 }}
-            style={{ width: "100%", padding: 20 }}
-          >
+            style={{ width: "100%", padding: 20 }}>
             {postIcon}
-            <Title className='postcard-title' level={4}>
+            <Title className="postcard-title" level={4}>
               {post.isAssignment ? `Assignment` : "Material"}: {" " + post.title}
               {post.isAssignment && (
-                <span className='postcard-duedate'>
+                <span className="postcard-duedate">
                   Due Date {dayjs(post.deadline).format("DD MMM")}
                 </span>
               )}
             </Title>
-            <Text type='secondary' strong>
+            <Text type="secondary" strong>
               {dayjs(post.date).format("DD MMM")}
             </Text>
             {/* <Space direction='vertical'> */}
@@ -74,15 +67,14 @@ const ClasspostMain = () => {
             </Paragraph>
             {/* </Space> */}
             <Divider style={{ backgroundColor: "#594f8b", margin: "10px 0px" }} />
-            <Space wrap size='large'>
+            <Space wrap size="large">
               {post.file_paths.map((file, index) => (
                 <Button
                   key={index}
-                  type='primary'
-                  shape='round'
+                  type="primary"
+                  shape="round"
                   icon={<DownloadOutlined />}
-                  size='large'
-                >
+                  size="large">
                   Download {index + 1}
                 </Button>
               ))}
@@ -90,7 +82,7 @@ const ClasspostMain = () => {
           </Card>
         </Col>
         <Col span={23}>
-          <Comment type=' class ' />
+          <Comment type=" class " />
         </Col>
       </Row>
     </Row>

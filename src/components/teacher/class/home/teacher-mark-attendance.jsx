@@ -4,7 +4,7 @@ import { Row, Col, Input, Table, Radio } from "antd";
 
 import ViewSearch from "../../../data-display_search";
 
-import { markAttendanceAction } from "../../../../redux/actions/StudentActions";
+import { markAttendanceAction } from "../../../../redux/actions/TeacherActions";
 
 const { Search } = Input;
 
@@ -42,7 +42,7 @@ const MarkAttendanceMain = () => {
         <Radio.Group
           value={std.isPresent}
           onChange={(e) => {
-            //dispatch(markAttendanceAction({ studentId:std.Id,isPresent:e.target.value }));
+            //dispatch(markAttendanceAction({ studentId: std.Id, isPresent: e.target.value }));
             // if (filteredData.length > 0) {
             //   const index = filteredData.findIndex((x) => x.key === std.key);
             //   SetFilteredData([

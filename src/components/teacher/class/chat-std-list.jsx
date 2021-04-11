@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Row, Col, List, Input } from "antd";
-
-import { setRoomId } from "../../../redux/actions/LoggerActions";
 
 const { Search } = Input;
 
@@ -10,8 +8,6 @@ const ChatMain = ({ setSelectedChat }) => {
   const [stdId, setStdId] = useState();
   const [filteredDisplay, SetFilteredDisplay] = useState([]);
   const [prevTxt, SetPrevTxt] = useState("");
-
-  const dispatch = useDispatch();
 
   const studentList = useSelector((state) => state.teacherReducer.studentList);
   const selectedClassId = useSelector((state) => state.teacherReducer.selectedClassId);

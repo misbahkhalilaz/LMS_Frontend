@@ -20,38 +20,31 @@ const ClassPostSidebar = () => {
   };
 
   return (
-    <Row align="top" style={{ paddingTop: 10 }}>
-      <Col span={22} push={1} style={{ marginBottom: 20 }}>
+    <Row gutter={[0, 20]} align="middle">
+      <Col span={22} push={1}>
         <Button
           className="btn"
           block
           type="primary"
           size="large"
           shape="round"
-          onClick={() => setShowPostEdit(!showPostEdit)}
-        >
+          onClick={() => setShowPostEdit(!showPostEdit)}>
           Edit Post
         </Button>
       </Col>
-      <Col span={22} push={1} style={{ marginBottom: 20 }}>
+      <Col span={22} push={1}>
         <Button
           className="btn"
           block
           type="primary"
           size="large"
           shape="round"
-          onClick={() => navigate("assign-grade")}
-        >
+          onClick={() => navigate("assign-grade")}>
           Grade Assignment
         </Button>
       </Col>
       {showPostEdit && (
-        <EditPost
-          setDestroy={setDestroy}
-          action="Edit"
-          type={postType}
-          prevValues={prevValues}
-        />
+        <EditPost setDestroy={setDestroy} action="Edit" type={postType} prevValues={prevValues} />
       )}
     </Row>
   );
