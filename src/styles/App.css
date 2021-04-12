@@ -118,8 +118,8 @@
 
 .chat-widget {
   position: fixed;
-  right: 10px;
-  bottom: 25px;
+  right: 15px;
+  bottom: 10px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }

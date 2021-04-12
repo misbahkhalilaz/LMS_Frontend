@@ -4,13 +4,10 @@ import Cookies from "universal-cookie";
 import {
   LOADING,
   LOAD_CLASSES,
-  LOAD_STUDENTID,
   SET_STDSELECTEDCLASS,
   LOAD_POSTLIST,
   SET_STDSELECTEDPOST,
 } from "../constants";
-
-//import { setRoomId } from "../actions/LoggerActions";
 
 export const loadingAction = (payload) => {
   return { type: LOADING, payload };
@@ -18,10 +15,6 @@ export const loadingAction = (payload) => {
 
 export const setClasses = (payload) => {
   return { type: LOAD_CLASSES, payload };
-};
-
-export const setStudentId = (payload) => {
-  return { type: LOAD_STUDENTID, payload };
 };
 
 export const setSelectedClass = (payload) => {
@@ -37,13 +30,19 @@ export const setClassPost = (payload) => {
 };
 
 export const getClassInfo = (classId, navigate) => (dispatch, getState) => {
-  navigate("class");
   const cookie = new Cookies();
   const token = cookie.get("token");
-  const loggerState = getState().loggerReducer;
-  const stdId = loggerState.userId;
+  const { selectedClassId, classPosts } = getState().studentReducer;
+  if (navigate) navigate("class");
+  if (selectedClassId === classId && classPosts) return;
+
   dispatch(loadingAction(true));
+
+  if (classId) localStorage.setItem("classId", classId);
+  else classId = localStorage.getItem("classId");
+
   dispatch(setSelectedClass(classId));
+
   //dispatch(setRoomId(`${stdId}_${classId}`));
 
   API("GET", "/student/getPosts?classId=" + classId, "", null, token).then((res) => {

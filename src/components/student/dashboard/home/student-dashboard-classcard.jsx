@@ -42,7 +42,8 @@ const ClassCard = ({ Class }) => {
         <Badge dot>
           <MessageOutlined className="classcard-icon" />
         </Badge>,
-      ]}>
+      ]}
+    >
       <List
         itemLayout="horizontal"
         size="small"

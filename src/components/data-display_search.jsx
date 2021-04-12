@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Row, Col, Input, Table } from "antd";
 
@@ -9,9 +10,11 @@ const ViewSearchMain = ({ data, columns, searchBy }) => {
   const [filteredDisplay, SetFilteredDisplay] = useState([]);
   const [prevTxt, SetPrevTxt] = useState("");
 
+  const navigate = useNavigate();
+
   const isLoading = useSelector((state) => state.loggerReducer.isLoading);
 
-  useEffect(() => SetDisplay(data), []);
+  useEffect(() => (!isLoading && !data ? navigate(-1) : SetDisplay(data)), []);
 
   const filterStudent = (value) => {
     if (prevTxt != value)
@@ -34,7 +37,7 @@ const ViewSearchMain = ({ data, columns, searchBy }) => {
 
   return (
     <Row>
-      <Row align="middle" justify="center" style={{ height: "10vh" }}>
+      <Row align='middle' justify='center' style={{ height: "10vh" }}>
         <Col span={20}>
           <Search
             placeholder={`Search by ${searchBy} (press enter/click search icon). . . .`}
@@ -44,10 +47,10 @@ const ViewSearchMain = ({ data, columns, searchBy }) => {
           />
         </Col>
       </Row>
-      <Row justify="center" style={{ height: "80vh" }}>
+      <Row justify='center' style={{ height: "80vh" }}>
         <Col>
           <Table
-            className="no-select"
+            className='no-select'
             {...tableProps}
             columns={columns}
             dataSource={filteredDisplay.length == 0 ? data : filteredDisplay}

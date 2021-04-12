@@ -25,20 +25,16 @@ const ClassSidebar = () => {
   const navigate = useNavigate();
 
   return (
-    <Row align="middle" style={{ height: "100%", paddingTop: 20 }}>
-      <Col span={22} push={1} style={{ marginBottom: "20px" }}>
-        <UpcomingAssignsCard
-          type="assignments"
-          list={upcomingAssignment}
-          height={250}
-        />
+    <Row gutter={[0, 10]} align="middle" style={{ height: "100%", padding: "20px 0" }}>
+      <Col span={22} push={1}>
+        <UpcomingAssignsCard type="assignments" list={upcomingAssignment} height={250} />
       </Col>
       <div className="chat-widget" onClick={() => navigate("chat")}>
         <Badge dot offset={[-5, 10]}>
           <Avatar
             size={50}
             icon={<WechatOutlined style={{ fontSize: 30 }} />}
-            style={{ backgroundColor: "#8F86BD" }}
+            style={{ backgroundColor: "#6e64a0" }}
           />
         </Badge>
       </div>

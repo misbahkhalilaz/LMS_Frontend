@@ -105,7 +105,8 @@ const Navbar = () => {
                     navigate("/login", { replace: true });
                     dispatch(clearStoreAction());
                     //window.location.replace("/login");
-                  }}>
+                  }}
+                >
                   <Button
                     shape="circle"
                     icon={<PoweroffOutlined />}
@@ -125,7 +126,8 @@ const Navbar = () => {
         width={330}
         destroyOnClose={true}
         visible={drawerVisible}
-        onClose={() => setDrawerVisible(false)}>
+        onClose={() => setDrawerVisible(false)}
+      >
         <List
           dataSource={notificationData}
           itemLayout="vertical"
@@ -142,7 +144,8 @@ const Navbar = () => {
                       content: <Text>{news.description}</Text>,
                       onOk() {},
                     });
-                  }}>
+                  }}
+                >
                   View
                 </Button>,
               ]}
@@ -150,7 +153,8 @@ const Navbar = () => {
                 backgroundColor: "#f2f2f2",
                 marginBottom: 10,
                 borderRadius: 15,
-              }}>
+              }}
+            >
               <Text strong>{`Admin has posted an annoucnement:
               ${news.title}`}</Text>
             </List.Item>

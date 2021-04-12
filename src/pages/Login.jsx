@@ -20,9 +20,10 @@ const steps = [
   {
     content: (
       <Form.Item
-        name="userId"
-        label="UserID"
-        rules={[{ required: true, message: "Please enter your userID!" }]}>
+        name='userId'
+        label='UserID'
+        rules={[{ required: true, message: "Please enter your userID!" }]}
+      >
         <Input />
       </Form.Item>
     ),
@@ -30,9 +31,10 @@ const steps = [
   {
     content: (
       <Form.Item
-        name="otp"
-        label="OTP"
-        rules={[{ required: true, message: "Please enter received Otp!" }]}>
+        name='otp'
+        label='OTP'
+        rules={[{ required: true, message: "Please enter received Otp!" }]}
+      >
         <Input />
       </Form.Item>
     ),
@@ -40,16 +42,17 @@ const steps = [
   {
     content: (
       <Form.Item
-        name="password"
-        label="Password"
-        rules={[{ required: true, message: "Please enter new password!" }]}>
+        name='password'
+        label='Password'
+        rules={[{ required: true, message: "Please enter new password!" }]}
+      >
         <Input.Password />
       </Form.Item>
     ),
   },
 ];
 
-const Login = () => {
+const Login = ({ setRole }) => {
   const [current, setCurrent] = useState(0);
   const [showSetPass, setShowSetPass] = useState(false);
 
@@ -63,7 +66,7 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const login = ({ userId, password }) => {
-    dispatch(loginAction({ userId, password }, navigate));
+    dispatch(loginAction({ userId, password }, navigate, setRole));
   };
 
   const setPassValidation = (values) => {
@@ -87,47 +90,50 @@ const Login = () => {
   }, [current]);
 
   return (
-    <Row align="middle" style={{ height: "90vh" }}>
+    <Row align='middle' style={{ height: "90vh" }}>
       <Col xs={{ span: 24 }} lg={{ span: 18 }}>
-        <img src={img} width="100%" height="100%" />
+        <img src={img} width='100%' height='100%' />
       </Col>
       <Col xs={{ span: 20, push: 2 }} lg={{ span: 6, push: 0 }}>
         <Row>
-          <Col className="box-shadow" style={{ textAlign: "center", padding: "40px" }}>
-            <Title level={3} className="no-select">
+          <Col className='box-shadow' style={{ textAlign: "center", padding: "40px" }}>
+            <Title level={3} className='no-select'>
               Welcome
             </Title>
-            <Form layout="vertical" size="large" hideRequiredMark="true" onFinish={login}>
+            <Form layout='vertical' size='large' hideRequiredMark='true' onFinish={login}>
               <Form.Item
-                name="userId"
-                label="UserID"
-                rules={[{ required: true, message: "Please enter your userID!" }]}>
+                name='userId'
+                label='UserID'
+                rules={[{ required: true, message: "Please enter your userID!" }]}
+              >
                 <Input
-                  className="form-input-radius"
-                  placeholder="UserID"
+                  className='form-input-radius'
+                  placeholder='UserID'
                   prefix={<UserOutlined />}
                 />
               </Form.Item>
               <Form.Item
-                name="password"
-                label="Password"
-                rules={[{ required: true, message: "Please enter your password!" }]}>
+                name='password'
+                label='Password'
+                rules={[{ required: true, message: "Please enter your password!" }]}
+              >
                 <Input.Password
-                  className="form-input-radius"
-                  placeholder="Password"
+                  className='form-input-radius'
+                  placeholder='Password'
                   prefix={<LockOutlined />}
                 />
               </Form.Item>
               <Form.Item>
                 <Button
-                  className="login-form-button"
-                  type="primary"
-                  shape="round"
-                  htmlType="submit"
-                  loading={isLoading}>
+                  className='login-form-button'
+                  type='primary'
+                  shape='round'
+                  htmlType='submit'
+                  loading={isLoading}
+                >
                   Log in
                 </Button>
-                <Button type="link" onClick={() => setShowSetPass(true)}>
+                <Button type='link' onClick={() => setShowSetPass(true)}>
                   Set password?
                 </Button>
               </Form.Item>
@@ -147,18 +153,19 @@ const Login = () => {
           setOtpTime(120);
           clearInterval(timer);
         }}
-        bodyStyle={{ padding: 50 }}>
-        <Steps className="no-select" progressDot size="small" current={current}>
-          <Step title="User Validation" />
-          <Step title="Otp Validation" subTitle={!isLoading && "TTL: " + OtpTime} />
-          <Step title="Set Password" />
+        bodyStyle={{ padding: 50 }}
+      >
+        <Steps className='no-select' progressDot size='small' current={current}>
+          <Step title='User Validation' />
+          <Step title='Otp Validation' subTitle={!isLoading && "TTL: " + OtpTime} />
+          <Step title='Set Password' />
         </Steps>
-        <Form colon={false} preserve={false} hideRequiredMark="true" onFinish={setPassValidation}>
-          <div className="center" style={{ height: 120 }}>
+        <Form colon={false} preserve={false} hideRequiredMark='true' onFinish={setPassValidation}>
+          <div className='center' style={{ height: 120 }}>
             {steps[current].content}
           </div>
           <Form.Item>
-            <Button type="primary" htmlType="submit" loading={isLoading} style={{ float: "right" }}>
+            <Button type='primary' htmlType='submit' loading={isLoading} style={{ float: "right" }}>
               {current < 2 ? "Next" : "Set Password"}
             </Button>
           </Form.Item>

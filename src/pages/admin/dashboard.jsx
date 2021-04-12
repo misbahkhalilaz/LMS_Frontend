@@ -9,11 +9,7 @@ const Dashboard = () => {
       <Col className="mainarea-bg" xs={{ span: 24 }} lg={{ span: 19 }}>
         <Main />
       </Col>
-      <Col
-        className="subtitle-bg"
-        xs={{ span: 16, offset: 4 }}
-        lg={{ span: 5, offset: 0 }}
-      >
+      <Col className="subtitle-bg" xs={{ span: 16, offset: 4 }} lg={{ span: 5, offset: 0 }}>
         <Sidebar />
       </Col>
     </Row>

@@ -1,5 +1,4 @@
 import { message } from "antd";
-import * as dayjs from "dayjs";
 import API from "../../utils/fetch";
 import Cookies from "universal-cookie";
 import {
@@ -50,12 +49,15 @@ export const getClassStudent = (classId) => (dispatch) => {
   });
 };
 
-export const getClassInfo = (classId, navigate) => (dispatch) => {
+export const getClassInfo = (classId, navigate) => (dispatch, getState) => {
   const cookie = new Cookies();
   const token = cookie.get("token");
+  const { selectedClassId, classPosts } = getState().teacherReducer;
   if (navigate) navigate("class");
+  if (selectedClassId === classId && classPosts) return;
+
   dispatch(loadingAction(true));
-  dispatch(setClassPostList([]));
+  // dispatch(setClassPostList([]));
   dispatch(setClassStudents());
 
   if (classId) localStorage.setItem("classId", classId);
@@ -92,7 +94,6 @@ export const getClassInfo = (classId, navigate) => (dispatch) => {
 export const getAssignedClasses = () => (dispatch) => {
   const cookie = new Cookies();
   const token = cookie.get("token");
-  dispatch(setAssignedClasses([]));
   dispatch(loadingAction(true));
 
   API("GET", "/teacher/getClasses", "", null, token).then((res) => {

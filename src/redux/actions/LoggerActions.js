@@ -22,18 +22,23 @@ export const setCheckToken = (payload) => ({ type: CHECKING_TOKEN, payload });
 export const setUserId = (payload) => ({ type: SET_USERID, payload });
 
 export const loginStatusAction = (payload) => {
-  if (!payload) new Cookies().remove("token", { path: "/", maxAge: 86400 });
+  if (!payload) {
+    localStorage.removeItem("classId");
+    new Cookies().remove("token", { path: "/", maxAge: 86400 });
+  }
 
   return { type: LOGGED_IN, payload };
 };
 
-export const loginAction = (payload, navigate) => (dispatch) => {
+export const loginAction = (payload, navigate, setRole) => (dispatch) => {
   const cookie = new Cookies();
   dispatch(setLoading(true));
 
   API("POST", "/auth/login", payload).then((res) => {
     if (res.status >= 200 && res.status < 300) {
       const { userId, token, role, name } = res.data;
+
+      setRole(role);
 
       if (role === "admin") dispatch(setAdminValues(token));
       dispatch(loginStatusAction(true));
@@ -49,7 +54,7 @@ export const loginAction = (payload, navigate) => (dispatch) => {
   });
 };
 
-export const tokenAuthAction = (navigate) => (dispatch) => {
+export const tokenAuthAction = (setRole) => (dispatch) => {
   const cookie = new Cookies();
   const token = cookie.get("token");
 
@@ -59,16 +64,16 @@ export const tokenAuthAction = (navigate) => (dispatch) => {
     if (res.status >= 200 && res.status < 300) {
       const { userId, role } = res.data;
 
+      setRole(role);
       dispatch(loginStatusAction(true));
       dispatch(setUserId(userId));
       if (role === "admin") dispatch(setAdminValues(token));
 
-      if ("/" + window.location.pathname.split("/")[1] !== window.location.pathname) navigate(-1);
-
-      navigate(role, { replace: true });
+      // if ("/" + window.location.pathname.split("/")[1] !== window.location.pathname) navigate(-1);
+      // navigate(role, { replace: true });
     } else {
       dispatch(loginStatusAction(false));
-      navigate("/login", { replace: true });
+      //navigate("/login", { replace: true });
       dispatch(clearStoreAction());
     }
 

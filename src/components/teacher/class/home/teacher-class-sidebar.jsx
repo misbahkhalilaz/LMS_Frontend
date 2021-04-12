@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Row, Col, Button, Badge, Avatar } from "antd";
 import { WechatOutlined } from "@ant-design/icons";
@@ -12,65 +12,69 @@ const ClassSidebar = () => {
     setShowPostCreate(false);
   };
 
-  const colStyle = { marginBottom: 30 };
   return (
-    <Row align="top" style={{ height: "100%", paddingTop: 10 }}>
-      <Col span={22} push={1} style={colStyle}>
+    <Row gutter={[0, 10]} align="top" style={{ height: "100%", padding: "20px 0" }}>
+      <Col span={20} push={2}>
         <Button
           className="btn"
           block
           type="primary"
           size="large"
           shape="round"
-          onClick={() => setShowPostCreate(!showPostCreate)}>
+          onClick={() => setShowPostCreate(!showPostCreate)}
+        >
           Create Post
         </Button>
       </Col>
-      <Col span={22} push={1} style={colStyle}>
+      <Col span={20} push={2}>
         <Button
           className="btn"
           block
           type="primary"
           size="large"
           shape="round"
-          onClick={() => navigate("mark-attendance")}>
+          onClick={() => navigate("mark-attendance")}
+        >
           Mark Attendance
         </Button>
       </Col>
-      <Col span={22} push={1} style={colStyle}>
+      <Col span={20} push={2}>
         <Button
           className="btn"
           block
           size="large"
           shape="round"
-          onClick={() => navigate("student-list")}>
+          onClick={() => navigate("student-list")}
+        >
           Members
         </Button>
       </Col>
-      <Col span={22} push={1} style={colStyle}>
+      <Col span={20} push={2}>
         <Button
           className="btn"
           block
           type="primary"
           size="large"
           shape="round"
-          onClick={() => navigate("show-attendance")}>
+          onClick={() => navigate("show-attendance")}
+        >
           Show Attendance
         </Button>
       </Col>
-      <Col span={22} push={1} style={colStyle}>
+      <Col span={20} push={2}>
         <Button className="btn" block type="primary" size="large" shape="round">
           Post Final Result
         </Button>
       </Col>
-      <Col span={22} push={1} style={colStyle}>
+      <Col span={20} push={2}>
         <Button
           className="btn"
           block
           type="primary"
           size="large"
           shape="round"
-          onClick={() => navigate("result")}>
+          onClick={() => navigate("result")}
+        >
           Show Final Result
         </Button>
       </Col>
@@ -79,7 +83,7 @@ const ClassSidebar = () => {
           <Avatar
             size={50}
             icon={<WechatOutlined style={{ fontSize: 30 }} />}
-            style={{ backgroundColor: "#8F86BD" }}
+            style={{ backgroundColor: "#6e64a0" }}
           />
         </Badge>
       </div>

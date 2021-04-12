@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { Row, Col, Button, Typography, Anchor, Skeleton } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+import { Row, Col, Button, Typography, Anchor, Skeleton, Empty } from "antd";
 
 import PostCard from "../../../class-postcard";
 
-const { Title } = Typography;
+import { getClassInfo } from "../../../../redux/actions/StudentActions";
+
+const { Title, Text } = Typography;
 const { Link } = Anchor;
 
 const ClassMain = () => {
@@ -13,6 +15,10 @@ const ClassMain = () => {
 
   const isLoading = useSelector((state) => state.loggerReducer.isLoading);
   const classPosts = useSelector((state) => state.studentReducer.classPosts);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => !classPosts && dispatch(getClassInfo()), []);
 
   useEffect(() => {
     setClassDetails({
@@ -24,17 +30,6 @@ const ClassMain = () => {
             title: "FYP proposal",
             dueDate: "25 Dec",
           },
-          {
-            type: "Assignment",
-            assignedDate: "19 Dec",
-            title: "FYP proposal",
-            dueDate: "25 Dec",
-          },
-          {
-            type: "Material",
-            assignedDate: "19 Dec",
-            title: "Books",
-          },
         ],
       },
       week2: {
@@ -45,17 +40,6 @@ const ClassMain = () => {
             title: "FYP proposal",
             dueDate: "25 Dec",
           },
-          {
-            type: "Assignment",
-            assignedDate: "19 Dec",
-            title: "FYP proposal",
-            dueDate: "25 Dec",
-          },
-          {
-            type: "Material",
-            assignedDate: "19 Dec",
-            title: "Books",
-          },
         ],
       },
       week3: {
@@ -64,18 +48,6 @@ const ClassMain = () => {
             type: "Material",
             assignedDate: "19 Dec",
             title: "Books",
-          },
-          {
-            type: "Assignment",
-            assignedDate: "19 Dec",
-            title: "FYP proposal",
-            dueDate: "25 Dec",
-          },
-          {
-            type: "Assignment",
-            assignedDate: "19 Dec",
-            title: "FYP proposal",
-            dueDate: "25 Dec",
           },
         ],
       },
@@ -93,10 +65,12 @@ const ClassMain = () => {
         <Col xs={{ span: 5 }} lg={{ span: 6, pull: 1 }}>
           <Button
             className="postfilter-btn"
+            autoFocus
             block
             shape="round"
             size="large"
-            onClick={() => setSelectedPosts("All")}>
+            onClick={() => setSelectedPosts("All")}
+          >
             All
           </Button>
         </Col>
@@ -106,7 +80,8 @@ const ClassMain = () => {
             block
             shape="round"
             size="large"
-            onClick={() => setSelectedPosts(true)}>
+            onClick={() => setSelectedPosts(true)}
+          >
             Assignments
           </Button>
         </Col>
@@ -116,7 +91,8 @@ const ClassMain = () => {
             block
             shape="round"
             size="large"
-            onClick={() => setSelectedPosts(false)}>
+            onClick={() => setSelectedPosts(false)}
+          >
             Materials
           </Button>
         </Col>
@@ -127,39 +103,49 @@ const ClassMain = () => {
             getContainer={() => document.getElementById("class-posts")}
             onClick={(e) => e.preventDefault()}
             showInkInFixed={true}
-            style={{ paddingLeft: 15, margin: "0 5px 0" }}>
+            style={{ paddingLeft: 15, margin: "0 5px 0" }}
+          >
             {/* {Object.keys(classDetails).map((key, index) => (
               <Link key={index} href={"#" + key} title={index + 1} />
             ))} */}
           </Anchor>
         </Col>
-        <Col
-          xs={{ span: 20 }}
-          lg={{ span: 22 }}
-          id="class-posts"
-          style={{ height: "80vh", overflowY: "auto" }}>
-          <Row justify="center" style={{ marginTop: 20 }}>
-            {isLoading
-              ? [0, 1, 2, 3].map((index) => (
-                  <Col key={index} span={23}>
-                    <Skeleton.Avatar
-                      key={index}
-                      active
-                      size={70}
-                      shape="square"
-                      style={{ width: "65vw", borderRadius: 25, margin: "15px 0" }}
-                    />
-                  </Col>
-                ))
-              : classPosts.map((post) => (
-                  <Col key={post.id} span={23}>
-                    {selectedPosts === post.isAssignment ? (
-                      <PostCard post={post} />
-                    ) : (
-                      selectedPosts === "All" && <PostCard post={post} />
-                    )}
-                  </Col>
-                ))}
+        <Col id="class-posts" xs={{ span: 20 }} lg={{ span: 22 }}>
+          <Row
+            gutter={[10, 50]}
+            justify="center"
+            align="middle"
+            style={{ height: "80vh", overflowY: "auto", padding: "25px 0" }}
+          >
+            {isLoading || !classPosts ? (
+              [0, 1, 2].map((index) => (
+                <Col key={index} span={23}>
+                  <Skeleton.Avatar
+                    key={index}
+                    active
+                    size={100}
+                    shape="square"
+                    style={{ width: "65vw", margin: "10px", borderRadius: 25 }}
+                  />
+                </Col>
+              ))
+            ) : classPosts.length == 0 ? (
+              <Empty
+                className="no-select"
+                description={<Text type="secondary">No Post Created</Text>}
+                imageStyle={{ height: "auto" }}
+              />
+            ) : (
+              classPosts.map((post) => (
+                <Col key={post.id} span={22}>
+                  {selectedPosts === post.isAssignment ? (
+                    <PostCard post={post} />
+                  ) : (
+                    selectedPosts === "All" && <PostCard post={post} />
+                  )}
+                </Col>
+              ))
+            )}
           </Row>
         </Col>
       </Row>

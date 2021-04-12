@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { useNavigate, useRoutes, Navigate } from "react-router";
+import { useState, useEffect } from "react";
+import { useRoutes, Navigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { tokenAuthAction } from "../redux/actions/LoggerActions";
 
@@ -36,21 +36,29 @@ import AdminStudentList from "../pages/admin/students";
 import AdminTimetable from "../pages/admin/timetable";
 
 const Router = () => {
-  const navigate = useNavigate();
+  const [role, setRole] = useState();
   const dispatch = useDispatch();
 
   const allowRender = useSelector((state) => state.loggerReducer.allowRender);
   const isLogged = useSelector((state) => state.loggerReducer.isLogged);
 
   const routes = [
-    { path: "login", element: <Login /> },
     {
-      path: "student",
+      path: "/",
+      element: isLogged && <Navigate to={role} replace={true} />,
+      children: [
+        { path: "login", element: <Login setRole={setRole} /> },
+        { path: "/", element: <Navigate to="login" replace={true} /> },
+        { path: "*", element: <Navigate to="login" replace={true} /> },
+      ],
+    },
+    {
+      path: "/",
+      element: (!isLogged || role !== "student") && <Navigate to="login" replace={true} />,
       children: [
         {
-          path: "/",
-          // path: "student",
-          element: isLogged ? <StudentDashboard /> : <Navigate to="/login" replace={true} />,
+          path: "student",
+          element: <StudentDashboard />,
           children: [
             { path: "/", element: <StudentHome /> },
             { path: "attendance", element: <StudentAttendance /> },
@@ -69,10 +77,11 @@ const Router = () => {
     },
     {
       path: "teacher",
+      element: (!isLogged || role !== "teacher") && <Navigate to="login" replace={true} />,
       children: [
         {
           path: "/",
-          element: isLogged ? <TeacherDashboard /> : <Navigate to="/login" replace={true} />,
+          element: <TeacherDashboard />,
         },
         { path: "repeat-request", element: <TeacherRepeatReq /> },
         {
@@ -97,10 +106,11 @@ const Router = () => {
     },
     {
       path: "admin",
+      element: (!isLogged || role !== "admin") && <Navigate to="login" replace={true} />,
       children: [
         {
           path: "/",
-          element: isLogged ? <AdminDashboard /> : <Navigate to="/login" replace={true} />,
+          element: <AdminDashboard />,
         },
         { path: "timetable", element: <AdminTimetable /> },
         { path: "course-list", element: <AdminCourseList /> },
@@ -112,7 +122,7 @@ const Router = () => {
 
   let element = useRoutes(routes);
 
-  useEffect(() => dispatch(tokenAuthAction(navigate)), []);
+  useEffect(() => dispatch(tokenAuthAction(setRole)), []);
 
   return (
     <Row style={{ height: "100%" }}>
