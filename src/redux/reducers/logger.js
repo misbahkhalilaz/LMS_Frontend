@@ -1,4 +1,4 @@
-import { LOADING, LOGGED_IN, CHECKING_TOKEN, SET_USERID } from "../constants";
+import { LOADING, LOGGED_IN, CHECKING_TOKEN, SET_USERID, SET_SELECTEDPOST } from "../constants";
 
 const loggerReducer = (state = {}, action) => {
   switch (action.type) {
@@ -10,6 +10,8 @@ const loggerReducer = (state = {}, action) => {
       return { ...state, allowRender: !action.payload };
     case SET_USERID:
       return { ...state, userId: action.payload };
+    case SET_SELECTEDPOST:
+      return { ...state, selectedPost: action.payload };
     default:
       return state;
   }

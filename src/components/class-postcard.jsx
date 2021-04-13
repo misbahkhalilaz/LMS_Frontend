@@ -5,7 +5,7 @@ import * as dayjs from "dayjs";
 
 import { BookOutlined, FileTextOutlined } from "@ant-design/icons";
 
-import { setClassPost } from "../redux/actions/TeacherActions";
+import { setClassPost } from "../redux/actions/LoggerActions";
 
 const { Title, Text } = Typography;
 

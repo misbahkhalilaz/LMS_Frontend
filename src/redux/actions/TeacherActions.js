@@ -6,48 +6,18 @@ import {
   LOAD_ASSIGNEDCLASS,
   SET_SELECTEDCLASS,
   LOAD_CLASSPOSTLIST,
-  SET_SELECTEDPOST,
   LOAD_CLASSSTUDENTS,
 } from "../constants";
 
-export const loadingAction = (payload) => {
-  return { type: LOADING, payload };
-};
+export const loadingAction = (payload) => ({ type: LOADING, payload });
 
-export const setAssignedClasses = (payload) => {
-  return { type: LOAD_ASSIGNEDCLASS, payload };
-};
+export const setAssignedClasses = (payload) => ({ type: LOAD_ASSIGNEDCLASS, payload });
 
-export const setSelectedClass = (payload) => {
-  return { type: SET_SELECTEDCLASS, payload };
-};
+export const setSelectedClass = (payload) => ({ type: SET_SELECTEDCLASS, payload });
 
-export const setClassPostList = (payload) => {
-  return { type: LOAD_CLASSPOSTLIST, payload };
-};
+export const setClassPostList = (payload) => ({ type: LOAD_CLASSPOSTLIST, payload });
 
-export const setClassPost = (payload) => {
-  return { type: SET_SELECTEDPOST, payload };
-};
-
-export const setClassStudents = (payload) => {
-  return { type: LOAD_CLASSSTUDENTS, payload };
-};
-
-export const getClassStudent = (classId) => (dispatch) => {
-  const cookie = new Cookies();
-  const token = cookie.get("token");
-  //dispatch(loadingAction(true));
-  dispatch(setSelectedClass(classId));
-
-  API("GET", "/teacher/getClassStudents?classId=" + classId, "", null, token).then((res) => {
-    if (res.status >= 200 && res.status < 300) {
-      dispatch(setClassStudents(res.data.data));
-    } else message.error(res.data.message, 1);
-
-    // dispatch(loadingAction(false));
-  });
-};
+export const setClassStudents = (payload) => ({ type: LOAD_CLASSSTUDENTS, payload });
 
 export const getClassInfo = () => (dispatch, getState) => {
   const cookie = new Cookies();

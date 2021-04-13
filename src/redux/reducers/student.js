@@ -10,6 +10,7 @@ const studentReducer = (state = {}, action) => {
       return { ...state, selectedClass: action.payload };
     case LOAD_POSTLIST:
       return { ...state, classPosts: action.payload };
+
     default:
       return state;
   }

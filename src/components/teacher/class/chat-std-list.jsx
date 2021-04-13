@@ -58,9 +58,9 @@ const ChatMain = ({ setSelectedChat }) => {
                 document.getElementById(stdId)?.classList.remove("active");
                 document.getElementById(std.id).classList.add("active");
                 setStdId(std.id);
+
                 setRoom(std.seatNo);
-              }}
-            >
+              }}>
               {std.seatNo} - {std.name}
             </button>
           )}

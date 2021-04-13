@@ -11,6 +11,7 @@ import {
   LOAD_BATCHLIST,
   LOAD_SECTIONLIST,
   SET_USERID,
+  SET_SELECTEDPOST,
 } from "../constants";
 
 export const clearStoreAction = () => ({ type: CLEAR_STORE });
@@ -20,6 +21,8 @@ export const setLoading = (payload) => ({ type: LOADING, payload });
 export const setCheckToken = (payload) => ({ type: CHECKING_TOKEN, payload });
 
 export const setUserId = (payload) => ({ type: SET_USERID, payload });
+
+export const setClassPost = (payload) => ({ type: SET_SELECTEDPOST, payload });
 
 export const loginStatusAction = (payload) => {
   if (!payload) {

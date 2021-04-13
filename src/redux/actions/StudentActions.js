@@ -7,7 +7,6 @@ import {
   LOAD_CLASSES,
   SET_STDSELECTEDCLASS,
   LOAD_POSTLIST,
-  SET_STDSELECTEDPOST,
 } from "../constants";
 
 export const loadingAction = (payload) => ({ type: LOADING, payload });
@@ -19,8 +18,6 @@ export const setClasses = (payload) => ({ type: LOAD_CLASSES, payload });
 export const setSelectedClass = (payload) => ({ type: SET_STDSELECTEDCLASS, payload });
 
 export const setClassPostList = (payload) => ({ type: LOAD_POSTLIST, payload });
-
-export const setClassPost = (payload) => ({ type: SET_STDSELECTEDPOST, payload });
 
 export const getClassInfo = () => (dispatch, getState) => {
   const cookie = new Cookies();

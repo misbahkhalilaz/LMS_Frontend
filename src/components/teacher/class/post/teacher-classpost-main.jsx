@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Card, Typography, Button, Divider, Space } from "antd";
@@ -6,14 +7,13 @@ import { BookOutlined, FileTextOutlined, DownloadOutlined } from "@ant-design/ic
 import dayjs from "dayjs";
 
 import Comment from "./teacher-classpost-comment";
-import { useEffect } from "react";
 
 const { Title, Text, Paragraph } = Typography;
 
 const ClasspostMain = () => {
   const navigate = useNavigate();
   const isLoading = useSelector((state) => state.loggerReducer.isLoading);
-  const post = useSelector((state) => state.teacherReducer.selectedPost);
+  const post = useSelector((state) => state.loggerReducer.selectedPost);
   const dispatch = useDispatch();
 
   useEffect(() => !post && navigate(-1), []);
@@ -41,8 +41,7 @@ const ClasspostMain = () => {
             className="box-shadow no-select post-bg"
             bordered={false}
             bodyStyle={{ height: 340 }}
-            style={{ width: "100%", padding: 20 }}
-          >
+            style={{ width: "100%", padding: 20 }}>
             {postIcon}
             <Title className="postcard-title" level={4}>
               {post?.isAssignment ? `Assignment` : "Material"}: {" " + post?.title}
@@ -73,8 +72,7 @@ const ClasspostMain = () => {
                   type="primary"
                   shape="round"
                   icon={<DownloadOutlined />}
-                  size="large"
-                >
+                  size="large">
                   Download {index + 1}
                 </Button>
               ))}

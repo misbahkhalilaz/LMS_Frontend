@@ -29,8 +29,8 @@ const ClassSidebar = () => {
   const selectedClass = useSelector((state) => state.studentReducer.selectedClass);
 
   return (
-    <Row gutter={[0, 10]} align="top" style={{ height: "100%", padding: "20px 0" }}>
-      <Col span={22} push={1}>
+    <Row gutter={[0, 10]} align="top" style={{ height: "100%", padding: "10px 0" }}>
+      <Col span={20} push={2}>
         <Card
           className="no-select"
           bodyStyle={{ height: 50, display: "grid", justifyContent: "center" }}
