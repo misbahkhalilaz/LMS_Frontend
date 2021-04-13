@@ -23,7 +23,7 @@ export const setUserId = (payload) => ({ type: SET_USERID, payload });
 
 export const loginStatusAction = (payload) => {
   if (!payload) {
-    localStorage.removeItem("classId");
+    localStorage.removeItem("class");
     new Cookies().remove("token", { path: "/", maxAge: 86400 });
   }
 

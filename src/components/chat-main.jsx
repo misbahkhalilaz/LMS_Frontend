@@ -74,8 +74,8 @@ const ChatMain = ({ selectedChat }) => {
                     <div
                       className="chat-item"
                       style={{
-                        float: item.type == "receive" ? "right" : "left",
-                        background: item.type == "receive" ? "#0091FF" : "#9F9F9F",
+                        float: item.type == "receive" ? "left" : "right",
+                        background: item.type == "receive" ? "#9F9F9F" : "#0091FF",
                       }}>
                       {item.msg}
                     </div>

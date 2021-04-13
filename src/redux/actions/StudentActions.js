@@ -3,49 +3,41 @@ import API from "../../utils/fetch";
 import Cookies from "universal-cookie";
 import {
   LOADING,
+  SET_STDSEMESTER,
   LOAD_CLASSES,
   SET_STDSELECTEDCLASS,
   LOAD_POSTLIST,
   SET_STDSELECTEDPOST,
 } from "../constants";
 
-export const loadingAction = (payload) => {
-  return { type: LOADING, payload };
-};
+export const loadingAction = (payload) => ({ type: LOADING, payload });
 
-export const setClasses = (payload) => {
-  return { type: LOAD_CLASSES, payload };
-};
+export const setSemester = (payload) => ({ type: SET_STDSEMESTER, payload });
 
-export const setSelectedClass = (payload) => {
-  return { type: SET_STDSELECTEDCLASS, payload };
-};
+export const setClasses = (payload) => ({ type: LOAD_CLASSES, payload });
 
-export const setClassPostList = (payload) => {
-  return { type: LOAD_POSTLIST, payload };
-};
+export const setSelectedClass = (payload) => ({ type: SET_STDSELECTEDCLASS, payload });
 
-export const setClassPost = (payload) => {
-  return { type: SET_STDSELECTEDPOST, payload };
-};
+export const setClassPostList = (payload) => ({ type: LOAD_POSTLIST, payload });
 
-export const getClassInfo = (classId, navigate) => (dispatch, getState) => {
+export const setClassPost = (payload) => ({ type: SET_STDSELECTEDPOST, payload });
+
+export const getClassInfo = () => (dispatch, getState) => {
   const cookie = new Cookies();
   const token = cookie.get("token");
-  const { selectedClassId, classPosts } = getState().studentReducer;
-  if (navigate) navigate("class");
-  if (selectedClassId === classId && classPosts) return;
+  const { selectedClass, classPosts } = getState().studentReducer;
+  const Class = JSON.parse(localStorage.getItem("class"));
+
+  if (selectedClass) localStorage.setItem("class", JSON.stringify(selectedClass));
+  else dispatch(setSelectedClass(Class));
+
+  if (selectedClass?.id == Class?.id && classPosts) return;
 
   dispatch(loadingAction(true));
 
-  if (classId) localStorage.setItem("classId", classId);
-  else classId = localStorage.getItem("classId");
+  const id = selectedClass ? selectedClass.id : Class.id;
 
-  dispatch(setSelectedClass(classId));
-
-  //dispatch(setRoomId(`${stdId}_${classId}`));
-
-  API("GET", "/student/getPosts?classId=" + classId, "", null, token).then((res) => {
+  API("GET", "/student/getPosts?classId=" + id, "", null, token).then((res) => {
     if (res.status >= 200 && res.status < 300) {
       dispatch(setClassPostList(res.data.data));
     } else message.error(res.data.message, 1);
@@ -61,6 +53,8 @@ export const getClasses = () => (dispatch) => {
 
   API("GET", "/student/getClasses", "", null, token).then((res) => {
     if (res.status >= 200 && res.status < 300) {
+      dispatch(setSemester(res.data.data[0]?.courses.semester));
+
       const classes = [];
       res.data.data.map(({ id, course_id, teacher_id, section_id, courses, type, users }) => {
         if (classes[course_id] === undefined) classes[course_id] = {};

@@ -11,6 +11,7 @@ const { Title } = Typography;
 
 const DashboardMain = () => {
   const isLoading = useSelector((state) => state.loggerReducer.isLoading);
+  const semester = useSelector((state) => state.studentReducer.semester);
   const classes = useSelector((state) => state.studentReducer.classes);
   const dispatch = useDispatch();
 
@@ -37,7 +38,17 @@ const DashboardMain = () => {
       <Row className="subtitle-bg" align="center" style={{ marginBottom: 10 }}>
         <Col>
           <Title className="no-select subtitle-text" level={2}>
-            2nd semester
+            {semester}
+            {semester == "1"
+              ? "st"
+              : semester == "2"
+              ? "nd"
+              : semester == "3"
+              ? "rd"
+              : semester
+              ? "th"
+              : null}{" "}
+            Semester
           </Title>
         </Col>
       </Row>
@@ -61,8 +72,7 @@ const DashboardMain = () => {
               key={Class.id}
               xs={{ span: 24 }}
               md={{ span: 12 }}
-              lg={{ span: 8 }}
-            >
+              lg={{ span: 8 }}>
               <ClassCard Class={Class} />
             </Col>
           ))

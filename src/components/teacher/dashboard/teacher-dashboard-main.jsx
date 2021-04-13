@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Typography, Card, Badge, Switch, Tooltip, Skeleton } from "antd";
 import { MessageOutlined } from "@ant-design/icons";
 
-import { getAssignedClasses, getClassInfo } from "../../../redux/actions/TeacherActions";
+import { getAssignedClasses, setSelectedClass } from "../../../redux/actions/TeacherActions";
 
 const { Title, Text } = Typography;
 
@@ -19,7 +19,10 @@ const DashboardMain = () => {
     !assignedClasses && dispatch(getAssignedClasses());
   }, []);
 
-  const goToClass = (id) => dispatch(getClassInfo(id, navigate));
+  const goToClass = (id) => {
+    dispatch(setSelectedClass(id));
+    navigate("class");
+  };
 
   return (
     <Row>
@@ -50,8 +53,7 @@ const DashboardMain = () => {
               key={Class.id}
               xs={{ span: 24 }}
               md={{ span: 12 }}
-              lg={{ span: 8 }}
-            >
+              lg={{ span: 8 }}>
               <Card
                 className="box-shadow no-select"
                 title={<Tooltip title={Class.courseName}>{Class.courseName}</Tooltip>}
@@ -71,8 +73,7 @@ const DashboardMain = () => {
                   <Badge dot style={{ marginTop: 15 }}>
                     <MessageOutlined className="classcard-icon" style={{ marginTop: 15 }} />
                   </Badge>,
-                ]}
-              >
+                ]}>
                 <Text strong>Batch: {Class.batch}</Text>
                 <Text strong>Section: {Class.sectionName}</Text>
               </Card>

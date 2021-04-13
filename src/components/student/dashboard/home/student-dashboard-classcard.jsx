@@ -3,10 +3,19 @@ import { useDispatch } from "react-redux";
 import { Card, Tooltip, Button, Badge, Avatar, List, Empty } from "antd";
 import { NotificationOutlined, MessageOutlined, ScheduleTwoTone } from "@ant-design/icons";
 
-import { getClassInfo } from "../../../../redux/actions/StudentActions";
+import { setSelectedClass } from "../../../../redux/actions/StudentActions";
 
 const ClassCard = ({ Class }) => {
-  const { id, teacherId, labId, labTeacherId, courseName, upcomingAssignments } = Class;
+  const {
+    id,
+    teacherId,
+    teacherName,
+    labId,
+    labTeacherName,
+    labTeacherId,
+    courseName,
+    upcomingAssignments,
+  } = Class;
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -15,10 +24,12 @@ const ClassCard = ({ Class }) => {
   };
 
   const theoryClass = () => {
-    dispatch(getClassInfo(id, navigate));
+    dispatch(setSelectedClass({ id, instructorName: teacherName }));
+    navigate("class");
   };
   const labClass = () => {
-    dispatch(getClassInfo(labId, navigate));
+    dispatch(setSelectedClass({ id: labId, instructorName: labTeacherName }));
+    navigate("class");
   };
 
   return (
@@ -42,8 +53,7 @@ const ClassCard = ({ Class }) => {
         <Badge dot>
           <MessageOutlined className="classcard-icon" />
         </Badge>,
-      ]}
-    >
+      ]}>
       <List
         itemLayout="horizontal"
         size="small"

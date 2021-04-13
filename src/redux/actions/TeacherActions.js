@@ -49,29 +49,29 @@ export const getClassStudent = (classId) => (dispatch) => {
   });
 };
 
-export const getClassInfo = (classId, navigate) => (dispatch, getState) => {
+export const getClassInfo = () => (dispatch, getState) => {
   const cookie = new Cookies();
   const token = cookie.get("token");
   const { selectedClassId, classPosts } = getState().teacherReducer;
-  if (navigate) navigate("class");
-  if (selectedClassId === classId && classPosts) return;
+  const Class = localStorage.getItem("class");
+
+  if (selectedClassId) localStorage.setItem("class", selectedClassId);
+  else dispatch(setSelectedClass(Class));
+
+  if (selectedClassId == Class && classPosts) return;
 
   dispatch(loadingAction(true));
-  // dispatch(setClassPostList([]));
   dispatch(setClassStudents());
 
-  if (classId) localStorage.setItem("classId", classId);
-  else classId = localStorage.getItem("classId");
-
-  dispatch(setSelectedClass(classId));
+  const id = selectedClassId ? selectedClassId : Class;
 
   Promise.all([
-    API("GET", "/teacher/getPosts?classId=" + classId, "", null, token).then((res) => {
+    API("GET", "/teacher/getPosts?classId=" + id, "", null, token).then((res) => {
       if (res.status < 200 || res.status >= 300)
         throw new Error(res.data.message + " Please select class again!");
       else return res.data.data;
     }),
-    API("GET", "/teacher/getClassStudents?classId=" + classId, "", null, token).then((res) => {
+    API("GET", "/teacher/getClassStudents?classId=" + id, "", null, token).then((res) => {
       if (res.status < 200 || res.status >= 300)
         throw new Error(res.data.message + " Please select class again!");
       else return res.data.data;
@@ -85,7 +85,6 @@ export const getClassInfo = (classId, navigate) => (dispatch, getState) => {
       dispatch(loadingAction(false));
     })
     .catch((err) => {
-      navigate(-1);
       message.error(err.message);
       dispatch(loadingAction(false));
     });
