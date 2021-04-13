@@ -9,6 +9,7 @@ const ChatMain = ({ setSelectedChat }) => {
   const [filteredDisplay, SetFilteredDisplay] = useState([]);
   const [prevTxt, SetPrevTxt] = useState("");
 
+  const isLoading = useSelector((state) => state.loggerReducer.isLoading);
   const studentList = useSelector((state) => state.teacherReducer.studentList);
   const selectedClassId = useSelector((state) => state.teacherReducer.selectedClassId);
   const userId = useSelector((state) => state.loggerReducer.userId);
@@ -22,7 +23,7 @@ const ChatMain = ({ setSelectedChat }) => {
       SetFilteredDisplay(
         value == ""
           ? []
-          : data.filter((o) =>
+          : studentList.filter((o) =>
               Object.keys(o).some((k) => String(o[k]).toLowerCase().includes(value.toLowerCase()))
             )
       );
@@ -46,6 +47,7 @@ const ChatMain = ({ setSelectedChat }) => {
         <List
           dataSource={filteredDisplay.length == 0 ? studentList : filteredDisplay}
           split={false}
+          loading={isLoading}
           size="large"
           itemLayout="vertical"
           renderItem={(std) => (
@@ -55,9 +57,10 @@ const ChatMain = ({ setSelectedChat }) => {
               onClick={() => {
                 document.getElementById(stdId)?.classList.remove("active");
                 document.getElementById(std.id).classList.add("active");
-                setRoom(std.seatNo);
                 setStdId(std.id);
-              }}>
+                setRoom(std.seatNo);
+              }}
+            >
               {std.seatNo} - {std.name}
             </button>
           )}

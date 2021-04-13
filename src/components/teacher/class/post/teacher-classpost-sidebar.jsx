@@ -20,26 +20,28 @@ const ClassPostSidebar = () => {
   };
 
   return (
-    <Row gutter={[0, 20]} align="middle">
-      <Col span={22} push={1}>
+    <Row gutter={[0, 30]} align="top" style={{ padding: "10px 0" }}>
+      <Col span={20} push={2}>
         <Button
           className="btn"
           block
           type="primary"
           size="large"
           shape="round"
-          onClick={() => setShowPostEdit(!showPostEdit)}>
+          onClick={() => setShowPostEdit(!showPostEdit)}
+        >
           Edit Post
         </Button>
       </Col>
-      <Col span={22} push={1}>
+      <Col span={20} push={2}>
         <Button
           className="btn"
           block
           type="primary"
           size="large"
           shape="round"
-          onClick={() => navigate("assign-grade")}>
+          onClick={() => navigate("assign-grade")}
+        >
           Grade Assignment
         </Button>
       </Col>

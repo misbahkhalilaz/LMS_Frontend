@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  loginStatusAction,
-  clearStoreAction,
-  tokenAuthAction,
-} from "../redux/actions/LoggerActions";
+
+import { loginStatusAction, clearStoreAction } from "../redux/actions/LoggerActions";
+
 import useViewport from "./useViewport";
+
 import {
   Row,
   Col,
@@ -79,11 +78,7 @@ const Navbar = () => {
                   shape="circle"
                   icon={<HomeFilled />}
                   style={{ color: "rgba(0, 0, 0, 0.65)" }}
-                  onClick={() => {
-                    const homePath = location.pathname.split("/")[1];
-
-                    if ("/" + homePath != location.pathname) navigate(homePath, { replace: true });
-                  }}
+                  onClick={() => navigate("/", { replace: true })}
                 />
               </Tooltip>,
               <Tooltip key={1} placement="bottom" title="Notifications">
@@ -104,7 +99,6 @@ const Navbar = () => {
                     dispatch(loginStatusAction(false));
                     navigate("/login", { replace: true });
                     dispatch(clearStoreAction());
-                    //window.location.replace("/login");
                   }}
                 >
                   <Button

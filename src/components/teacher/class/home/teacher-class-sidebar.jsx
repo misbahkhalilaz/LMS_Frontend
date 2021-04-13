@@ -13,7 +13,7 @@ const ClassSidebar = () => {
   };
 
   return (
-    <Row gutter={[0, 10]} align="top" style={{ height: "100%", padding: "20px 0" }}>
+    <Row gutter={[0, 10]} align="top" style={{ height: "100%", padding: "10px 0" }}>
       <Col span={20} push={2}>
         <Button
           className="btn"

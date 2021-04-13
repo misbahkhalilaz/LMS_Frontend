@@ -69,7 +69,8 @@ const ClassMain = () => {
             block
             shape="round"
             size="large"
-            onClick={() => setSelectedPosts("All")}>
+            onClick={() => setSelectedPosts("All")}
+          >
             All
           </Button>
         </Col>
@@ -79,7 +80,8 @@ const ClassMain = () => {
             block
             shape="round"
             size="large"
-            onClick={() => setSelectedPosts(true)}>
+            onClick={() => setSelectedPosts(true)}
+          >
             Assignments
           </Button>
         </Col>
@@ -89,7 +91,8 @@ const ClassMain = () => {
             block
             shape="round"
             size="large"
-            onClick={() => setSelectedPosts(false)}>
+            onClick={() => setSelectedPosts(false)}
+          >
             Materials
           </Button>
         </Col>
@@ -100,7 +103,8 @@ const ClassMain = () => {
             getContainer={() => document.getElementById("class-posts")}
             onClick={(e) => e.preventDefault()}
             showInkInFixed={true}
-            style={{ paddingLeft: 15, margin: "0 5px 0" }}>
+            style={{ paddingLeft: 15, margin: "0 5px 0" }}
+          >
             {/* {Object.keys(classDetails).map((key, index) => (
               <Link key={index} href={"#" + key} title={index + 1} />
             ))} */}
@@ -111,7 +115,8 @@ const ClassMain = () => {
             gutter={[10, 50]}
             justify="center"
             align="middle"
-            style={{ height: "80vh", overflowY: "auto", padding: "25px 0" }}>
+            style={{ height: "80vh", overflowY: "auto", padding: "25px 0" }}
+          >
             {isLoading || !classPosts ? (
               [0, 1, 2].map((index) => (
                 <Col key={index} span={23}>
