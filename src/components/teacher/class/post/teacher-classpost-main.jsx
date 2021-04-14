@@ -6,7 +6,7 @@ import { BookOutlined, FileTextOutlined, DownloadOutlined } from "@ant-design/ic
 
 import dayjs from "dayjs";
 
-import Comment from "./teacher-classpost-comment";
+import Comment from "../../../classpost-comment";
 
 const { Title, Text, Paragraph } = Typography;
 

@@ -48,7 +48,7 @@ export const getClassInfo = () => (dispatch, getState) => {
     }),
   ])
     .then(([posts, students]) => {
-      students = students.map(({ id, user_id, name }) => ({ id, seatNo: user_id, name }));
+      students = students.map(({ id, user_id, name }) => ({ key: id, id, seatNo: user_id, name }));
       dispatch(setClassPostList(posts));
       dispatch(setClassStudents(students));
 

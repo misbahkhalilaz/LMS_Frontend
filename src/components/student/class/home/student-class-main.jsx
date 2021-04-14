@@ -110,7 +110,6 @@ const ClassMain = () => {
           <Row
             gutter={[10, 50]}
             justify="center"
-            align="middle"
             style={{ height: "80vh", overflowY: "auto", padding: "25px 0" }}>
             {isLoading || !classPosts ? (
               [0, 1, 2].map((index) => (
