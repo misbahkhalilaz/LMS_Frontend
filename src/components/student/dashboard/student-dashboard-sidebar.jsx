@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Row, Col, Button, Image } from "antd";
 
@@ -25,8 +25,8 @@ const DashboardSidebar = () => {
   const navigate = useNavigate();
 
   return (
-    <Row align="top" style={{ height: "100%", paddingTop: 10 }}>
-      <Col span={22} push={1} style={{ marginBottom: 15 }}>
+    <Row gutter={[0, 10]} align="top" style={{ height: "100%", padding: "10px 0" }}>
+      <Col span={20} push={2}>
         <Button
           className="btn"
           block
@@ -39,11 +39,11 @@ const DashboardSidebar = () => {
         </Button>
       </Col>
 
-      <Col span={22} push={1} style={{ marginBottom: 15 }}>
+      <Col span={22} push={1}>
         <LecturesCard type="lectures" list={lectureDetail} height={250} />
       </Col>
 
-      <Col span={22} push={1} style={{ marginBottom: 15 }}>
+      <Col span={20} push={2}>
         <Button
           className="btn"
           block
@@ -68,7 +68,7 @@ const DashboardSidebar = () => {
         </Button>
       </Col>
 
-      <Col span={22} push={1} style={{ marginBottom: 15 }}>
+      <Col span={20} push={2}>
         <Button
           className="btn"
           block

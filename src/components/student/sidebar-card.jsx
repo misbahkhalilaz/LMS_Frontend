@@ -4,9 +4,7 @@ const { Text } = Typography;
 
 const SidebarCard = ({ type, list, height }) => {
   const noData = {
-    emptyText: (
-      <Empty description={"No upcoming " + type} imageStyle={{ height: 100 }} />
-    ),
+    emptyText: <Empty description={"No upcoming " + type} imageStyle={{ height: 100 }} />,
   };
 
   return (

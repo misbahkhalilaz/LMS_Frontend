@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import {
   loginAction,
   requestOtpAction,
   verifyOtpAction,
-  setPassAction,
+  setPasswordAction,
 } from "../redux/actions/LoggerActions";
 
 import { Row, Col, Input, Button, Form, Typography, Modal, Steps, message } from "antd";
@@ -49,7 +49,7 @@ const steps = [
   },
 ];
 
-const Login = () => {
+const Login = ({ setRole }) => {
   const [current, setCurrent] = useState(0);
   const [showSetPass, setShowSetPass] = useState(false);
 
@@ -57,18 +57,19 @@ const Login = () => {
   const [token, setToken] = useState();
   const [timer, setTimer] = useState();
 
-  const navigate = useNavigate();
   const isLoading = useSelector((state) => state.loggerReducer.isLoading);
+
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const login = ({ userId, password }) => {
-    dispatch(loginAction({ userId, password }, navigate, message));
+    dispatch(loginAction({ userId, password }, navigate, setRole));
   };
 
   const setPassValidation = (values) => {
-    if (current == 0) dispatch(requestOtpAction(values, message, setToken, setCurrent));
-    else if (current == 1) dispatch(verifyOtpAction(values, token, message, setToken, setCurrent));
-    else dispatch(setPassAction(values, token, message, setShowSetPass));
+    if (current == 0) dispatch(requestOtpAction(values, setToken, setCurrent));
+    else if (current == 1) dispatch(verifyOtpAction(values, token, setToken, setCurrent));
+    else dispatch(setPasswordAction(values, token, setShowSetPass));
   };
 
   useEffect(() => {
@@ -121,8 +122,8 @@ const Login = () => {
                 <Button
                   className="login-form-button"
                   type="primary"
-                  htmlType="submit"
                   shape="round"
+                  htmlType="submit"
                   loading={isLoading}>
                   Log in
                 </Button>
@@ -135,10 +136,10 @@ const Login = () => {
         </Row>
       </Col>
       <Modal
-        footer={null}
-        destroyOnClose
         width={600}
+        footer={null}
         visible={showSetPass}
+        destroyOnClose
         onCancel={() => setShowSetPass(false)}
         afterClose={() => {
           setToken();
@@ -146,16 +147,19 @@ const Login = () => {
           setOtpTime(120);
           clearInterval(timer);
         }}
-        bodyStyle={{ padding: 50 }}>
+        bodyStyle={{ padding: "50px 0px 20px" }}>
         <Steps className="no-select" progressDot size="small" current={current}>
-          <Step title="User Validation" />
-          <Step title="Otp Validation" subTitle={!isLoading && "TTL: " + OtpTime} />
-          <Step title="Set Password" />
+          <Step title="User validate" />
+          <Step title="Otp Validate" subTitle={!isLoading && "TTL: " + OtpTime} />
+          <Step title="Password" />
         </Steps>
-        <Form colon={false} preserve={false} hideRequiredMark="true" onFinish={setPassValidation}>
-          <div className="center" style={{ height: 120 }}>
-            {steps[current].content}
-          </div>
+        <Form
+          colon={false}
+          preserve={false}
+          hideRequiredMark="true"
+          onFinish={setPassValidation}
+          style={{ height: 140, padding: "20px 40px" }}>
+          <div className="center">{steps[current].content}</div>
           <Form.Item>
             <Button type="primary" htmlType="submit" loading={isLoading} style={{ float: "right" }}>
               {current < 2 ? "Next" : "Set Password"}

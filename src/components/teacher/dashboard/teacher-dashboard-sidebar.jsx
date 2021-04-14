@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Row, Col, Button, Image } from "antd";
 
@@ -8,26 +8,20 @@ import RescheduleClass from "./teacher-reschduleclass";
 const DashboardSidebar = () => {
   const [showTimetable, setShowTimetable] = useState(false);
   const [showReschedule, setShowReschedule] = useState(false);
-  const [lectureDetails, setLectureDetails] = useState([]);
-
-  useEffect(
-    () =>
-      setLectureDetails([
-        {
-          title: "BSCS 602 - ICS I",
-          description: "Time: 2:15 PM",
-        },
-        {
-          title: "BSCS 604 - PHY I",
-          description: "Time: 2:15 PM",
-        },
-        {
-          title: "BSCS 606 - STATS I",
-          description: "Time: 2:15 PM",
-        },
-      ]),
-    []
-  );
+  const [lectureDetails] = useState([
+    {
+      title: "BSCS 602 - ICS I",
+      description: "Time: 2:15 PM",
+    },
+    {
+      title: "BSCS 604 - PHY I",
+      description: "Time: 2:15 PM",
+    },
+    {
+      title: "BSCS 606 - STATS I",
+      description: "Time: 2:15 PM",
+    },
+  ]);
 
   const setDestroy = () => {
     setShowReschedule(false);
@@ -35,8 +29,8 @@ const DashboardSidebar = () => {
   const navigate = useNavigate();
 
   return (
-    <Row align="top" style={{ height: "100%", paddingTop: 10 }}>
-      <Col span={22} push={1} style={{ marginBottom: 15 }}>
+    <Row gutter={[0, 10]} align="top" style={{ height: "100%", padding: "10px 0" }}>
+      <Col span={20} push={2}>
         <Button
           className="btn"
           block
@@ -60,10 +54,10 @@ const DashboardSidebar = () => {
           />
         </Button>
       </Col>
-      <Col span={22} push={1} style={{ marginBottom: 15 }}>
+      <Col span={22} push={1}>
         <LecturesCard type="lectures" list={lectureDetails} height={250} />
       </Col>
-      <Col span={22} push={1} style={{ marginBottom: 15 }}>
+      <Col span={20} push={2}>
         <Button
           className="btn"
           block
@@ -75,7 +69,7 @@ const DashboardSidebar = () => {
           Reschedule Class
         </Button>
       </Col>
-      <Col span={22} push={1} style={{ marginBottom: 15 }}>
+      <Col span={20} push={2}>
         <Button
           className="btn"
           block

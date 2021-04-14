@@ -5,7 +5,7 @@ import * as dayjs from "dayjs";
 
 import { BookOutlined, FileTextOutlined } from "@ant-design/icons";
 
-import { setClassPost } from "../redux/actions/TeacherActions";
+import { setClassPost } from "../redux/actions/LoggerActions";
 
 const { Title, Text } = Typography;
 
@@ -14,32 +14,30 @@ const PostCard = ({ post }) => {
   const dispatch = useDispatch();
 
   const postIcon = post.isAssignment ? (
-    <FileTextOutlined className='postcard-icon' />
+    <FileTextOutlined className="postcard-icon" />
   ) : (
-    <BookOutlined className='postcard-icon' />
+    <BookOutlined className="postcard-icon" />
   );
 
   const dueDate = post.isAssignment && (
-    <span className='postcard-duedate'>Due {dayjs(post.deadline).format("DD MMM")}</span>
+    <span className="postcard-duedate">Due {dayjs(post.deadline).format("DD MMM")}</span>
   );
 
   return (
     <Card
-      className='box-shadow no-select postcard-bg'
+      className="box-shadow no-select postcard-bg"
       hoverable
-      bodyStyle={{ paddingTop: 10, height: 70 }}
-      style={{ padding: "14px 0" }}
+      bodyStyle={{ paddingTop: 15, height: 100 }}
       onClick={() => {
         dispatch(setClassPost(post));
         navigate("post");
-      }}
-    >
+      }}>
       {postIcon}
-      <Title className='postcard-title' level={4}>
+      <Title className="postcard-title" level={4}>
         {post.isAssignment ? `Assignment` : "Material"}: {" " + post.title}
         {dueDate}
       </Title>
-      <Text type='secondary' strong>
+      <Text type="secondary" strong>
         {dayjs(post.date).format("DD MMM")}
       </Text>
     </Card>

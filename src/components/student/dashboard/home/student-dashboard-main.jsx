@@ -11,12 +11,11 @@ const { Title } = Typography;
 
 const DashboardMain = () => {
   const isLoading = useSelector((state) => state.loggerReducer.isLoading);
+  const semester = useSelector((state) => state.studentReducer.semester);
   const classes = useSelector((state) => state.studentReducer.classes);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (classes.length === 0) dispatch(getClasses());
-  }, []);
+  useEffect(() => !classes && dispatch(getClasses()), []);
 
   const [classCardDetails] = useState([
     {
@@ -36,15 +35,25 @@ const DashboardMain = () => {
 
   return (
     <Row>
-      <Row justify="center" className="subtitle-bg">
+      <Row className="subtitle-bg" align="center" style={{ marginBottom: 10 }}>
         <Col>
-          <Title className="no-select subtitle-text" level={2} style={{ marginBottom: 25 }}>
-            2nd semester
+          <Title className="no-select subtitle-text" level={2}>
+            {semester}
+            {semester == "1"
+              ? "st"
+              : semester == "2"
+              ? "nd"
+              : semester == "3"
+              ? "rd"
+              : semester
+              ? "th"
+              : null}{" "}
+            Semester
           </Title>
         </Col>
       </Row>
-      <Row style={{ height: "80vh", overflowY: "auto", paddingTop: 15 }}>
-        {isLoading || classes.length === 0 ? (
+      <Row gutter={[10, 20]} style={{ height: "80vh", overflowY: "auto", padding: "25px 0 10px" }}>
+        {isLoading || !classes ? (
           <Row gutter={[0, 40]} justify="space-around">
             {[0, 1, 2].map((index) => (
               <Skeleton.Avatar
@@ -63,18 +72,12 @@ const DashboardMain = () => {
               key={Class.id}
               xs={{ span: 24 }}
               md={{ span: 12 }}
-              lg={{ span: 8 }}
-              style={{ marginBottom: 20 }}>
+              lg={{ span: 8 }}>
               <ClassCard Class={Class} />
             </Col>
           ))
         )}
-        <Col
-          className="center"
-          xs={{ span: 24 }}
-          md={{ span: 12 }}
-          lg={{ span: 8 }}
-          style={{ marginBottom: 20 }}>
+        <Col className="center" xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
           <RepeatClass />
         </Col>
       </Row>

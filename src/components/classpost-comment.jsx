@@ -34,8 +34,7 @@ const Editor = ({ onChange, onSubmit, value, type }) => (
         position: "absolute",
         bottom: "4px",
         right: "2px",
-      }}
-    >
+      }}>
       <RightCircleFilled style={{ fontSize: 24 }} />
     </Button>
   </div>
@@ -66,9 +65,7 @@ const ClasspostComment = ({ type }) => {
   return (
     <>
       <Title className="no-select" style={{ marginTop: 15 }} level={5}>{`${
-        comments.length === 0
-          ? type + "comments"
-          : comments.length + type.toLowerCase() + "comment"
+        comments.length === 0 ? type + "comments" : comments.length + type.toLowerCase() + "comment"
       }`}</Title>
       {comments.length > 0 && <CommentList comments={comments} />}
       <Comment

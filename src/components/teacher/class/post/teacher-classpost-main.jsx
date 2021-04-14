@@ -1,16 +1,22 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Card, Typography, Button, Divider, Space } from "antd";
-import * as dayjs from "dayjs";
-import Comment from "./teacher-classpost-comment";
 import { BookOutlined, FileTextOutlined, DownloadOutlined } from "@ant-design/icons";
+
+import dayjs from "dayjs";
+
+import Comment from "../../../classpost-comment";
 
 const { Title, Text, Paragraph } = Typography;
 
 const ClasspostMain = () => {
+  const navigate = useNavigate();
   const isLoading = useSelector((state) => state.loggerReducer.isLoading);
-  const post = useSelector((state) => state.teacherReducer.selectedPost);
+  const post = useSelector((state) => state.loggerReducer.selectedPost);
   const dispatch = useDispatch();
+
+  useEffect(() => !post && navigate(-1), []);
 
   /*{
       type: "Material",
@@ -21,68 +27,52 @@ const ClasspostMain = () => {
       file: [],
     }*/
 
-  const postIcon = post.isAssignment ? (
-    <FileTextOutlined className='postcard-icon' />
+  const postIcon = post?.isAssignment ? (
+    <FileTextOutlined className="postcard-icon" />
   ) : (
-    <BookOutlined className='postcard-icon' />
+    <BookOutlined className="postcard-icon" />
   );
 
   return (
     <Row>
-      <Row>
-        <Col>
-          <Title
-            className='no-select '
-            level={2}
-            style={{
-              marginBottom: 25,
-              color: "#FFFFFF" /*JUST FOR ADJUSTMENT */,
-            }}
-          >
-            '
-          </Title>
-        </Col>
-      </Row>
-      <Row justify='center' style={{ height: "80vh", overflowY: "auto" }}>
+      <Row justify="center" style={{ height: "90vh", paddingTop: 20, overflowY: "auto" }}>
         <Col span={23}>
           <Card
-            className='box-shadow no-select post-bg'
+            className="box-shadow no-select post-bg"
             bordered={false}
             bodyStyle={{ height: 340 }}
-            style={{ width: "100%", padding: 20 }}
-          >
+            style={{ width: "100%", padding: 20 }}>
             {postIcon}
-            <Title className='postcard-title' level={4}>
-              {post.isAssignment ? `Assignment` : "Material"}: {" " + post.title}
-              {post.isAssignment && (
-                <span className='postcard-duedate'>
+            <Title className="postcard-title" level={4}>
+              {post?.isAssignment ? `Assignment` : "Material"}: {" " + post?.title}
+              {post?.isAssignment && (
+                <span className="postcard-duedate">
                   Due Date {dayjs(post.deadline).format("DD MMM")}
                 </span>
               )}
             </Title>
-            <Text type='secondary' strong>
-              {dayjs(post.date).format("DD MMM")}
+            <Text type="secondary" strong>
+              {dayjs(post?.date).format("DD MMM")}
             </Text>
             {/* <Space direction='vertical'> */}
-            {post.isAssignment && (
-              <Text strong code style={{ paddingLeft: 20 }}>
+            {post?.isAssignment && (
+              <Text strong code style={{ paddingLeft: 10 }}>
                 {`Marks: ${post.total_marks}`}
               </Text>
             )}
             <Paragraph style={{ margin: "20px", height: 130, overflowY: "auto" }}>
-              {post.description}
+              {post?.description}
             </Paragraph>
             {/* </Space> */}
             <Divider style={{ backgroundColor: "#594f8b", margin: "10px 0px" }} />
-            <Space wrap size='large'>
-              {post.file_paths.map((file, index) => (
+            <Space wrap size="large">
+              {post?.file_paths.map((file, index) => (
                 <Button
                   key={index}
-                  type='primary'
-                  shape='round'
+                  type="primary"
+                  shape="round"
                   icon={<DownloadOutlined />}
-                  size='large'
-                >
+                  size="large">
                   Download {index + 1}
                 </Button>
               ))}
@@ -90,7 +80,7 @@ const ClasspostMain = () => {
           </Card>
         </Col>
         <Col span={23}>
-          <Comment type=' class ' />
+          <Comment type=" class " />
         </Col>
       </Row>
     </Row>

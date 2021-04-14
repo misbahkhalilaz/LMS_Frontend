@@ -1,8 +1,8 @@
 import { Row, Col } from "antd";
 
-import Main from "../../components/teacher/class/home/teacher-member";
+import Main from "../../components/teacher/class/home/teacher-class-students";
 
-const Member = () => {
+const ClassStudents = () => {
   return (
     <Row>
       <Col className="mainarea-bg" span={24}>
@@ -11,4 +11,4 @@ const Member = () => {
     </Row>
   );
 };
-export default Member;
+export default ClassStudents;

@@ -24,7 +24,8 @@ const TeacherListMain = () => {
   const dispatch = useDispatch();
 
   useEffect(
-    () => (teacherList.length == 0 ? dispatch(getTeacherListAction({ role: "teacher", page: 1, pageSize: 20 })) : null),
+    () =>
+      !teacherList && dispatch(getTeacherListAction({ role: "teacher", page: 1, pageSize: 20 })),
     []
   );
 
@@ -49,8 +50,8 @@ const TeacherListMain = () => {
       title: "Status",
       render: (teacher) => (
         <Switch
-          checkedChildren='Active'
-          unCheckedChildren='Inactive'
+          checkedChildren="Active"
+          unCheckedChildren="Inactive"
           checked={teacher.isActive}
           onChange={(checked) => {
             dispatch(chgTeacherActiveAction({ id: teacher.id, isActive: checked }));
@@ -97,10 +98,10 @@ const TeacherListMain = () => {
 
   return (
     <Row>
-      <Row align='middle' style={{ height: "10vh" }}>
+      <Row align="middle" style={{ height: "10vh" }}>
         <Col span={16} push={1}>
           <Search
-            placeholder='Search by name/email/phone no (press enter/click search icon). . . .'
+            placeholder="Search by name/email/phone no (press enter/click search icon). . . ."
             allowClear
             enterButton
             onSearch={filterStudent}
@@ -108,19 +109,22 @@ const TeacherListMain = () => {
         </Col>
         <Col span={5} push={2}>
           <Button
-            className='postfilter-btn'
+            className="postfilter-btn"
             block
-            shape='round'
-            size='large'
-            onClick={() => setShowCreateProfile(true)}
-          >
+            shape="round"
+            size="large"
+            onClick={() => setShowCreateProfile(true)}>
             {width < 700 ? "Add" : "Add Teacher"}
           </Button>
         </Col>
       </Row>
       <Row style={{ height: "80vh" }}>
         <Col>
-          <Table {...tableProps} columns={columns} dataSource={filteredData.length == 0 ? teacherList : filteredData} />
+          <Table
+            {...tableProps}
+            columns={columns}
+            dataSource={filteredData.length == 0 ? teacherList : filteredData}
+          />
         </Col>
       </Row>
       {showCreateProfile && <CreateTeacherProfile setDestroy={() => setDestroy()} />}

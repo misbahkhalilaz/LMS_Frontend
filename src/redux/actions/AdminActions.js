@@ -83,8 +83,7 @@ export const getClassBySect = (queryParams, queryParams1, setClassBySect, setRoo
       dispatch(loadingAction(false));
     })
     .catch((err) => {
-      console.log(err.name, err.message);
-      message.error(err.name, 1);
+      message.error(err.name);
 
       dispatch(loadingAction(false));
     });

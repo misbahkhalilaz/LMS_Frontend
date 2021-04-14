@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { loginStatAction, clearStoreAction } from "../redux/actions/LoggerActions";
+
+import { loginStatusAction, clearStoreAction } from "../redux/actions/LoggerActions";
+
 import useViewport from "./useViewport";
+
 import {
   Row,
   Col,
@@ -64,46 +67,42 @@ const Navbar = () => {
         <PageHeader
           backIcon={!homePaths.includes(location.pathname) && <LeftOutlined />}
           title={
-            <Title className='no-select' level={2} style={{ margin: 0, color: "#FFFFFF" }}>
+            <Title className="no-select" level={2} style={{ margin: 0, color: "#FFFFFF" }}>
               {width < 700 ? "DCS - UBIT" : "Department of Computer Science - UBIT"}
             </Title>
           }
           extra={
             isLogged && [
-              <Tooltip key={0} placement='bottom' title='Homepage'>
+              <Tooltip key={0} placement="bottom" title="Homepage">
                 <Button
-                  shape='circle'
+                  shape="circle"
                   icon={<HomeFilled />}
                   style={{ color: "rgba(0, 0, 0, 0.65)" }}
-                  onClick={() => {
-                    const homePath = location.pathname.split("/")[1];
-                    if (homePath != location.pathname) navigate(homePath, { replace: true });
-                  }}
+                  onClick={() => navigate("/", { replace: true })}
                 />
               </Tooltip>,
-              <Tooltip key={1} placement='bottom' title='Notifications'>
+              <Tooltip key={1} placement="bottom" title="Notifications">
                 <Button
-                  shape='circle'
+                  shape="circle"
                   icon={<BellFilled />}
                   style={{ color: "rgba(0, 0, 0, 0.65)" }}
                   onClick={() => setDrawerVisible(true)}
                 />
               </Tooltip>,
-              <Tooltip key={2} placement='bottom' title='Logout'>
+              <Tooltip key={2} placement="bottom" title="Logout">
                 <Popconfirm
-                  placement='bottom'
-                  title='Are you sure？'
-                  okText='Yes'
-                  cancelText='No'
+                  placement="bottom"
+                  title="Are you sure？"
+                  okText="Yes"
+                  cancelText="No"
                   onConfirm={() => {
+                    dispatch(loginStatusAction(false));
+                    navigate("/login", { replace: true });
                     dispatch(clearStoreAction());
-                    dispatch(loginStatAction(false));
-                    //navigate("/login", { replace: true });
-                    window.location.replace("/login");
                   }}
                 >
                   <Button
-                    shape='circle'
+                    shape="circle"
                     icon={<PoweroffOutlined />}
                     style={{ color: "rgba(0, 0, 0, 0.65)" }}
                   />
@@ -115,9 +114,9 @@ const Navbar = () => {
         />
       </Col>
       <Drawer
-        className='no-select'
-        title='Notifications'
-        placement='right'
+        className="no-select"
+        title="Notifications"
+        placement="right"
         width={330}
         destroyOnClose={true}
         visible={drawerVisible}
@@ -125,14 +124,14 @@ const Navbar = () => {
       >
         <List
           dataSource={notificationData}
-          itemLayout='vertical'
-          size='small'
+          itemLayout="vertical"
+          size="small"
           renderItem={(news) => (
             <List.Item
               actions={[
                 <Button
-                  type='primary'
-                  size='small'
+                  type="primary"
+                  size="small"
                   onClick={() => {
                     Modal.info({
                       title: news.title,

@@ -1,23 +1,21 @@
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Row, Col, List, Input } from "antd";
-
-import { setRoomId } from "../../../redux/actions/LoggerActions";
 
 const { Search } = Input;
 
 const ChatMain = ({ setSelectedChat }) => {
+  const [stdId, setStdId] = useState();
   const [filteredDisplay, SetFilteredDisplay] = useState([]);
   const [prevTxt, SetPrevTxt] = useState("");
 
-  const dispatch = useDispatch();
-
+  const isLoading = useSelector((state) => state.loggerReducer.isLoading);
   const studentList = useSelector((state) => state.teacherReducer.studentList);
   const selectedClassId = useSelector((state) => state.teacherReducer.selectedClassId);
   const userId = useSelector((state) => state.loggerReducer.userId);
 
   const setRoom = (stdId) => {
-    setSelectedChat({ roomId: `${stdId}_${selectedClassId}`, userId })
+    setSelectedChat({ roomId: `${stdId}_${selectedClassId}`, userId });
   };
 
   const filterStudent = (value) => {
@@ -25,9 +23,9 @@ const ChatMain = ({ setSelectedChat }) => {
       SetFilteredDisplay(
         value == ""
           ? []
-          : data.filter((o) =>
-            Object.keys(o).some((k) => String(o[k]).toLowerCase().includes(value.toLowerCase()))
-          )
+          : studentList.filter((o) =>
+              Object.keys(o).some((k) => String(o[k]).toLowerCase().includes(value.toLowerCase()))
+            )
       );
 
     SetPrevTxt(value);
@@ -49,11 +47,21 @@ const ChatMain = ({ setSelectedChat }) => {
         <List
           dataSource={filteredDisplay.length == 0 ? studentList : filteredDisplay}
           split={false}
+          loading={isLoading}
           size="large"
           itemLayout="vertical"
           renderItem={(std) => (
-            <button className="button" onClick={() => setRoom(std.user_id)}>
-              {std.user_id} - {std.name}
+            <button
+              id={std.id}
+              className="button"
+              onClick={() => {
+                document.getElementById(stdId)?.classList.remove("active");
+                document.getElementById(std.id).classList.add("active");
+                setStdId(std.id);
+
+                setRoom(std.seatNo);
+              }}>
+              {std.seatNo} - {std.name}
             </button>
           )}
         />

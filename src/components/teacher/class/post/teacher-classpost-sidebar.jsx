@@ -20,8 +20,8 @@ const ClassPostSidebar = () => {
   };
 
   return (
-    <Row align="top" style={{ paddingTop: 10 }}>
-      <Col span={22} push={1} style={{ marginBottom: 20 }}>
+    <Row gutter={[0, 30]} align="top" style={{ padding: "10px 0" }}>
+      <Col span={20} push={2}>
         <Button
           className="btn"
           block
@@ -33,7 +33,7 @@ const ClassPostSidebar = () => {
           Edit Post
         </Button>
       </Col>
-      <Col span={22} push={1} style={{ marginBottom: 20 }}>
+      <Col span={20} push={2}>
         <Button
           className="btn"
           block
@@ -46,12 +46,7 @@ const ClassPostSidebar = () => {
         </Button>
       </Col>
       {showPostEdit && (
-        <EditPost
-          setDestroy={setDestroy}
-          action="Edit"
-          type={postType}
-          prevValues={prevValues}
-        />
+        <EditPost setDestroy={setDestroy} action="Edit" type={postType} prevValues={prevValues} />
       )}
     </Row>
   );
