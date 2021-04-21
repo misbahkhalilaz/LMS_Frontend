@@ -139,7 +139,7 @@ const CreateClass = ({ setDestroy }) => {
               }
             />
           </Form.Item>
-          <Form.Item wrapperCol={{ offset: 20 }}>
+          <Form.Item wrapperCol={{ xs: { offset: 19 }, lg: { offset: 20 } }}>
             <Button type="primary" htmlType="submit" loading={isLoading}>
               Next
             </Button>
@@ -169,7 +169,7 @@ const CreateClass = ({ setDestroy }) => {
               ))}
             </Radio.Group>
           </Form.Item>
-          <Form.Item wrapperCol={{ offset: 20 }}>
+          <Form.Item wrapperCol={{ xs: { offset: 19 }, lg: { offset: 20 } }}>
             <Button type="primary" htmlType="submit" loading={isLoading}>
               Next
             </Button>
@@ -180,7 +180,13 @@ const CreateClass = ({ setDestroy }) => {
     {
       title: "Teacher",
       content: (
-        <Form colon={false} requiredMark={false} preserve={false} onFinish={createClass}>
+        <Form
+          colon={false}
+          requiredMark={false}
+          preserve={false}
+          onFinish={createClass}
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 12 }}>
           <Form.Item
             name="teacherId"
             label="Select Teacher"
@@ -189,15 +195,13 @@ const CreateClass = ({ setDestroy }) => {
                 required: true,
                 message: "Please select a teacher!",
               },
-            ]}
-            labelCol={{ span: 10 }}>
+            ]}>
             <Select
               showSearch
               options={teacherList}
               filterOption={(input, option) =>
                 option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
-              style={{ width: 200 }}
             />
           </Form.Item>
           {creditHour == 2 && (
@@ -209,19 +213,17 @@ const CreateClass = ({ setDestroy }) => {
                   required: true,
                   message: "Please select a lab teacher!",
                 },
-              ]}
-              labelCol={{ span: 10 }}>
+              ]}>
               <Select
                 showSearch
                 options={teacherList}
                 filterOption={(input, option) =>
                   option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
-                style={{ width: 200 }}
               />
             </Form.Item>
           )}
-          <Form.Item wrapperCol={{ offset: 20 }}>
+          <Form.Item wrapperCol={{ xs: { offset: 19 }, lg: { offset: 20 } }}>
             <Button type="primary" htmlType="submit" loading={isLoading}>
               Next
             </Button>

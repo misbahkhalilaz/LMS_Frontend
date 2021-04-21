@@ -25,15 +25,11 @@ const { RangePicker } = DatePicker;
 const CreateBatch = ({ setDestroy }) => {
   const [isModalVisible, setIsModalVisible] = useState(true);
 
-  const [programDetail] = useState([
-    { label: "BSCS", value: 2 },
-    { label: "BSSE", value: 3 },
-    { label: "MCS", value: 4 },
-  ]);
   const [batchinfo, setBatchinfo] = useState([]);
   const [current, setCurrent] = useState(0);
 
   const isLoading = useSelector((state) => state.loggerReducer.isLoading);
+  const programList = useSelector((state) => state.adminReducer.programList);
   const dispatch = useDispatch();
 
   const initInfoSubmit = (values) => {
@@ -72,8 +68,7 @@ const CreateBatch = ({ setDestroy }) => {
           requiredMark={false}
           onFinish={initInfoSubmit}
           labelCol={{ span: 9 }}
-          wrapperCol={{ span: 12 }}
-        >
+          wrapperCol={{ span: 12 }}>
           <Form.Item
             name="shift"
             label="Shift"
@@ -82,8 +77,7 @@ const CreateBatch = ({ setDestroy }) => {
                 required: true,
                 message: "Please select shift!",
               },
-            ]}
-          >
+            ]}>
             <Radio.Group options={["Morning", "Evening"]} />
           </Form.Item>
           <Form.Item
@@ -95,13 +89,12 @@ const CreateBatch = ({ setDestroy }) => {
                 required: true,
                 message: "Please select program!",
               },
-            ]}
-          >
+            ]}>
             <Select
               showSearch
-              options={programDetail}
+              options={programList}
               filterOption={(input, option) =>
-                option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
             />
           </Form.Item>
@@ -113,14 +106,8 @@ const CreateBatch = ({ setDestroy }) => {
                 required: true,
                 message: "Please select academic term period!",
               },
-            ]}
-          >
-            <RangePicker
-              inputReadOnly={true}
-              picker="month"
-              format={"MM/YYYY"}
-              locale={locale}
-            />
+            ]}>
+            <RangePicker inputReadOnly={true} picker="month" format={"MM/YYYY"} locale={locale} />
           </Form.Item>
           <Form.Item
             name="name"
@@ -131,8 +118,7 @@ const CreateBatch = ({ setDestroy }) => {
                 required: true,
                 message: "Please enter batch name!",
               },
-            ]}
-          >
+            ]}>
             <Input />
           </Form.Item>
           <Form.Item
@@ -141,10 +127,9 @@ const CreateBatch = ({ setDestroy }) => {
             rules={[
               {
                 required: true,
-                message: "Please select shift!",
+                message: "Please enter number of sections!",
               },
-            ]}
-          >
+            ]}>
             <InputNumber min={1} precision={0} max={3} />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 20 }}>
@@ -169,8 +154,7 @@ const CreateBatch = ({ setDestroy }) => {
                 margin: 20,
                 position: "relative",
                 textAlign: "center",
-              }}
-            >
+              }}>
               <Typography.Title level={5}>
                 Section - {String.fromCharCode(65 + index)} Student List
               </Typography.Title>
@@ -183,13 +167,8 @@ const CreateBatch = ({ setDestroy }) => {
                     message: "Please upload students list!",
                   },
                 ]}
-                style={{ position: "absolute", bottom: 0, textAlign: "center" }}
-              >
-                <Upload
-                  maxCount={1}
-                  accept=".xlsx, .xls"
-                  beforeUpload={() => false}
-                >
+                style={{ position: "absolute", bottom: 0, textAlign: "center" }}>
+                <Upload maxCount={1} accept=".xlsx, .xls" beforeUpload={() => false}>
                   <Button type="primary">Click to upload</Button>
                 </Upload>
               </Form.Item>
@@ -214,14 +193,13 @@ const CreateBatch = ({ setDestroy }) => {
       visible={isModalVisible}
       onCancel={() => setIsModalVisible(false)}
       afterClose={() => setDestroy(false)}
-      bodyStyle={{ paddingTop: 50 }}
-    >
+      bodyStyle={{ paddingTop: 50 }}>
       <Steps className="no-select" size="small" current={current}>
         {steps.map((item) => (
           <Step key={item.title} title={item.title} />
         ))}
       </Steps>
-      <div>{steps[current].content}</div>
+      <div style={{ marginTop: 20 }}>{steps[current].content}</div>
     </Modal>
   );
 };

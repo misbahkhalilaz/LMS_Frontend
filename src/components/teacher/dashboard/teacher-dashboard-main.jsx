@@ -58,9 +58,8 @@ const DashboardMain = () => {
                 className="box-shadow no-select"
                 title={<Tooltip title={Class.courseName}>{Class.courseName}</Tooltip>}
                 bordered={false}
-                bodyStyle={{ height: "108px", display: "grid", justifyContent: "center" }}
+                bodyStyle={{ height: 108 }}
                 hoverable
-                onClick={() => goToClass(Class.id)}
                 actions={[
                   <Text strong>
                     Personal Chat
@@ -74,8 +73,17 @@ const DashboardMain = () => {
                     <MessageOutlined className="classcard-icon" style={{ marginTop: 15 }} />
                   </Badge>,
                 ]}>
-                <Text strong>Batch: {Class.batch}</Text>
-                <Text strong>Section: {Class.sectionName}</Text>
+                <div
+                  onClick={() => goToClass(Class.id)}
+                  style={{
+                    height: "100%",
+                    display: "grid",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}>
+                  <Text strong>Batch: {Class.batch}</Text>
+                  <Text strong>Section: {Class.sectionName}</Text>
+                </div>
               </Card>
             </Col>
           ))
