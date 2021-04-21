@@ -10,8 +10,7 @@ const CreateTeacherProfile = ({ setDestroy }) => {
   const isLoading = useSelector((state) => state.loggerReducer.isLoading);
   const dispatch = useDispatch();
 
-  const postSubmit = (values) =>
-    dispatch(addTeacherAction(values, message, setIsModalVisible));
+  const postSubmit = (values) => dispatch(addTeacherAction(values, message, setIsModalVisible));
 
   return (
     <Modal
@@ -26,15 +25,13 @@ const CreateTeacherProfile = ({ setDestroy }) => {
       footer={null}
       visible={isModalVisible}
       onCancel={() => setIsModalVisible(false)}
-      afterClose={() => setDestroy()}
-    >
+      afterClose={() => setDestroy()}>
       <Form
         colon={false}
         requiredMark={false}
         onFinish={postSubmit}
         labelCol={{ span: 8 }}
-        wrapperCol={{ span: 12 }}
-      >
+        wrapperCol={{ span: 12 }}>
         <Form.Item
           name="userId"
           label="Login ID"
@@ -44,8 +41,7 @@ const CreateTeacherProfile = ({ setDestroy }) => {
               required: true,
               message: "Please enter login id!",
             },
-          ]}
-        >
+          ]}>
           <Input />
         </Form.Item>
         <Form.Item
@@ -57,8 +53,7 @@ const CreateTeacherProfile = ({ setDestroy }) => {
               required: true,
               message: "Please enter teacher name!",
             },
-          ]}
-        >
+          ]}>
           <Input />
         </Form.Item>
         <Form.Item
@@ -71,13 +66,10 @@ const CreateTeacherProfile = ({ setDestroy }) => {
               message: "Please enter phone number!",
             },
             {
-              pattern: new RegExp(
-                "^(\\+92)-{0,1}\\d{3}-{0,1}\\d{7}$|^\\d{11}$|^\\d{4}-\\d{7}$"
-              ),
+              pattern: new RegExp("^(\\+92)-{0,1}\\d{3}-{0,1}\\d{7}$|^\\d{11}$|^\\d{4}-\\d{7}$"),
               message: "Please enter phone number in valid format!",
             },
-          ]}
-        >
+          ]}>
           <Input />
         </Form.Item>
         <Form.Item
@@ -93,11 +85,10 @@ const CreateTeacherProfile = ({ setDestroy }) => {
               message: "Please enter email in valid format!",
               type: "email",
             },
-          ]}
-        >
+          ]}>
           <Input />
         </Form.Item>
-        <Form.Item wrapperCol={{ offset: 20 }}>
+        <Form.Item wrapperCol={{ xs: { offset: 19 }, lg: { offset: 20 } }}>
           <Button type="primary" htmlType="submit" loading={isLoading}>
             Create
           </Button>

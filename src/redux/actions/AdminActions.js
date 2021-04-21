@@ -149,7 +149,7 @@ export const getCourseList = (queryParams, setCourseList, setCurrent) => (dispat
   const token = cookie.get("token");
 
   dispatch(loadingAction(true));
-  console.log(queryParams);
+
   API("GET", "/admin/getCourses?" + new URLSearchParams(queryParams), "", null, token).then(
     (res) => {
       if (res.status >= 200 && res.status < 300) {
