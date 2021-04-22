@@ -8,7 +8,18 @@ import {
   setPasswordAction,
 } from "../redux/actions/LoggerActions";
 
-import { Row, Col, Input, Button, Form, Typography, Modal, Steps, message } from "antd";
+import {
+  Row,
+  Col,
+  Input,
+  Button,
+  Form,
+  Typography,
+  Modal,
+  Steps,
+  message,
+  notification,
+} from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 import img from "../assets/loginpage.png";
@@ -167,6 +178,12 @@ const Login = ({ setRole }) => {
           </Form.Item>
         </Form>
       </Modal>
+      {notification.info({
+        placement: "topLeft",
+        message: `Login Credentials`,
+        description: `UserID: admin pass: admin UserId: teacher -or- B00000001 pass: 12345`,
+        duration: 20,
+      })}
     </Row>
   );
 };
