@@ -33,7 +33,8 @@ const steps = [
       <Form.Item
         name="userId"
         label="UserID"
-        rules={[{ required: true, message: "Please enter your userID!" }]}>
+        rules={[{ required: true, message: "Please enter your userID!" }]}
+      >
         <Input />
       </Form.Item>
     ),
@@ -43,7 +44,8 @@ const steps = [
       <Form.Item
         name="otp"
         label="OTP"
-        rules={[{ required: true, message: "Please enter received Otp!" }]}>
+        rules={[{ required: true, message: "Please enter received Otp!" }]}
+      >
         <Input />
       </Form.Item>
     ),
@@ -53,7 +55,8 @@ const steps = [
       <Form.Item
         name="password"
         label="Password"
-        rules={[{ required: true, message: "Please enter new password!" }]}>
+        rules={[{ required: true, message: "Please enter new password!" }]}
+      >
         <Input.Password />
       </Form.Item>
     ),
@@ -112,7 +115,8 @@ const Login = ({ setRole }) => {
               <Form.Item
                 name="userId"
                 label="UserID"
-                rules={[{ required: true, message: "Please enter your userID!" }]}>
+                rules={[{ required: true, message: "Please enter your userID!" }]}
+              >
                 <Input
                   className="form-input-radius"
                   placeholder="UserID"
@@ -122,7 +126,8 @@ const Login = ({ setRole }) => {
               <Form.Item
                 name="password"
                 label="Password"
-                rules={[{ required: true, message: "Please enter your password!" }]}>
+                rules={[{ required: true, message: "Please enter your password!" }]}
+              >
                 <Input.Password
                   className="form-input-radius"
                   placeholder="Password"
@@ -135,7 +140,8 @@ const Login = ({ setRole }) => {
                   type="primary"
                   shape="round"
                   htmlType="submit"
-                  loading={isLoading}>
+                  loading={isLoading}
+                >
                   Log in
                 </Button>
                 <Button type="link" onClick={() => setShowSetPass(true)}>
@@ -158,7 +164,8 @@ const Login = ({ setRole }) => {
           setOtpTime(120);
           clearInterval(timer);
         }}
-        bodyStyle={{ padding: "50px 0px 20px" }}>
+        bodyStyle={{ padding: "50px 0px 20px" }}
+      >
         <Steps className="no-select" progressDot size="small" current={current}>
           <Step title="User validate" />
           <Step title="Otp Validate" subTitle={!isLoading && "TTL: " + OtpTime} />
@@ -169,7 +176,8 @@ const Login = ({ setRole }) => {
           preserve={false}
           hideRequiredMark="true"
           onFinish={setPassValidation}
-          style={{ height: 140, padding: "20px 40px" }}>
+          style={{ height: 140, padding: "20px 40px" }}
+        >
           <div className="center">{steps[current].content}</div>
           <Form.Item>
             <Button type="primary" htmlType="submit" loading={isLoading} style={{ float: "right" }}>
@@ -180,7 +188,7 @@ const Login = ({ setRole }) => {
       </Modal>
       {notification.info({
         placement: "topLeft",
-        message: `Login Credentials`,
+        message: `Login Credentials(testing)`,
         description: `UserID: admin pass: admin UserId: teacher -or- B00000001 pass: 12345`,
         duration: 20,
       })}
