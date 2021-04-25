@@ -1,0 +1,11 @@
+{
+  "short_name": "UBIT - LMS",
+  "name": "Umaer Basha Institute of Information Technology - Learning Management System",
+  "description": "A LMS built by github.com/bilalahmed24 and github.com/misbahkhalilaz",
+  "lang": "en-US",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

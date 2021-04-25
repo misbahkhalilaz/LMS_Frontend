@@ -64,6 +64,7 @@ const steps = [
 ];
 
 const Login = ({ setRole }) => {
+  // const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [current, setCurrent] = useState(0);
   const [showSetPass, setShowSetPass] = useState(false);
 
@@ -86,6 +87,36 @@ const Login = ({ setRole }) => {
     else dispatch(setPasswordAction(values, token, setShowSetPass));
   };
 
+  // useEffect(() => {
+  //   const image = new Image();
+  //   image.onload = () => setIsImageLoaded(true);
+  //   image.src = img;
+
+  //   notification.info({
+  //     placement: "topLeft",
+  //     message: `Login Credentials(testing)`,
+  //     description: `UserID: admin pass: admin UserId: teacher -or- B00000001 pass: 12345`,
+  //     duration: 20,
+  //   });
+
+  //   return () => {
+  //     image.onload = null;
+  //   };
+  // }, []);
+
+  // if (!isImageLoaded) {
+  //   return null;
+  // }
+
+  useEffect(() => {
+    notification.info({
+      placement: "topLeft",
+      message: `Login Credentials(testing)`,
+      description: `UserID: admin pass: admin UserId: teacher -or- B00000001 pass: 12345`,
+      duration: 20,
+    });
+  }, []);
+
   useEffect(() => {
     if (OtpTime == 0) {
       clearInterval(timer);
@@ -103,7 +134,7 @@ const Login = ({ setRole }) => {
   return (
     <Row align="middle" style={{ height: "90vh" }}>
       <Col xs={{ span: 24 }} lg={{ span: 18 }}>
-        <img src={img} width="100%" height="100%" />
+        <img src={img} alt="Login Image" width="100%" height="100%" />
       </Col>
       <Col xs={{ span: 20, push: 2 }} lg={{ span: 6, push: 0 }}>
         <Row>
@@ -186,12 +217,6 @@ const Login = ({ setRole }) => {
           </Form.Item>
         </Form>
       </Modal>
-      {notification.info({
-        placement: "topLeft",
-        message: `Login Credentials(testing)`,
-        description: `UserID: admin pass: admin UserId: teacher -or- B00000001 pass: 12345`,
-        duration: 20,
-      })}
     </Row>
   );
 };
