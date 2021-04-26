@@ -109,7 +109,7 @@ const Login = ({ setRole }) => {
   return (
     <Row align="middle" style={{ height: "90vh" }}>
       <Col xs={{ span: 24 }} lg={{ span: 18 }}>
-        <img src={img} alt="Login Image" />
+        <img src={img} alt="Login Image" width="100%" height="100%" />
       </Col>
       <Col xs={{ span: 20, push: 2 }} lg={{ span: 6, push: 0 }}>
         <Row>
