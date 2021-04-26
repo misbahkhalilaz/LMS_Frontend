@@ -98,8 +98,8 @@ const TeacherListMain = () => {
 
   return (
     <Row>
-      <Row align="middle" style={{ height: "10vh" }}>
-        <Col span={16} push={1}>
+      <Row align="center" style={{ padding: "10px 0" }}>
+        <Col span={16}>
           <Search
             placeholder="Search by name/email/phone no (press enter/click search icon). . . ."
             allowClear
@@ -107,7 +107,7 @@ const TeacherListMain = () => {
             onSearch={filterStudent}
           />
         </Col>
-        <Col span={5} push={2}>
+        <Col span={5} push={1}>
           <Button
             className="postfilter-btn"
             block

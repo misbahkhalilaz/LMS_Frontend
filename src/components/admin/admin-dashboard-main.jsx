@@ -44,7 +44,7 @@ const DashboardMain = () => {
             style={{ backgroundColor: "#F2F2F2" }}
             onClick={() => setShowCreateBatch(true)}>
             <PlusCircleFilled style={iconStyle} />
-            <Title level={4} type="secondary" className="no-select">
+            <Title level={3} type="secondary" className="no-select">
               Create Batch
             </Title>
           </Card>
@@ -58,7 +58,7 @@ const DashboardMain = () => {
             style={{ backgroundColor: "#F2F2F2" }}
             onClick={() => setShowCreateProfile(true)}>
             <PlusCircleFilled style={iconStyle} />
-            <Title level={4} type="secondary" className="no-select">
+            <Title level={3} type="secondary" className="no-select">
               Create Teacher Profile
             </Title>
           </Card>
@@ -72,7 +72,7 @@ const DashboardMain = () => {
             onClick={() => setShowCreateClass(true)}
             style={{ backgroundColor: "#F2F2F2" }}>
             <PlusCircleFilled style={iconStyle} />
-            <Title level={4} type="secondary" className="no-select">
+            <Title level={3} type="secondary" className="no-select">
               Create Class
             </Title>
           </Card>

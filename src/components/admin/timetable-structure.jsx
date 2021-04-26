@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import useViewport from "../useViewport";
 import { Row, Col, Typography, Select, Button, Popconfirm, message } from "antd";
 
 import { addBatchTimetable } from "../../redux/actions/AdminActions";
@@ -9,6 +10,7 @@ const { Title } = Typography;
 const TimetableStruct = ({ shift, batch, sections, classBySect, rooms }) => {
   const [timetable, setTimetable] = useState([]);
   const [availableRooms, setAvailableRooms] = useState(rooms);
+  const { width } = useViewport();
 
   const slots = [1, 2, 3];
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
@@ -81,7 +83,7 @@ const TimetableStruct = ({ shift, batch, sections, classBySect, rooms }) => {
             borderRadius: 10,
           }}>
           <Col>
-            <Title level={4} style={{ color: "#FFFFFF" }}>
+            <Title level={width < 700 ? 5 : 4} style={{ color: "#FFFFFF" }}>
               {batch?.label} - Semester {batch?.semester} ({shift})
             </Title>
           </Col>
@@ -95,10 +97,10 @@ const TimetableStruct = ({ shift, batch, sections, classBySect, rooms }) => {
           <Col span={6}>
             <Row justify="space-around" align="middle" style={{ height: "100%" }}>
               <Col>
-                <Title level={4}>Days</Title>
+                <Title level={width < 700 ? 5 : 4}>Days</Title>
               </Col>
               <Col>
-                <Title level={4}>Section</Title>
+                <Title level={width < 700 ? 5 : 4}>Section</Title>
               </Col>
             </Row>
           </Col>
@@ -111,15 +113,15 @@ const TimetableStruct = ({ shift, batch, sections, classBySect, rooms }) => {
                   borderRadius: slotNo === 3 ? "0 10px 0 0" : 0,
                 }}>
                 <Col>
-                  <Title level={4}>Slot {slotNo}</Title>
+                  <Title level={width < 700 ? 5 : 4}>Slot {slotNo}</Title>
                 </Col>
               </Row>
               <Row justify="space-around">
                 <Col>
-                  <Title level={4}>Class</Title>
+                  <Title level={width < 700 ? 5 : 4}>Class</Title>
                 </Col>
                 <Col>
-                  <Title level={4}>Room</Title>
+                  <Title level={width < 700 ? 5 : 4}>Room</Title>
                 </Col>
               </Row>
             </Col>
@@ -131,7 +133,9 @@ const TimetableStruct = ({ shift, batch, sections, classBySect, rooms }) => {
               <Col span={6}>
                 <Row>
                   <Col span={10} className="center">
-                    <Title level={4}>{dayName}</Title>
+                    <Title level={width < 700 ? 5 : 4}>
+                      {width < 700 ? dayName.slice(0, 3) : dayName}
+                    </Title>
                   </Col>
                   <Col
                     span={12}
@@ -141,7 +145,7 @@ const TimetableStruct = ({ shift, batch, sections, classBySect, rooms }) => {
                     }}>
                     {sections.map((section) => (
                       <Row key={section.value} justify="center" align="middle">
-                        <Title level={4}>{section.label}</Title>
+                        <Title level={width < 700 ? 5 : 4}>{section.label}</Title>
                       </Row>
                     ))}
                   </Col>
