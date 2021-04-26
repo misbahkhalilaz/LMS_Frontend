@@ -41,7 +41,8 @@ const ClasspostMain = () => {
             className="box-shadow no-select post-bg"
             bordered={false}
             bodyStyle={{ height: 340 }}
-            style={{ width: "100%", padding: 20 }}>
+            style={{ width: "100%", padding: 20 }}
+          >
             {postIcon}
             <Title className="postcard-title" level={4}>
               {post?.isAssignment ? `Assignment` : "Material"}: {" " + post?.title}
@@ -72,7 +73,8 @@ const ClasspostMain = () => {
                   type="primary"
                   shape="round"
                   icon={<DownloadOutlined />}
-                  size="large">
+                  size="large"
+                >
                   Download {index + 1}
                 </Button>
               ))}

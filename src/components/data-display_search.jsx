@@ -30,14 +30,14 @@ const ViewSearchMain = ({ data, columns, searchBy }) => {
   };
 
   const tableProps = {
-    scroll: { y: "70vh" },
+    scroll: { y: "calc(100vh - 200px)" },
     loading: isLoading,
     pagination: false,
   };
 
   return (
     <Row>
-      <Row align='middle' justify='center' style={{ height: "10vh" }}>
+      <Row align="middle" justify="center" style={{ height: 60 }}>
         <Col span={20}>
           <Search
             placeholder={`Search by ${searchBy} (press enter/click search icon). . . .`}
@@ -47,10 +47,10 @@ const ViewSearchMain = ({ data, columns, searchBy }) => {
           />
         </Col>
       </Row>
-      <Row justify='center' style={{ height: "80vh" }}>
+      <Row justify="center" style={{ height: "calc(100vh - 124px)" }}>
         <Col>
           <Table
-            className='no-select'
+            className="no-select"
             {...tableProps}
             columns={columns}
             dataSource={filteredDisplay.length == 0 ? data : filteredDisplay}

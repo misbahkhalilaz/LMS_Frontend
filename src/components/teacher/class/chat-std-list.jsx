@@ -33,7 +33,7 @@ const ChatMain = ({ setSelectedChat }) => {
 
   return (
     <Row>
-      <Row align="middle" justify="center" style={{ height: "10vh" }}>
+      <Row align="middle" justify="center" style={{ height: 60 }}>
         <Col span={23} push={1}>
           <Search
             placeholder={`Search by seat no/name. . .`}
@@ -43,7 +43,10 @@ const ChatMain = ({ setSelectedChat }) => {
           />
         </Col>
       </Row>
-      <Row justify="center" style={{ height: "80vh", overflowY: "auto", overflowX: "hidden" }}>
+      <Row
+        justify="center"
+        style={{ height: "calc(100vh - 124px)", overflowY: "auto", overflowX: "hidden" }}
+      >
         <List
           dataSource={filteredDisplay.length == 0 ? studentList : filteredDisplay}
           split={false}
@@ -60,7 +63,8 @@ const ChatMain = ({ setSelectedChat }) => {
                 setStdId(std.id);
 
                 setRoom(std.seatNo);
-              }}>
+              }}
+            >
               {std.seatNo} - {std.name}
             </button>
           )}

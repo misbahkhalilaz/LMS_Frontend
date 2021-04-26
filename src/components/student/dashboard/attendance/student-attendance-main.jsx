@@ -39,27 +39,19 @@ const AttendanceMain = () => {
 
   return (
     <Row>
-      <Row justify="center" className="subtitle-bg">
+      <Row className="subtitle-bg" justify="center" style={{ height: 60, marginBottom: 10 }}>
         <Col>
-          <Title
-            className="no-select subtitle-text"
-            level={2}
-            style={{ marginBottom: 25 }}
-          >
+          <Title className="no-select subtitle-text" level={2}>
             Attendance
           </Title>
         </Col>
       </Row>
-      <Row style={{ height: "80vh", overflowY: "auto", paddingTop: 10 }}>
+      <Row
+        gutter={[10, 20]}
+        style={{ height: "calc(100vh - 134px)", overflowY: "auto", padding: "25px 0 5px" }}
+      >
         {attendance.map((attendanceDetail, index) => (
-          <Col
-            className="center"
-            key={index}
-            xs={{ span: 24 }}
-            md={{ span: 12 }}
-            lg={{ span: 8 }}
-            style={{ marginBottom: 20 }}
-          >
+          <Col className="center" key={index} xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
             <AttendanceCard attendance={attendanceDetail} />
           </Col>
         ))}

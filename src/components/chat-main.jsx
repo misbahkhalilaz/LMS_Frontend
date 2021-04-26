@@ -60,7 +60,8 @@ const ChatMain = ({ selectedChat }) => {
               borderRadius: 15,
               backgroundColor: "#F2F2F2",
               height: "100%",
-            }}>
+            }}
+          >
             <Row align="bottom" justify="end" style={{ overflowY: "auto", flex: "1 1 auto" }}>
               <List
                 dataSource={data}
@@ -70,13 +71,15 @@ const ChatMain = ({ selectedChat }) => {
                 renderItem={(item, i) => (
                   <List.Item
                     id={i == data.length - 1 ? "last_msg" : undefined}
-                    style={{ float: "left", width: "100%" }}>
+                    style={{ float: "left", width: "100%" }}
+                  >
                     <div
                       className="chat-item"
                       style={{
                         float: item.type == "receive" ? "left" : "right",
                         background: item.type == "receive" ? "#9F9F9F" : "#0091FF",
-                      }}>
+                      }}
+                    >
                       {item.msg}
                     </div>
                   </List.Item>
@@ -138,7 +141,8 @@ const ChatMain = ({ selectedChat }) => {
                     disabled={!value.trim()}
                     htmlType="submit"
                     onClick={handleSubmit}
-                    style={{ position: "absolute", bottom: 4, right: 2 }}>
+                    style={{ position: "absolute", bottom: 4, right: 2 }}
+                  >
                     <RightCircleFilled style={{ fontSize: 24 }} />
                   </Button>
                 </div>

@@ -26,14 +26,17 @@ const DashboardMain = () => {
 
   return (
     <Row>
-      <Row className="subtitle-bg" align="center" style={{ marginBottom: 10 }}>
+      <Row className="subtitle-bg" align="center" style={{ height: 60, marginBottom: 10 }}>
         <Col>
           <Title className="no-select subtitle-text" level={2}>
             Assigned Classes
           </Title>
         </Col>
       </Row>
-      <Row gutter={[10, 20]} style={{ height: "80vh", overflowY: "auto", padding: "25px 0 10px" }}>
+      <Row
+        gutter={[10, 20]}
+        style={{ height: "calc(100vh - 134px)", overflowY: "auto", padding: "25px 0 8px" }}
+      >
         {isLoading || !assignedClasses ? (
           <Row gutter={[0, 40]} justify="space-around">
             {[0, 1, 2, 3, 4, 5].map((index) => (
@@ -53,7 +56,8 @@ const DashboardMain = () => {
               key={Class.id}
               xs={{ span: 24 }}
               md={{ span: 12 }}
-              lg={{ span: 8 }}>
+              lg={{ span: 8 }}
+            >
               <Card
                 className="box-shadow no-select"
                 title={<Tooltip title={Class.courseName}>{Class.courseName}</Tooltip>}
@@ -72,7 +76,8 @@ const DashboardMain = () => {
                   <Badge dot style={{ marginTop: 15 }}>
                     <MessageOutlined className="classcard-icon" style={{ marginTop: 15 }} />
                   </Badge>,
-                ]}>
+                ]}
+              >
                 <div
                   onClick={() => goToClass(Class.id)}
                   style={{
@@ -80,7 +85,8 @@ const DashboardMain = () => {
                     display: "grid",
                     justifyContent: "center",
                     alignItems: "center",
-                  }}>
+                  }}
+                >
                   <Text strong>Batch: {Class.batch}</Text>
                   <Text strong>Section: {Class.sectionName}</Text>
                 </div>
