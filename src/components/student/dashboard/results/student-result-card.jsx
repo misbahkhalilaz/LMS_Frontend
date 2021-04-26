@@ -10,7 +10,7 @@ const ResultCard = (props) => {
       className="box-shadow no-select"
       title={props.result.title}
       bordered={false}
-      style={{ marginBottom: 20 }}
+      style={{ marginBottom: 15 }}
       bodyStyle={{ padding: 10, textAlign: "center" }}
     >
       <Title level={5}>Theory: {props.result.theory}</Title>

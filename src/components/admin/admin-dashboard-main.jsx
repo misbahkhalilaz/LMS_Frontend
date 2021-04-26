@@ -27,14 +27,17 @@ const DashboardMain = () => {
 
   return (
     <Row>
-      <Row className="subtitle-bg" align="center" style={{ marginBottom: 10 }}>
+      <Row className="subtitle-bg" align="center" style={{ height: 60, marginBottom: 10 }}>
         <Col>
           <Title className="no-select subtitle-text" level={2}>
             Admin Home
           </Title>
         </Col>
       </Row>
-      <Row gutter={[10, 20]} style={{ height: "80vh", overflowY: "auto", padding: 10 }}>
+      <Row
+        gutter={[10, 20]}
+        style={{ height: "calc(100vh - 134px)", overflowY: "auto", padding: 10 }}
+      >
         <Col className="center" xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
           <Card
             className="box-shadow"
@@ -42,7 +45,8 @@ const DashboardMain = () => {
             bordered={false}
             bodyStyle={styles}
             style={{ backgroundColor: "#F2F2F2" }}
-            onClick={() => setShowCreateBatch(true)}>
+            onClick={() => setShowCreateBatch(true)}
+          >
             <PlusCircleFilled style={iconStyle} />
             <Title level={3} type="secondary" className="no-select">
               Create Batch
@@ -56,7 +60,8 @@ const DashboardMain = () => {
             bordered={false}
             bodyStyle={styles}
             style={{ backgroundColor: "#F2F2F2" }}
-            onClick={() => setShowCreateProfile(true)}>
+            onClick={() => setShowCreateProfile(true)}
+          >
             <PlusCircleFilled style={iconStyle} />
             <Title level={3} type="secondary" className="no-select">
               Create Teacher Profile
@@ -70,7 +75,8 @@ const DashboardMain = () => {
             bordered={false}
             bodyStyle={styles}
             onClick={() => setShowCreateClass(true)}
-            style={{ backgroundColor: "#F2F2F2" }}>
+            style={{ backgroundColor: "#F2F2F2" }}
+          >
             <PlusCircleFilled style={iconStyle} />
             <Title level={3} type="secondary" className="no-select">
               Create Class

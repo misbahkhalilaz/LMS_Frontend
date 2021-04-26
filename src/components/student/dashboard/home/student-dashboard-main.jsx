@@ -35,7 +35,7 @@ const DashboardMain = () => {
 
   return (
     <Row>
-      <Row className="subtitle-bg" align="center" style={{ marginBottom: 10 }}>
+      <Row className="subtitle-bg" align="center" style={{ height: 60, marginBottom: 10 }}>
         <Col>
           <Title className="no-select subtitle-text" level={2}>
             {semester}
@@ -52,7 +52,10 @@ const DashboardMain = () => {
           </Title>
         </Col>
       </Row>
-      <Row gutter={[10, 20]} style={{ height: "80vh", overflowY: "auto", padding: "25px 0 10px" }}>
+      <Row
+        gutter={[10, 20]}
+        style={{ height: "calc(100vh - 134px)", overflowY: "auto", padding: "25px 0 8px" }}
+      >
         {isLoading || !classes ? (
           <Row gutter={[0, 40]} justify="space-around">
             {[0, 1, 2].map((index) => (
@@ -72,7 +75,8 @@ const DashboardMain = () => {
               key={Class.id}
               xs={{ span: 24 }}
               md={{ span: 12 }}
-              lg={{ span: 8 }}>
+              lg={{ span: 8 }}
+            >
               <ClassCard Class={Class} />
             </Col>
           ))

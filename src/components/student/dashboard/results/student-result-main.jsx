@@ -39,18 +39,14 @@ const ResultMain = () => {
 
   return (
     <Row>
-      <Row justify="center" className="subtitle-bg">
+      <Row className="subtitle-bg" justify="center" style={{ height: 60, marginBottom: 10 }}>
         <Col>
-          <Title
-            className="no-select subtitle-text"
-            level={2}
-            style={{ marginBottom: 25 }}
-          >
+          <Title className="no-select subtitle-text" level={2}>
             Semester Results
           </Title>
         </Col>
       </Row>
-      <Row style={{ height: "80vh", overflowY: "auto", paddingTop: 10 }}>
+      <Row style={{ height: "calc(100vh - 134px)", overflowY: "auto", paddingTop: 20 }}>
         <Col span={24}>
           <Tabs tabPosition="left">
             <TabPane tab="Semester 1" key="1">

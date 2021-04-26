@@ -158,7 +158,8 @@ const CourseListMain = () => {
                       onClick={() => {
                         setSelectedSemester(index + 1);
                         setIsModalVisible(true);
-                      }}>
+                      }}
+                    >
                       Add Course
                     </Button>
                   </>
@@ -180,14 +181,16 @@ const CourseListMain = () => {
         width={800}
         destroyOnClose
         visible={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}>
+        onCancel={() => setIsModalVisible(false)}
+      >
         <Form
           colon={false}
           preserve={false}
           requiredMark={false}
           onFinish={addCourse}
           labelCol={{ span: 8 }}
-          wrapperCol={{ span: 12 }}>
+          wrapperCol={{ span: 12 }}
+        >
           <Form.Item
             name="code"
             label="Course Code"
@@ -197,7 +200,8 @@ const CourseListMain = () => {
                 required: true,
                 message: "Please enter course code!",
               },
-            ]}>
+            ]}
+          >
             <Input placeholder="Enter course code with program id, eg:BSCS-101" />
           </Form.Item>
           <Form.Item
@@ -209,7 +213,8 @@ const CourseListMain = () => {
                 required: true,
                 message: "Please enter course name!",
               },
-            ]}>
+            ]}
+          >
             <Input placeholder="Enter course name" />
           </Form.Item>
           <Form.Item
@@ -220,7 +225,8 @@ const CourseListMain = () => {
                 required: true,
                 message: "Please enter theory credit hours!",
               },
-            ]}>
+            ]}
+          >
             <InputNumber placeholder="Credit Hrs" type="number" min={2} max={3} />
           </Form.Item>
           <Form.Item
@@ -231,7 +237,8 @@ const CourseListMain = () => {
                 required: true,
                 message: "Please enter total theory marks!",
               },
-            ]}>
+            ]}
+          >
             <InputNumber placeholder="Th marks" type="number" min={1} max={100} />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 20 }}>
