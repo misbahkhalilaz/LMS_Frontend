@@ -25,12 +25,7 @@ const CourseListMain = () => {
 
   return (
     <Row>
-      <Row
-        className="no-select"
-        align="middle"
-        justify="space-around"
-        gutter={[20]}
-        style={{ height: "10vh" }}>
+      <Row className="no-select" gutter={[20, 5]} align="center" style={{ padding: "10px 0" }}>
         <Col offset={1}>
           <Title level={width < 700 ? 5 : 4} style={{ display: "inline" }}>
             Shift{" "}
@@ -76,7 +71,7 @@ const CourseListMain = () => {
           <Select
             showSearch
             value={selectedBatchId}
-            options={batchList[selectedProgId]?.[selectedShift]}
+            options={batchList?.[selectedProgId]?.[selectedShift]}
             disabled={!selectedProgId}
             onSelect={(value) => {
               setSelectedBatchId(value);

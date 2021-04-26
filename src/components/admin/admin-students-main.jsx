@@ -64,8 +64,8 @@ const StudentListMain = () => {
       title: "Status",
       render: (std) => (
         <Switch
-          checkedChildren='Active'
-          unCheckedChildren='Inactive'
+          checkedChildren="Active"
+          unCheckedChildren="Inactive"
           checked={std.isActive}
           onChange={(checked) =>
             dispatch(
@@ -124,101 +124,101 @@ const StudentListMain = () => {
 
   return (
     <Row>
-      <Row
-        className='no-select'
-        align='middle'
-        justify='center'
-        gutter={[20]}
-        style={{ height: "10vh" }}
-      >
+      <Row className="no-select" gutter={[20, 5]} align="center" style={{ padding: "10px 0" }}>
         <Col span={12}>
           <Search
-            placeholder='Search by seatNo/name/email/phoneNo (press enter/click search icon). . . .'
+            placeholder="Search by seatNo/name/email/phoneNo (press enter/click search icon). . . ."
             allowClear
             enterButton
             onSearch={filterStudent}
           />
         </Col>
         <Col>
-          <Title level={width < 700 ? 5 : 4} style={{ float: "left" }}>
-            Program
-          </Title>
-          <Select
-            allowClear
-            showSearch
-            options={programList}
-            value={programId}
-            onSelect={(value) => {
-              dispatch(getStudentListAction({ programId: value, ...resetparams }, functions));
-              setProgramId(value);
-              setBatchId();
-              setSectionId();
-              setAvailableSect();
-            }}
-            onClear={() => {
-              setStudentList();
-              setProgramId();
-              setBatchId();
-              setSectionId();
-              setTotal();
-              setAvailableSect();
-              setFilter({ role: "student" });
-            }}
-            filterOption={(input, option) =>
-              option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-            style={{ width: 90 }}
-          />
+          <label>
+            <Title level={width < 700 ? 5 : 4} style={{ float: "left" }}>
+              Program
+            </Title>
+            <Select
+              allowClear
+              showSearch
+              options={programList}
+              value={programId}
+              onSelect={(value) => {
+                dispatch(getStudentListAction({ programId: value, ...resetparams }, functions));
+                setProgramId(value);
+                setBatchId();
+                setSectionId();
+                setAvailableSect();
+              }}
+              onClear={() => {
+                setStudentList();
+                setProgramId();
+                setBatchId();
+                setSectionId();
+                setTotal();
+                setAvailableSect();
+                setFilter({ role: "student" });
+              }}
+              filterOption={(input, option) =>
+                option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              style={{ width: 90 }}
+            />
+          </label>
         </Col>
         <Col>
-          <Title level={width < 700 ? 5 : 4} style={{ float: "left" }}>
-            Batch
-          </Title>
-          <Select
-            showSearch
-            allowClear
-            value={batchId}
-            options={
-              programId && [...batchList[programId].Morning, ...batchList[programId].Evening]
-            }
-            disabled={!programId}
-            onSelect={(value) => {
-              dispatch(getStudentListAction({ batchId: value, ...resetparams }, functions));
-              setBatchId(value);
-              setSectionId();
-              setAvailableSect(sectionList[value]);
-            }}
-            onClear={() => {
-              dispatch(getStudentListAction({ programId, ...resetparams }, functions));
-              setBatchId();
-              setSectionId();
-              setAvailableSect();
-            }}
-            filterOption={(input, option) =>
-              option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-            style={{ width: 90 }}
-          />
+          <label>
+            <Title level={width < 700 ? 5 : 4} style={{ float: "left" }}>
+              Batch
+            </Title>
+            <Select
+              showSearch
+              allowClear
+              value={batchId}
+              options={
+                programId && [...batchList[programId].Morning, ...batchList[programId].Evening]
+              }
+              disabled={!programId}
+              onSelect={(value) => {
+                dispatch(getStudentListAction({ batchId: value, ...resetparams }, functions));
+                setBatchId(value);
+                setSectionId();
+                setAvailableSect(sectionList[value]);
+              }}
+              onClear={() => {
+                dispatch(getStudentListAction({ programId, ...resetparams }, functions));
+                setBatchId();
+                setSectionId();
+                setAvailableSect();
+              }}
+              filterOption={(input, option) =>
+                option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              style={{ width: 90 }}
+            />
+          </label>
         </Col>
         <Col>
-          <Title level={width < 700 ? 5 : 4} style={{ float: "left" }}>
-            Section
-          </Title>
-          <Select
-            allowClear
-            options={availableSect}
-            value={sectionId}
-            onSelect={(value) => {
-              dispatch(getStudentListAction({ sectionId: value, ...resetparams }, functions));
-              setSectionId(value);
-            }}
-            onClear={() => {
-              dispatch(getStudentListAction({ batchId, ...resetparams }, functions));
-              setSectionId();
-            }}
-            disabled={!availableSect}
-            style={{ width: 90 }}
-          />
+          <label>
+            <Title level={width < 700 ? 5 : 4} style={{ float: "left" }}>
+              Section
+            </Title>
+            <Select
+              allowClear
+              options={availableSect}
+              value={sectionId}
+              onSelect={(value) => {
+                dispatch(getStudentListAction({ sectionId: value, ...resetparams }, functions));
+                setSectionId(value);
+              }}
+              onClear={() => {
+                dispatch(getStudentListAction({ batchId, ...resetparams }, functions));
+                setSectionId();
+              }}
+              disabled={!availableSect}
+              style={{ width: 90 }}
+            />
+          </label>
         </Col>
       </Row>
       <Row style={{ height: "80vh" }}>

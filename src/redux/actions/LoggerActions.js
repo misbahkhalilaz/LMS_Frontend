@@ -60,6 +60,11 @@ export const loginAction = (payload, navigate, setRole) => (dispatch) => {
 export const tokenAuthAction = (setRole) => (dispatch) => {
   const cookie = new Cookies();
   const token = cookie.get("token");
+  if (!token) {
+    dispatch(loginStatusAction(false));
+    dispatch(clearStoreAction());
+    return;
+  }
 
   dispatch(showLoading());
   dispatch(setCheckToken(true));
